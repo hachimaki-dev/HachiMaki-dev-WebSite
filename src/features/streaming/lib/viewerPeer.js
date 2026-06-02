@@ -10,12 +10,21 @@ import { createStreamLogger } from './streamLogger'
 
 const log = createStreamLogger('viewerPeer')
 
-/** ICE server configuration */
+/** ICE server configuration (Free STUN + OpenRelay TURN) */
 const ICE_CONFIG = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' },
+    {
+      urls: 'turn:openrelay.metered.ca:80',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
   ],
 }
 
@@ -50,6 +59,9 @@ export function createViewerPeer({
   let reconnectTimeout = null
   let backoffMs = BACKOFF.INITIAL_MS
   let isDestroyed = false
+
+  /** @type {RTCIceCandidateInit[]} */
+  let iceQueue = []
 
   /**
    * Handle an SDP offer from the caster
@@ -113,6 +125,15 @@ export function createViewerPeer({
     try {
       onStateChange?.('connecting')
       await pc.setRemoteDescription(new RTCSessionDescription(sdp))
+      
+      /* Process queued ICE candidates */
+      while (iceQueue.length > 0) {
+        const candidate = iceQueue.shift()
+        await pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(err => 
+          log.error('Failed to add queued ICE candidate:', err)
+        )
+      }
+
       const answer = await pc.createAnswer()
       await pc.setLocalDescription(answer)
       onAnswer(pc.localDescription)
@@ -129,7 +150,14 @@ export function createViewerPeer({
    */
   async function handleIceCandidate(candidate) {
     if (!pc) {
-      log.warn('No peer connection when handling ICE candidate')
+      log.warn('No peer connection when handling ICE candidate, queueing')
+      iceQueue.push(candidate)
+      return
+    }
+
+    if (!pc.remoteDescription) {
+      log.debug('Queueing ICE candidate (no remote description yet)')
+      iceQueue.push(candidate)
       return
     }
 

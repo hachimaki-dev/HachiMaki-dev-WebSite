@@ -35,36 +35,43 @@ export function createSignalingChannel(roomId, localId) {
   /**
    * Subscribe to signaling messages for this room
    * @param {function(SignalingMessage): void} onMessage - Called for each new message
+   * @returns {Promise<void>} Resolves when successfully subscribed
    */
   function subscribe(onMessage) {
     messageCallback = onMessage
 
-    subscription = supabase
-      .channel(`signaling:${roomId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: TABLES.SIGNALING,
-          filter: `room_id=eq.${roomId}`,
-        },
-        (payload) => {
-          const msg = payload.new
-          /* Ignore own messages */
-          if (msg.sender_id === localId) return
-          /* If targeted, ignore messages not for us */
-          if (msg.target_id && msg.target_id !== localId) return
+    return new Promise((resolve, reject) => {
+      subscription = supabase
+        .channel(`signaling:${roomId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: TABLES.SIGNALING,
+            filter: `room_id=eq.${roomId}`,
+          },
+          (payload) => {
+            const msg = payload.new
+            /* Ignore own messages */
+            if (msg.sender_id === localId) return
+            /* If targeted, ignore messages not for us */
+            if (msg.target_id && msg.target_id !== localId) return
 
-          log.debug('Received:', msg.type, 'from', msg.sender_id)
-          messageCallback?.(msg)
-        }
-      )
-      .subscribe((status) => {
-        log.info('Subscription status:', status)
-      })
-
-    return subscription
+            log.debug('Received:', msg.type, 'from', msg.sender_id)
+            messageCallback?.(msg)
+          }
+        )
+        .subscribe((status, err) => {
+          log.info('Subscription status:', status)
+          if (status === 'SUBSCRIBED') {
+            resolve()
+          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            log.error('Channel error:', err)
+            reject(new Error(`Failed to subscribe: ${status}`))
+          }
+        })
+    })
   }
 
   /**

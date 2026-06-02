@@ -9,12 +9,21 @@ import { createStreamLogger } from './streamLogger'
 
 const log = createStreamLogger('peerManager')
 
-/** ICE server configuration (free STUN only for v1) */
+/** ICE server configuration (Free STUN + OpenRelay TURN) */
 const ICE_CONFIG = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' },
+    {
+      urls: 'turn:openrelay.metered.ca:80',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
   ],
 }
 
@@ -39,6 +48,8 @@ export function createPeerManager({
 }) {
   /** @type {Map<string, RTCPeerConnection>} */
   const peers = new Map()
+  /** @type {Map<string, RTCIceCandidateInit[]>} */
+  const iceQueues = new Map()
 
   /**
    * Create a new peer connection for a viewer
@@ -53,6 +64,7 @@ export function createPeerManager({
 
     const pc = new RTCPeerConnection(ICE_CONFIG)
     peers.set(viewerId, pc)
+    iceQueues.set(viewerId, [])
 
     /* Add all local tracks to the connection */
     localStream.getTracks().forEach((track) => {
@@ -80,6 +92,7 @@ export function createPeerManager({
           break
         case 'closed':
           peers.delete(viewerId)
+          iceQueues.delete(viewerId)
           break
       }
     }
@@ -120,6 +133,15 @@ export function createPeerManager({
     try {
       await pc.setRemoteDescription(new RTCSessionDescription(sdp))
       log.info(`Set remote description (answer) for viewer ${viewerId}`)
+      
+      /* Process queued ICE candidates */
+      const queue = iceQueues.get(viewerId) || []
+      while (queue.length > 0) {
+        const candidate = queue.shift()
+        await pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(err => 
+          log.error(`Failed to add queued ICE candidate for ${viewerId}:`, err)
+        )
+      }
     } catch (err) {
       log.error(`Failed to set answer for ${viewerId}:`, err)
       onError?.(viewerId, err)
@@ -135,6 +157,14 @@ export function createPeerManager({
     const pc = peers.get(viewerId)
     if (!pc) {
       log.warn(`No peer found for viewer ${viewerId} when handling ICE`)
+      return
+    }
+
+    if (!pc.remoteDescription) {
+      log.debug(`Queueing ICE candidate for ${viewerId} (no remote description yet)`)
+      const queue = iceQueues.get(viewerId) || []
+      queue.push(candidate)
+      iceQueues.set(viewerId, queue)
       return
     }
 

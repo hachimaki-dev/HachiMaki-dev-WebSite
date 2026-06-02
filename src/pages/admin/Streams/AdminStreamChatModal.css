@@ -1,0 +1,151 @@
+/* ============================================
+   AdminStreamChatModal.css
+   ============================================ */
+
+.admin-chat-modal {
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+  min-height: 400px;
+}
+
+.admin-chat-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.admin-chat-modal__title {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.admin-chat-modal__clear-btn {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.admin-chat-modal__clear-btn:hover:not(:disabled) {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.admin-chat-modal__clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-chat-modal__content {
+  flex: 1;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-chat-modal__error {
+  padding: var(--space-3);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+  font-size: var(--font-size-sm);
+}
+
+.admin-chat-modal__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.admin-chat-modal__empty {
+  margin: auto;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+/* Individual message */
+.admin-chat-modal__msg {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: border-color var(--transition-fast);
+}
+
+.admin-chat-modal__msg:hover {
+  border-color: var(--color-border);
+}
+
+.admin-chat-modal__msg-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-chat-modal__msg-meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.admin-chat-modal__msg-author {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent);
+}
+
+.admin-chat-modal__msg-time {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-text-dim);
+}
+
+.admin-chat-modal__msg-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.admin-chat-modal__del-btn {
+  padding: 2px 6px;
+  background: transparent;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger-dim);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.admin-chat-modal__msg:hover .admin-chat-modal__del-btn {
+  opacity: 1;
+}
+
+.admin-chat-modal__del-btn:hover {
+  background: var(--color-danger);
+  color: #fff;
+}

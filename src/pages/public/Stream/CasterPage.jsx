@@ -148,7 +148,7 @@ export function CasterPage() {
     peerManagerRef.current = manager
 
     /* Subscribe to signaling messages */
-    signaling.subscribe((msg) => {
+    await signaling.subscribe((msg) => {
       switch (msg.type) {
         case 'viewer-ready':
           manager.createPeerForViewer(msg.sender_id)
@@ -160,6 +160,9 @@ export function CasterPage() {
           manager.handleIceCandidate(msg.sender_id, msg.payload.candidate)
           break
       }
+    }).catch(err => {
+      log.error('Failed to subscribe caster to signaling:', err)
+      setPageError('Error de red: No se pudo conectar al canal de señalización.')
     })
 
     /* Start periodic signaling cleanup */

@@ -175,6 +175,37 @@ export function useRooms() {
     return true
   }, [])
 
+  /**
+   * Delete a recording (Storage + DB)
+   * @param {string} recordingId
+   * @param {string} filePath
+   */
+  const deleteRecording = useCallback(async (recordingId, filePath) => {
+    /* 1. Delete from Storage */
+    const { error: storageError } = await supabase.storage
+      .from('recordings')
+      .remove([filePath])
+
+    if (storageError) {
+      log.error('Failed to delete recording file:', storageError.message)
+      // We continue to delete from DB even if storage fails, just in case it's orphaned
+    }
+
+    /* 2. Delete from DB */
+    const { error: dbError } = await supabase
+      .from(TABLES.RECORDINGS)
+      .delete()
+      .eq('id', recordingId)
+
+    if (dbError) {
+      log.error('Failed to delete recording record:', dbError.message)
+      return false
+    }
+
+    log.info('Deleted recording:', recordingId)
+    return true
+  }, [])
+
   return {
     rooms,
     loading,
@@ -184,5 +215,6 @@ export function useRooms() {
     getRoomBySlug,
     updateRoomStatus,
     deleteRoom,
+    deleteRecording,
   }
 }

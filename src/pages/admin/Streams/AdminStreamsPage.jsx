@@ -11,6 +11,7 @@ import { supabase } from '../../../lib/supabase'
 import { TABLES } from '../../../lib/constants'
 import { useRooms } from '../../../features/streaming/hooks/useRooms'
 import { createStreamLogger } from '../../../features/streaming/lib/streamLogger'
+import { AdminStreamChatModal } from './AdminStreamChatModal'
 import './AdminStreamsPage.css'
 
 const log = createStreamLogger('AdminStreams')
@@ -46,10 +47,11 @@ function formatDate(iso) {
 
 export function AdminStreamsPage() {
   const navigate = useNavigate()
-  const { rooms, loading, error, listRooms, createRoom, deleteRoom } = useRooms()
+  const { rooms, loading, error, listRooms, createRoom, deleteRoom, deleteRecording } = useRooms()
   const [newTitle, setNewTitle] = useState('')
   const [creating, setCreating] = useState(false)
   const [recordings, setRecordings] = useState([])
+  const [chatRoom, setChatRoom] = useState(null)
 
   /* Load rooms and recordings */
   useEffect(() => {
@@ -95,6 +97,27 @@ export function AdminStreamsPage() {
   const getRecordingUrl = (filePath) => {
     const { data } = supabase.storage.from('recordings').getPublicUrl(filePath)
     return data?.publicUrl || '#'
+  }
+
+  const handleDeleteRecording = async (recId, filePath) => {
+    const ok = window.confirm('¿Borrar permanentemente esta grabación? Se eliminará el archivo de Storage.')
+    if (!ok) return
+
+    const success = await deleteRecording(recId, filePath)
+    if (success) {
+      await loadRecordings()
+      await listRooms() // update counts in rooms table
+    }
+  }
+
+  const handleCopyLink = async (slug) => {
+    const url = `${window.location.origin}/hachimaki-dev/stream/${slug}/watch`
+    try {
+      await navigator.clipboard.writeText(url)
+      alert('Enlace copiado: ' + url)
+    } catch (err) {
+      log.error('Failed to copy link', err)
+    }
   }
 
   return (
@@ -171,9 +194,23 @@ export function AdminStreamsPage() {
                       🔴
                     </button>
                     <button
+                      className="admin-streams__action-btn"
+                      onClick={() => handleCopyLink(room.slug)}
+                      title="Copiar Enlace Público"
+                    >
+                      🔗
+                    </button>
+                    <button
+                      className="admin-streams__action-btn"
+                      onClick={() => setChatRoom(room)}
+                      title="Ver Historial de Chat"
+                    >
+                      💬
+                    </button>
+                    <button
                       className="admin-streams__action-btn admin-streams__action-btn--danger"
                       onClick={() => handleDelete(room.id)}
-                      title="Eliminar"
+                      title="Eliminar Sala"
                     >
                       🗑
                     </button>
@@ -202,7 +239,7 @@ export function AdminStreamsPage() {
                 <th>Fecha</th>
                 <th>Duración</th>
                 <th>Tamaño</th>
-                <th>Descargar</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -215,14 +252,24 @@ export function AdminStreamsPage() {
                   <td>{formatDuration(rec.duration_ms)}</td>
                   <td>{formatBytes(rec.file_size)}</td>
                   <td>
-                    <a
-                      className="admin-streams__recording-link"
-                      href={getRecordingUrl(rec.file_path)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      ⬇ Descargar
-                    </a>
+                    <div className="admin-streams__actions">
+                      <a
+                        className="admin-streams__recording-link"
+                        href={getRecordingUrl(rec.file_path)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ marginRight: 'var(--space-2)' }}
+                      >
+                        ⬇ Descargar
+                      </a>
+                      <button
+                        className="admin-streams__action-btn admin-streams__action-btn--danger"
+                        onClick={() => handleDeleteRecording(rec.id, rec.file_path)}
+                        title="Eliminar Grabación"
+                      >
+                        🗑
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -230,6 +277,13 @@ export function AdminStreamsPage() {
           </table>
         </>
       )}
+
+      {/* Chat History Modal */}
+      <AdminStreamChatModal 
+        isOpen={!!chatRoom} 
+        onClose={() => setChatRoom(null)} 
+        room={chatRoom} 
+      />
     </div>
   )
 }

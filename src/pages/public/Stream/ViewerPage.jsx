@@ -33,6 +33,8 @@ export function ViewerPage() {
   const [roomLoading, setRoomLoading] = useState(true)
   /** @type {[ViewerState, function]} */
   const [viewerState, setViewerState] = useState('loading')
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
 
   /* Refs */
   const videoRef = useRef(null)
@@ -87,8 +89,11 @@ export function ViewerPage() {
         log.info('Received remote stream')
         if (videoRef.current) {
           videoRef.current.srcObject = remoteStream
-          videoRef.current.play().catch((err) => {
+          videoRef.current.play().then(() => {
+            setAutoplayBlocked(false)
+          }).catch((err) => {
             log.warn('Autoplay blocked:', err.message)
+            setAutoplayBlocked(true)
           })
         }
         setViewerState('connected')
@@ -113,16 +118,16 @@ export function ViewerPage() {
           peer.handleIceCandidate(msg.payload.candidate)
           break
       }
-    })
-
-    /* Announce to caster */
-    signaling.sendViewerReady()
+    }).then(() => {
+      /* Announce to caster ONLY after successfully subscribed */
+      signaling.sendViewerReady()
+    }).catch(err => log.error('Signaling error:', err))
 
     return () => {
       peer.disconnect()
       signaling.unsubscribe()
     }
-  }, [room, viewerId, joinRoom, viewerState])
+  }, [room?.id, viewerId, joinRoom])
 
   /* ── Fullscreen toggle ── */
   const videoWrapperRef = useRef(null)
@@ -179,7 +184,24 @@ export function ViewerPage() {
             className="viewer-page__video"
             autoPlay
             playsInline
+            muted={isMuted}
           />
+
+          {/* Unmute button */}
+          {isMuted && viewerState === 'connected' && (
+            <button
+              className="viewer-page__unmute-btn"
+              onClick={() => {
+                setIsMuted(false)
+                if (videoRef.current) {
+                  videoRef.current.muted = false
+                }
+              }}
+              title="Activar Sonido"
+            >
+              🔇 Haz clic para activar el sonido
+            </button>
+          )}
 
           {/* Fullscreen button */}
           <button
@@ -219,6 +241,20 @@ export function ViewerPage() {
               <span className="viewer-page__status-text">Stream Offline</span>
               <span className="viewer-page__status-subtext">
                 El emisor no está transmitiendo en este momento
+              </span>
+            </div>
+          )}
+
+          {autoplayBlocked && viewerState === 'connected' && (
+            <div className="viewer-page__status-overlay" style={{ background: 'rgba(0,0,0,0.8)', cursor: 'pointer' }} onClick={() => {
+              if (videoRef.current) {
+                videoRef.current.play().then(() => setAutoplayBlocked(false))
+              }
+            }}>
+              <span className="viewer-page__status-icon">▶️</span>
+              <span className="viewer-page__status-text">Haz clic para iniciar el video</span>
+              <span className="viewer-page__status-subtext">
+                Tu navegador bloqueó la reproducción automática
               </span>
             </div>
           )}

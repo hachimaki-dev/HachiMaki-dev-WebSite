@@ -16,6 +16,7 @@ export function AdminLayout() {
     { to: ROUTES.ADMIN, label: 'Dashboard', icon: '◉', end: true },
     { to: ROUTES.ADMIN_BLOG, label: 'Blog', icon: '✏', end: false },
     { to: ROUTES.ADMIN_PORTFOLIO, label: 'Portfolio', icon: '◧', end: false },
+    { to: ROUTES.ADMIN_STREAMS, label: 'Streams', icon: '📡', end: false },
     { to: ROUTES.ADMIN_SETTINGS, label: 'Settings', icon: '⚙', end: false },
   ]
 
