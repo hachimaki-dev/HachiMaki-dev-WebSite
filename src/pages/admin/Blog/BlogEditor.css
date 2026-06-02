@@ -107,7 +107,30 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
+}
+
+.blog-editor__photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-4);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.blog-editor__photo-option {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.blog-editor__photo-option:hover {
+  border-color: var(--color-accent);
+  transform: scale(1.05);
 }
 
 /* ── Actions ── */

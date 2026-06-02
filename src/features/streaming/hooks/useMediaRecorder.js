@@ -131,7 +131,7 @@ export function useMediaRecorder() {
       const durationMs = Date.now() - startTimeRef.current
 
       recorder.onstop = () => {
-        const mimeType = mimeTypeRef.current || 'video/webm'
+        const mimeType = recorder.mimeType || mimeTypeRef.current || 'video/webm'
         const blob = new Blob(chunksRef.current, { type: mimeType })
 
         log.info(`Recording complete: ${blob.size} bytes, ${durationMs}ms`)
@@ -143,7 +143,12 @@ export function useMediaRecorder() {
         resolve({ blob, durationMs, mimeType })
       }
 
-      recorder.stop()
+      try {
+        recorder.stop()
+      } catch (err) {
+        log.error('Failed to stop MediaRecorder:', err)
+        resolve(null)
+      }
     })
   }, [])
 

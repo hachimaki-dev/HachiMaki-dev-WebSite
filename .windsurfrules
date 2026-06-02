@@ -19,12 +19,13 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
 - `src/pages/public/` → Public pages | `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 - `src/pages/admin/` → Admin CRUD pages (behind AuthGuard) | `src/pages/admin/Streams/` → AdminStreamsPage
-- `src/features/` → Domain logic (auth, blog, portfolio, streaming)
+- `src/features/` → Domain logic (auth, blog, portfolio, streaming, visitor)
 - `src/features/streaming/lib/` → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 - `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
+- `src/features/visitor/hooks/` → useVisitorTracker, useVisitorLogs
 - `src/styles/tokens.css` → ALL design tokens — ALWAYS use these
 
-## DB: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages (Supabase PostgreSQL + RLS)
+## DB: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages, photos, visitor_logs (Supabase PostgreSQL + RLS)
 ## Accent: #c8f000 | Font: Space Grotesk | Theme: dark (#0d0d0d)
 
 ## 🔄 Auto-Maintenance (MANDATORY)

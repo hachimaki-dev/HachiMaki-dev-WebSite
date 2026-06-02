@@ -10,6 +10,8 @@ export function Header() {
     { to: ROUTES.HOME, label: 'HOME' },
     { to: ROUTES.BLOG, label: 'BLOG' },
     { to: ROUTES.PORTFOLIO, label: 'PORTFOLIO' },
+    { to: ROUTES.PHOTOS, label: 'PHOTOS' },
+    { to: ROUTES.VISITORS, label: 'VISITANTES' },
   ]
 
   /* VHS clock */

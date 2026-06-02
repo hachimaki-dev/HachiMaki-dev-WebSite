@@ -3,13 +3,34 @@ import { Link } from 'react-router-dom'
 import { PageWrapper } from '../../../components/layout/PageWrapper'
 import { useBlogPosts } from '../../../features/blog/useBlogPosts'
 import { usePublicLiveStreams } from '../../../features/streaming/hooks/usePublicLiveStreams'
+import { useProjects } from '../../../features/portfolio/useProjects'
 import { formatDate } from '../../../utils/formatDate'
 import { ROUTES } from '../../../lib/constants'
 import './HomePage.css'
 
+function getProjectIcon(tags = []) {
+  const tagsStr = (tags || []).map(t => t.toLowerCase()).join(' ')
+  if (tagsStr.includes('game') || tagsStr.includes('juego') || tagsStr.includes('play')) return '🎮'
+  if (tagsStr.includes('web') || tagsStr.includes('sitio') || tagsStr.includes('app')) return '🌐'
+  if (tagsStr.includes('mobile') || tagsStr.includes('android') || tagsStr.includes('ios')) return '📱'
+  if (tagsStr.includes('tool') || tagsStr.includes('cli') || tagsStr.includes('util') || tagsStr.includes('library')) return '🛠️'
+  if (tagsStr.includes('music') || tagsStr.includes('audio') || tagsStr.includes('sound')) return '📻'
+  if (tagsStr.includes('photo') || tagsStr.includes('image') || tagsStr.includes('gallery')) return '📷'
+  return '📁'
+}
+
+const MOCK_PROJECTS = [
+  { id: 'mock-1', slug: 'bailando-solo', title: 'Bailando Solo', tags: ['web', 'react', 'music'] },
+  { id: 'mock-2', slug: 'ev3-guias', title: 'EV3 Robots', tags: ['tool', 'education', 'game'] },
+  { id: 'mock-3', slug: 'flickr-gallery', title: 'Flickr Clone', tags: ['photo', 'gallery'] },
+  { id: 'mock-4', slug: 'retro-synth', title: 'Retro Synth', tags: ['music', 'audio'] },
+  { id: 'mock-5', slug: 'live-stream', title: 'Stream Nave', tags: ['streaming', 'web'] }
+]
+
 export function HomePage() {
   const { posts: latestPosts, loading: postsLoading } = useBlogPosts()
   const { stories, loading: streamsLoading } = usePublicLiveStreams()
+  const { projects, loading: projectsLoading } = useProjects()
 
   /* Live clock */
   const [time, setTime] = useState(new Date())
@@ -18,6 +39,8 @@ export function HomePage() {
     return () => clearInterval(timer)
   }, [])
   const timestamp = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+
+  const displayProjects = projects.length > 0 ? projects : MOCK_PROJECTS
 
   return (
     <PageWrapper>
@@ -174,21 +197,59 @@ export function HomePage() {
 
         {/* ── Right: Nav sidebar ── */}
         <aside className="outsider__sidebar animate-slide-up delay-4">
-          <div className="outsider__sidebar-title">NAVEGACIÓN</div>
-          <nav className="outsider__sidebar-nav">
-            <Link to={ROUTES.HOME} className="outsider__nav-item outsider__nav-item--active">
-              <span className="outsider__nav-dot"></span> DASHBOARD
+          <div className="outsider__sidebar-title">
+            APLICACIONES.SYS
+          </div>
+          
+          <div className="outsider__app-grid">
+            {/* System Apps */}
+            <Link to={ROUTES.BLOG} className="outsider__app-item" title="Blog / Transmisiones">
+              <div className="outsider__app-icon-wrapper">
+                <span className="outsider__app-emoji">📝</span>
+                <div className="outsider__app-glow"></div>
+              </div>
+              <span className="outsider__app-label">Blog</span>
             </Link>
-            <Link to={ROUTES.BLOG} className="outsider__nav-item">
-              {'>'} SEÑALES
+
+            <Link to={ROUTES.PHOTOS} className="outsider__app-item" title="Galería de Fotos">
+              <div className="outsider__app-icon-wrapper">
+                <span className="outsider__app-emoji">📷</span>
+                <div className="outsider__app-glow"></div>
+              </div>
+              <span className="outsider__app-label">Fotos</span>
             </Link>
-            <Link to={ROUTES.PORTFOLIO} className="outsider__nav-item">
-              {'>'} ARCHIVO
+
+            <Link to={ROUTES.VISITORS} className="outsider__app-item" title="Registro de Visitantes">
+              <div className="outsider__app-icon-wrapper">
+                <span className="outsider__app-emoji">🕵️</span>
+                <div className="outsider__app-glow"></div>
+              </div>
+              <span className="outsider__app-label">Visitantes</span>
             </Link>
-            <a href="mailto:hello@hachimaki.dev" className="outsider__nav-item">
-              {'>'} CONTACTO
-            </a>
-          </nav>
+
+            {/* Portfolio Projects */}
+            {projectsLoading ? (
+              <div className="outsider__app-loading">CARGANDO...</div>
+            ) : (
+              displayProjects.map((project) => {
+                const icon = getProjectIcon(project.tags)
+                return (
+                  <Link
+                    key={project.id}
+                    to={`${ROUTES.PORTFOLIO}/${project.slug}`}
+                    className="outsider__app-item"
+                    title={project.title}
+                  >
+                    <div className="outsider__app-icon-wrapper">
+                      <span className="outsider__app-emoji">{icon}</span>
+                      <div className="outsider__app-glow"></div>
+                    </div>
+                    <span className="outsider__app-label">{project.title}</span>
+                  </Link>
+                )
+              })
+            )}
+          </div>
 
           {/* Agent info */}
           <div className="outsider__sidebar-agent">

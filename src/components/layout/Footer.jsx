@@ -1,4 +1,5 @@
-import { SITE } from '../../lib/constants'
+import { Link } from 'react-router-dom'
+import { SITE, ROUTES } from '../../lib/constants'
 import './Footer.css'
 
 export function Footer() {
@@ -12,19 +13,23 @@ export function Footer() {
           <div className="footer__brand">
             <span className="footer__logo">
               <span className="footer__logo-bracket">{`{`}</span>
-              <span className="footer__logo-text">hm</span>
+              <span className="footer__logo-text">La Nave</span>
               <span className="footer__logo-bracket">{`}`}</span>
             </span>
-            <p className="footer__tagline">Building things for the web.</p>
+            <p className="footer__disclaimer">
+              Aviso Parroquial: Este sitio representa una faceta puramente personal, nacida del sano (y a veces obstinado) entusiasmo de querer crear, compartir y experimentar con mi propio trozo de internet. No pretende satisfacer las expectativas de nadie más que las mías. Navega bajo tu propio riesgo, pero con buena onda.
+            </p>
           </div>
 
           {/* Links */}
           <div className="footer__links">
             <div className="footer__col">
               <h4 className="footer__col-title">Sitio</h4>
-              <a href="/" className="footer__link">Inicio</a>
-              <a href="/blog" className="footer__link">Blog</a>
-              <a href="/portfolio" className="footer__link">Portfolio</a>
+              <Link to={ROUTES.HOME} className="footer__link">Inicio</Link>
+              <Link to={ROUTES.BLOG} className="footer__link">Blog</Link>
+              <Link to={ROUTES.PORTFOLIO} className="footer__link">Portfolio</Link>
+              <Link to={ROUTES.PHOTOS} className="footer__link">Fotos</Link>
+              <Link to={ROUTES.VISITORS} className="footer__link">Visitantes</Link>
             </div>
             <div className="footer__col">
               <h4 className="footer__col-title">Social</h4>
@@ -35,14 +40,6 @@ export function Footer() {
                 className="footer__link"
               >
                 GitHub
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer__link"
-              >
-                Twitter / X
               </a>
             </div>
           </div>
@@ -57,3 +54,4 @@ export function Footer() {
     </footer>
   )
 }
+

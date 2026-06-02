@@ -1,0 +1,100 @@
+.photos-page {
+  min-height: calc(100vh - var(--header-height, 60px) - var(--footer-height, 60px));
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero Section (2/3 of viewport) */
+.photos-hero {
+  height: 66vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  border-bottom: 2px solid var(--color-accent);
+  padding: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.photos-hero__image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: var(--radius-md, 8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.photos-hero__empty {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+
+/* Masonry/Tetris Grid Collage */
+.photos-collage {
+  padding: var(--space-4);
+  background-color: var(--color-bg);
+  /* Use CSS Columns for a simple masonry layout without JS */
+  column-count: 2;
+  column-gap: var(--space-4);
+}
+
+@media (min-width: 600px) {
+  .photos-collage {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 900px) {
+  .photos-collage {
+    column-count: 4;
+  }
+}
+
+@media (min-width: 1200px) {
+  .photos-collage {
+    column-count: 5;
+  }
+}
+
+.photos-collage__item {
+  break-inside: avoid;
+  margin-bottom: var(--space-4);
+  cursor: pointer;
+  position: relative;
+  border-radius: var(--radius-sm, 4px);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  border: 1px solid transparent;
+  background-color: var(--color-surface);
+}
+
+.photos-collage__item:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 15px var(--color-accent);
+  border-color: var(--color-accent);
+  z-index: 10;
+}
+
+.photos-collage__item--active {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+  filter: brightness(1.1);
+}
+
+.photos-collage__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+.photos-collage__item:hover .photos-collage__image {
+  filter: brightness(1.1) contrast(1.1);
+}

@@ -16,9 +16,8 @@
   margin-bottom: var(--space-10);
 }
 
-/* ── Brand ── */
 .footer__brand {
-  max-width: 280px;
+  max-width: 480px;
 }
 
 .footer__logo {
@@ -38,10 +37,11 @@
   color: var(--color-text);
 }
 
-.footer__tagline {
+.footer__disclaimer {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
   line-height: var(--line-height-relaxed);
+  opacity: 0.85;
 }
 
 /* ── Links ── */

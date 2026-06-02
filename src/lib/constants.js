@@ -10,6 +10,8 @@ export const ROUTES = {
   BLOG_POST: '/blog/:slug',
   PORTFOLIO: '/portfolio',
   PROJECT: '/portfolio/:slug',
+  PHOTOS: '/photos',
+  VISITORS: '/visitantes',
   LOGIN: '/login',
 
   /* Streaming routes */
@@ -26,6 +28,7 @@ export const ROUTES = {
   ADMIN_PORTFOLIO_EDIT: '/admin/portfolio/:id',
   ADMIN_SETTINGS: '/admin/settings',
   ADMIN_STREAMS: '/admin/streams',
+  ADMIN_PHOTOS: '/admin/photos',
 }
 
 /* ── Supabase tables ── */
@@ -39,6 +42,8 @@ export const TABLES = {
   SIGNALING: 'signaling_messages',
   RECORDINGS: 'recordings',
   CHAT_MESSAGES: 'chat_messages',
+  PHOTOS: 'photos',
+  VISITOR_LOGS: 'visitor_logs',
 }
 
 /* ── Site metadata ── */

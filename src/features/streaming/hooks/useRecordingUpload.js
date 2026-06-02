@@ -39,8 +39,11 @@ export function useRecordingUpload() {
     setProgress(0)
     setError(null)
 
+    // Clean MIME type to remove codec parameters (e.g., "video/webm;codecs=vp9,opus" -> "video/webm")
+    // This is required because Supabase Storage allowed_mime_types checks for exact string matches.
+    const cleanMimeType = mimeType ? mimeType.split(';')[0].trim() : 'video/webm'
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-    const ext = mimeType?.includes('mp4') ? 'mp4' : 'webm'
+    const ext = cleanMimeType.includes('mp4') ? 'mp4' : 'webm'
     const filePath = `${casterId}/${roomId}/${timestamp}.${ext}`
 
     try {
@@ -50,7 +53,7 @@ export function useRecordingUpload() {
       const { error: uploadError } = await supabase.storage
         .from(BUCKET)
         .upload(filePath, blob, {
-          contentType: mimeType || 'video/webm',
+          contentType: cleanMimeType,
           cacheControl: '3600',
           upsert: false,
         })
@@ -75,7 +78,7 @@ export function useRecordingUpload() {
           file_path: filePath,
           file_size: blob.size,
           duration_ms: durationMs,
-          mime_type: mimeType || 'video/webm',
+          mime_type: cleanMimeType,
         })
         .select()
         .single()

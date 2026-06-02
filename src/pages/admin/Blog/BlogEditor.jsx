@@ -5,7 +5,9 @@ import { useToast } from '../../../components/ui/Toast'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
 import { PageLoader } from '../../../components/ui/PageLoader'
+import { Modal } from '../../../components/ui/Modal'
 import { slugify } from '../../../utils/slugify'
+import { usePhotos } from '../../../features/photos/usePhotos'
 import { ROUTES } from '../../../lib/constants'
 import './BlogEditor.css'
 
@@ -19,6 +21,8 @@ export function BlogEditor() {
 
   const [loading, setLoading] = useState(isEditing)
   const [saving, setSaving] = useState(false)
+  const [isPhotoPickerOpen, setIsPhotoPickerOpen] = useState(false)
+  const { photos, loading: photosLoading } = usePhotos()
   const [form, setForm] = useState({
     title: '',
     slug: '',
@@ -166,7 +170,44 @@ export function BlogEditor() {
                 <img src={form.cover_url} alt="Preview" />
               </div>
             )}
+            <Button
+              type="button"
+              variant="outline"
+              fullWidth
+              onClick={() => setIsPhotoPickerOpen(true)}
+              style={{ marginTop: 'var(--space-2)' }}
+            >
+              Seleccionar desde Fotos
+            </Button>
           </div>
+
+          {/* Photo Picker Modal */}
+          <Modal
+            open={isPhotoPickerOpen}
+            onClose={() => setIsPhotoPickerOpen(false)}
+            title="Seleccionar portada"
+            size="lg"
+          >
+            {photosLoading ? (
+              <PageLoader />
+            ) : (
+              <div className="blog-editor__photo-grid">
+                {photos.map((photo) => (
+                  <img
+                    key={photo.id}
+                    src={photo.publicUrl}
+                    alt="Cover option"
+                    className="blog-editor__photo-option"
+                    onClick={() => {
+                      handleChange('cover_url')({ target: { value: photo.publicUrl } })
+                      setIsPhotoPickerOpen(false)
+                    }}
+                  />
+                ))}
+                {photos.length === 0 && <p>No hay fotos subidas en la galería.</p>}
+              </div>
+            )}
+          </Modal>
 
           {/* Actions */}
           <div className="blog-editor__actions">

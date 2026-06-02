@@ -28,7 +28,7 @@ Deploy: GitHub Pages.
 - CSS: kebab-case (`.blog-card__title`)
 - Variables: `--color-accent`, `--space-4`, `--font-sans`
 
-## Tables: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages
+## Tables: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages, photos, visitor_logs
 ## RLS: public read if published=true, auth write. Streaming: open signaling/chat, auth for rooms/recordings
 
 ## 🔄 Auto-Maintenance (MANDATORY)

@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useBlocker } from 'react-router-dom'
 import { useAuth } from '../../../features/auth/useAuth'
 import { useMediaDevices } from '../../../features/streaming/hooks/useMediaDevices'
 import { useMediaRecorder } from '../../../features/streaming/hooks/useMediaRecorder'
@@ -20,6 +20,7 @@ import { startPeriodicCleanup, cleanupAllMessages } from '../../../features/stre
 import { createStreamLogger } from '../../../features/streaming/lib/streamLogger'
 import { StreamChat } from './StreamChat'
 import { PageLoader } from '../../../components/ui/PageLoader'
+import { useToast } from '../../../components/ui/Toast'
 import './CasterPage.css'
 
 const log = createStreamLogger('CasterPage')
@@ -64,11 +65,28 @@ export function CasterPage() {
     error: mediaError, helpMessage,
     getStream, getDisplayStream, stopStream,
   } = useMediaDevices()
-  const { isRecording, duration, startRecording, stopRecording } = useMediaRecorder()
-  const { uploading, progress: uploadProgress, uploadRecording } = useRecordingUpload()
+  const { isRecording, duration, error: recorderError, startRecording, stopRecording } = useMediaRecorder()
+  const { uploading, progress: uploadProgress, error: uploadError, uploadRecording } = useRecordingUpload()
   const { viewerCount, joinRoom } = usePresence(room?.id, 'caster')
   const userId = user?.id || 'caster'
   const { messages, sendMessage, deleteMessage } = useChat(room?.id, userId, 'Caster')
+  const { toast } = useToast()
+
+  /* Warn before closing tab or navigating when streaming or uploading */
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isLive || uploading) {
+        e.preventDefault()
+        e.returnValue = 'Hay una transmisión o subida en progreso. ¿Seguro que quieres salir?'
+        return e.returnValue
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [isLive, uploading])
+
 
   /* Device selection state */
   const [selectedCamera, setSelectedCamera] = useState('')
@@ -123,7 +141,10 @@ export function CasterPage() {
     await updateRoomStatus(room.id, 'live')
 
     /* Start recording */
-    startRecording(stream)
+    const started = startRecording(stream)
+    if (!started) {
+      toast({ type: 'warning', message: 'No se pudo iniciar la grabación local de la transmisión.' })
+    }
 
     /* Set up signaling */
     const signaling = createSignalingChannel(room.id, user.id)
@@ -169,41 +190,66 @@ export function CasterPage() {
     cleanupStopRef.current = startPeriodicCleanup(room.id)
 
     log.info('🔴 Stream is LIVE')
-  }, [stream, room, user, updateRoomStatus, startRecording])
+  }, [stream, room, user, updateRoomStatus, startRecording, toast])
 
   /* ── Stop Stream ── */
   const handleStopStream = useCallback(async () => {
     setIsLive(false)
 
-    /* Stop recording and get blob */
-    const recordingResult = await stopRecording()
-
-    /* Update room status */
-    if (room) {
-      await updateRoomStatus(room.id, 'ended')
+    let recordingResult = null
+    try {
+      /* Stop recording and get blob */
+      recordingResult = await stopRecording()
+    } catch (err) {
+      log.error('Error stopping recorder:', err)
     }
 
-    /* Close all peers */
-    peerManagerRef.current?.removeAllPeers()
+    try {
+      /* Update room status */
+      if (room) {
+        await updateRoomStatus(room.id, 'ended')
+      }
+    } catch (err) {
+      log.error('Error updating room status:', err)
+    }
 
-    /* Cleanup signaling */
-    signalingRef.current?.unsubscribe()
-    cleanupStopRef.current?.()
-    if (room) await cleanupAllMessages(room.id)
+    try {
+      /* Close all peers */
+      peerManagerRef.current?.removeAllPeers()
+
+      /* Cleanup signaling */
+      signalingRef.current?.unsubscribe()
+      cleanupStopRef.current?.()
+      if (room) await cleanupAllMessages(room.id)
+    } catch (err) {
+      log.error('Error cleaning up streaming connection:', err)
+    }
 
     /* Upload recording */
     if (recordingResult?.blob && room && user) {
-      await uploadRecording({
-        blob: recordingResult.blob,
-        roomId: room.id,
-        casterId: user.id,
-        durationMs: recordingResult.durationMs,
-        mimeType: recordingResult.mimeType,
-      })
+      try {
+        const result = await uploadRecording({
+          blob: recordingResult.blob,
+          roomId: room.id,
+          casterId: user.id,
+          durationMs: recordingResult.durationMs,
+          mimeType: recordingResult.mimeType,
+        })
+        if (result) {
+          toast({ type: 'success', message: 'Grabación guardada con éxito en el servidor.' })
+        } else {
+          toast({ type: 'error', message: 'Error al subir la grabación a la nube.' })
+        }
+      } catch (err) {
+        log.error('Error uploading recording:', err)
+        toast({ type: 'error', message: 'Error al subir la grabación a la nube.' })
+      }
+    } else {
+      toast({ type: 'warning', message: 'No se generó ninguna grabación para guardar.' })
     }
 
     log.info('⬛ Stream ended')
-  }, [room, user, stopRecording, updateRoomStatus, uploadRecording])
+  }, [room, user, stopRecording, updateRoomStatus, uploadRecording, toast])
 
   /* ── Cleanup on unmount ── */
   useEffect(() => {
@@ -214,6 +260,33 @@ export function CasterPage() {
       stopStream()
     }
   }, [stopStream])
+
+  /* ── Page navigation blocker ── */
+  const blocker = useBlocker(
+    ({ currentValue, nextLocation }) =>
+      (isLive || uploading) && currentValue.url !== nextLocation.url
+  )
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      const proceed = window.confirm(
+        isLive
+          ? 'Estás transmitiendo en vivo. Si sales de la página, la transmisión se detendrá y se guardará. ¿Seguro que quieres salir?'
+          : 'Se está subiendo la grabación de la transmisión. Si sales ahora, se perderá. ¿Seguro que quieres salir?'
+      )
+      if (proceed) {
+        if (isLive) {
+          handleStopStream().finally(() => {
+            blocker.proceed()
+          })
+        } else {
+          blocker.proceed()
+        }
+      } else {
+        blocker.reset()
+      }
+    }
+  }, [blocker, isLive, uploading, handleStopStream])
 
   /* ── Render guards ── */
   if (authLoading || roomLoading) return <PageLoader />
@@ -341,10 +414,10 @@ export function CasterPage() {
           )}
         </div>
 
-        {/* Media error */}
-        {(mediaError || helpMessage) && (
+        {/* Media / Recorder / Upload errors */}
+        {(mediaError || helpMessage || recorderError || uploadError) && (
           <div className="caster-page__error">
-            {mediaError || helpMessage}
+            {mediaError || helpMessage || recorderError || uploadError}
           </div>
         )}
       </div>

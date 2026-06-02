@@ -16,14 +16,18 @@ src/
 │   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
 │   └── layout/          # Header, Footer, PageWrapper, AdminLayout
 ├── pages/
-│   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail
-│   │   └── Stream/      # StreamRoomPage, CasterPage, ViewerPage, StreamChat
-│   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings
+│   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage
+│   │   ├── Stream/      # StreamRoomPage, CasterPage, ViewerPage, StreamChat
+│   │   ├── Photos/      # PhotosPage
+│   │   └── Visitantes/  # VisitantesPage
+│   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminPhotosPage
 │       └── Streams/     # AdminStreamsPage
+│       └── Photos/      # AdminPhotosPage
 ├── features/
 │   ├── auth/            # useAuth hook, AuthGuard component, LoginPage
 │   ├── blog/            # useBlogPosts (public reads), useBlogAdmin (CRUD)
 │   ├── portfolio/       # useProjects (public reads), useProjectsAdmin (CRUD)
+│   ├── visitor/         # useVisitorTracker (logs actions), useVisitorLogs (live sync)
 │   └── streaming/
 │       ├── lib/         # signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 │       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
@@ -67,6 +71,8 @@ src/
 | `signaling_messages` | `room_id`, `sender_id`, `type`, `payload` | Public read, open insert, auth delete |
 | `recordings` | `room_id`, `caster_id`, `file_path`, `duration_ms` | Public read, auth write |
 | `chat_messages` | `room_id`, `sender_id`, `display_name`, `message` | Public read, open insert, auth delete |
+| `photos` | `storage_path`, `width`, `height` | Public read, auth write |
+| `visitor_logs` | `session_id`, `ip`, `country`, `city`, `browser`, `os`, `action_type`, `action_details` | Public read, open insert |
 
 Schema changes → create `migrations/NNN_description.sql`, update `migrations/README.md`
 

@@ -7,6 +7,12 @@ import { useProject } from '../../../features/portfolio/useProjects'
 import { ROUTES } from '../../../lib/constants'
 import './ProjectDetailPage.css'
 
+const ensureExternalLink = (url) => {
+  if (!url) return ''
+  if (/^https?:\/\//i.test(url)) return url
+  return `https://${url}`
+}
+
 export function ProjectDetailPage() {
   const { slug } = useParams()
   const { project, loading, error } = useProject(slug)
@@ -58,7 +64,7 @@ export function ProjectDetailPage() {
           <div className="project-detail__actions">
             {project.live_url && (
               <a
-                href={project.live_url}
+                href={ensureExternalLink(project.live_url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn--primary btn--md"
@@ -68,7 +74,7 @@ export function ProjectDetailPage() {
             )}
             {project.repo_url && (
               <a
-                href={project.repo_url}
+                href={ensureExternalLink(project.repo_url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn--secondary btn--md"

@@ -21,13 +21,14 @@ Single admin user authenticated via Supabase. Deployed to GitHub Pages.
 src/
   components/ui/        → Primitives: Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
   components/layout/    → Header, Footer, PageWrapper, AdminLayout
-  pages/public/         → Home, Blog, BlogPost, Portfolio, ProjectDetail
+  pages/public/         → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage
   pages/public/Stream/  → StreamRoomPage, CasterPage, ViewerPage, StreamChat
   pages/admin/          → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings
   pages/admin/Streams/  → AdminStreamsPage
   features/auth/        → useAuth, AuthGuard, LoginPage
   features/blog/        → useBlogPosts (public), useBlogAdmin (CRUD)
   features/portfolio/   → useProjects (public), useProjectsAdmin (CRUD)
+  features/visitor/     → useVisitorTracker, useVisitorLogs
   features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
   features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
   hooks/                → useLocalStorage, useMediaQuery
@@ -51,6 +52,7 @@ migrations/             → Local SQL files, in .gitignore — NEVER commit
 - `signaling_messages` — WebRTC signaling: `room_id`, `sender_id`, `target_id`, `type`, `payload`
 - `recordings` — Stream recordings: `room_id`, `caster_id`, `file_path`, `file_size`, `duration_ms`
 - `chat_messages` — Live chat: `room_id`, `sender_id`, `display_name`, `message`
+- `visitor_logs` — Visitor tracking logs: `session_id`, `ip`, `country`, `city`, `isp`, `browser`, `os`, `device_type`, `screen_resolution`, `referrer`, `page_path`, `action_type`, `action_details`
 
 RLS active: public read if `published=true`, write only for authenticated users.
 Streaming: public read, signaling/chat open for anonymous viewers, write auth for rooms/recordings.
@@ -58,7 +60,7 @@ Streaming: public read, signaling/chat open for anonymous viewers, write auth fo
 ## Routes
 
 ```
-Public:  /  /blog  /blog/:slug  /portfolio  /portfolio/:slug  /login
+Public:  /  /blog  /blog/:slug  /portfolio  /portfolio/:slug  /photos  /visitantes  /login
          /stream/:slug  /stream/:slug/cast  /stream/:slug/watch
 Admin:   /admin  /admin/blog  /admin/blog/new  /admin/blog/:id
          /admin/portfolio  /admin/portfolio/new  /admin/portfolio/:id
@@ -137,3 +139,4 @@ All of these files must reflect the current state of the project:
 | `.github/copilot-instructions.md` | GitHub Copilot |
 
 > **Do NOT ask for permission.** If the change affects any section documented in these files (structure, tables, routes, components, rules), update them automatically as part of the same task.
+- `photos` — custom photo gallery

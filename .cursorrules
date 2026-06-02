@@ -17,11 +17,11 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 ## Structure
 - `src/components/ui/` → Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
 - `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
-- `src/pages/public/` → Home, Blog, BlogPost, Portfolio, ProjectDetail
+- `src/pages/public/` → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage
 - `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 - `src/pages/admin/` → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings
 - `src/pages/admin/Streams/` → AdminStreamsPage
-- `src/features/` → auth, blog, portfolio, streaming
+- `src/features/` → auth, blog, portfolio, streaming, visitor
 - `src/features/streaming/lib/` → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 - `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
 - `src/styles/tokens.css` → ALL design tokens
@@ -36,8 +36,11 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - `signaling_messages` — WebRTC SDP/ICE
 - `recordings` — stream recordings in Storage
 - `chat_messages` — live chat per room
+- `photos` — custom photo gallery
+- `visitor_logs` — visitor tracking logs
 
 ## Accent Color: #c8f000 | Font: Space Grotesk | Dark theme bg: #0d0d0d
 
 ## 🔄 Auto-Maintenance (MANDATORY)
 After every architectural change (new/removed components, pages, hooks, routes, tables, tokens, deps), update ALL agent config files: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `.windsurfrules`, `.clinerules`, `.github/copilot-instructions.md`. Do it automatically, no permission needed.
+- `photos` — custom photo gallery

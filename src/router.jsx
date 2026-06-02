@@ -12,7 +12,11 @@ const BlogPage = lazy(() => import('./pages/public/Blog/BlogPage').then(m => ({ 
 const BlogPostPage = lazy(() => import('./pages/public/Blog/BlogPostPage').then(m => ({ default: m.BlogPostPage })))
 const PortfolioPage = lazy(() => import('./pages/public/Portfolio/PortfolioPage').then(m => ({ default: m.PortfolioPage })))
 const ProjectDetailPage = lazy(() => import('./pages/public/Portfolio/ProjectDetailPage').then(m => ({ default: m.ProjectDetailPage })))
+const PhotosPage = lazy(() => import('./pages/public/Photos/PhotosPage').then(m => ({ default: m.PhotosPage })))
+const VisitantesPage = lazy(() => import('./pages/public/Visitantes/VisitantesPage').then(m => ({ default: m.VisitantesPage })))
 const LoginPage = lazy(() => import('./features/auth/LoginPage').then(m => ({ default: m.LoginPage })))
+
+import { useVisitorTracker } from './features/visitor/hooks/useVisitorTracker'
 
 /* ── Streaming pages ── */
 const StreamRoomPage = lazy(() => import('./pages/public/Stream/StreamRoomPage').then(m => ({ default: m.StreamRoomPage })))
@@ -26,9 +30,11 @@ const AdminPortfolioPage = lazy(() => import('./pages/admin/Portfolio/AdminPortf
 const ProjectEditor = lazy(() => import('./pages/admin/Portfolio/ProjectEditor').then(m => ({ default: m.ProjectEditor })))
 const SettingsPage = lazy(() => import('./pages/admin/Settings/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminStreamsPage = lazy(() => import('./pages/admin/Streams/AdminStreamsPage').then(m => ({ default: m.AdminStreamsPage })))
+const AdminPhotosPage = lazy(() => import('./pages/admin/Photos/AdminPhotosPage').then(m => ({ default: m.AdminPhotosPage })))
 
 /* ── Public layout wrapper ── */
 function PublicLayout() {
+  useVisitorTracker()
   return (
     <>
       <Header />
@@ -62,6 +68,8 @@ export const router = createBrowserRouter(
         { path: '/blog/:slug', element: <BlogPostPage /> },
         { path: '/portfolio', element: <PortfolioPage /> },
         { path: '/portfolio/:slug', element: <ProjectDetailPage /> },
+        { path: '/photos', element: <PhotosPage /> },
+        { path: '/visitantes', element: <VisitantesPage /> },
         { path: '/stream/:slug', element: <StreamRoomPage /> },
         { path: '/stream/:slug/cast', element: <CasterPage /> },
         { path: '/stream/:slug/watch', element: <ViewerPage /> },
@@ -90,6 +98,7 @@ export const router = createBrowserRouter(
         { path: 'portfolio/:id', element: <ProjectEditor /> },
         { path: 'settings', element: <SettingsPage /> },
         { path: 'streams', element: <AdminStreamsPage /> },
+        { path: 'photos', element: <AdminPhotosPage /> },
       ],
     },
   ],

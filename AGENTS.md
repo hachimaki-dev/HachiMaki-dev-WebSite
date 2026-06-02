@@ -44,6 +44,8 @@ All values come from `src/styles/tokens.css`:
 - `signaling_messages` — WebRTC SDP/ICE exchange
 - `recordings` — stream recordings in Supabase Storage
 - `chat_messages` — live chat per room
+- `photos` — custom photo gallery
+- `visitor_logs` — visitor activity logs
 
 RLS: public read when `published=true`, writes require authentication.
 Streaming: public read, anonymous signaling/chat, auth for rooms/recordings.
@@ -55,11 +57,15 @@ src/components/ui/             → Reusable primitives (Button, Input, Card, Mod
 src/components/layout/         → Header, Footer, PageWrapper, AdminLayout
 src/pages/public/              → Public pages (Home, Blog, Portfolio)
 src/pages/public/Stream/       → StreamRoomPage, CasterPage, ViewerPage, StreamChat
+src/pages/public/Photos/       → PhotosPage
+src/pages/public/Visitantes/   → VisitantesPage
 src/pages/admin/               → Admin CRUD pages (behind AuthGuard)
 src/pages/admin/Streams/       → AdminStreamsPage
-src/features/{domain}/         → Domain hooks & helpers (auth, blog, portfolio, streaming)
+src/pages/admin/Photos/        → AdminPhotosPage
+src/features/{domain}/         → Domain hooks & helpers (auth, blog, portfolio, streaming, visitor)
 src/features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 src/features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
+src/features/visitor/hooks/    → useVisitorTracker, useVisitorLogs
 src/hooks/                     → Generic hooks (useMediaQuery, useLocalStorage)
 src/utils/                     → Pure functions (formatDate, slugify, truncate)
 ```

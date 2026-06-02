@@ -38,9 +38,10 @@ Deployed to GitHub Pages via GitHub Actions.
 - Stream pages: `src/pages/public/Stream/` (StreamRoomPage, CasterPage, ViewerPage, StreamChat)
 - Admin pages: `src/pages/admin/` (wrapped in `<AuthGuard>`)
 - Admin streams: `src/pages/admin/Streams/` (AdminStreamsPage)
-- Business logic: `src/features/{domain}/` (auth, blog, portfolio, streaming)
+- Business logic: `src/features/{domain}/` (auth, blog, portfolio, streaming, visitor)
 - Streaming lib: `src/features/streaming/lib/` (signalingChannel, peerManager, viewerPeer, etc.)
 - Streaming hooks: `src/features/streaming/hooks/` (useMediaDevices, useRooms, usePresence, usePublicLiveStreams, useChat, etc.)
+- Visitor hooks: `src/features/visitor/hooks/` (useVisitorTracker, useVisitorLogs)
 - Generic hooks: `src/hooks/`
 - Pure utilities: `src/utils/`
 
