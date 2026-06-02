@@ -1,0 +1,35 @@
+# hachimaki-dev — Cline / Roo Code Rules
+
+## Project
+Personal website: React 18 + Vite + CSS native + Supabase.
+Single admin user. Landing + Blog + Portfolio + Admin panel.
+Deploy: GitHub Pages.
+
+## Strict Constraints
+- JS only (no TS)
+- CSS vars from `src/styles/tokens.css` only — no hardcoded values
+- No CSS frameworks
+- Supabase client from `src/lib/supabase.js` only — singleton
+- No localStorage for data
+- Loading + error + empty states always
+- Toast notifications via `useToast()`
+- Migrations in `migrations/NNN.sql` — gitignored
+
+## Key Files
+- `src/styles/tokens.css` — Design tokens (colors, fonts, spacing)
+- `src/lib/supabase.js` — Supabase singleton
+- `src/lib/constants.js` — Routes, tables, config
+- `src/router.jsx` — All routes with lazy loading
+- `src/features/auth/AuthGuard.jsx` — Protects /admin/*
+
+## Naming
+- Components: PascalCase (`BlogCard.jsx`)
+- Hooks: `use` prefix (`useBlogPosts.js`)
+- CSS: kebab-case (`.blog-card__title`)
+- Variables: `--color-accent`, `--space-4`, `--font-sans`
+
+## Tables: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages
+## RLS: public read if published=true, auth write. Streaming: open signaling/chat, auth for rooms/recordings
+
+## 🔄 Auto-Maintenance (MANDATORY)
+After every architectural change (new/removed components, pages, hooks, routes, tables, tokens, deps), update ALL agent config files: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `.windsurfrules`, `.clinerules`, `.github/copilot-instructions.md`. Do it automatically, no permission needed.

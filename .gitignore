@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.local
+
+# Migrations — private schema (NEVER commit)
+migrations/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+._*
+
+# Agent prompts (optional — keep or remove)
+# AGENT_MASTER_PROMPT.md
+# AGENT_SESSION_PROMPT.md

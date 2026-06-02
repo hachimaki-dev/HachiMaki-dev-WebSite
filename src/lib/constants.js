@@ -1,0 +1,59 @@
+/**
+ * constants.js — Global configuration & route constants
+ * hachimaki.dev
+ */
+
+/* ── Public routes ── */
+export const ROUTES = {
+  HOME: '/',
+  BLOG: '/blog',
+  BLOG_POST: '/blog/:slug',
+  PORTFOLIO: '/portfolio',
+  PROJECT: '/portfolio/:slug',
+  LOGIN: '/login',
+
+  /* Streaming routes */
+  STREAM_ROOM: '/stream/:slug',
+  STREAM_CAST: '/stream/:slug/cast',
+
+  /* Admin routes */
+  ADMIN: '/admin',
+  ADMIN_BLOG: '/admin/blog',
+  ADMIN_BLOG_NEW: '/admin/blog/new',
+  ADMIN_BLOG_EDIT: '/admin/blog/:id',
+  ADMIN_PORTFOLIO: '/admin/portfolio',
+  ADMIN_PORTFOLIO_NEW: '/admin/portfolio/new',
+  ADMIN_PORTFOLIO_EDIT: '/admin/portfolio/:id',
+  ADMIN_SETTINGS: '/admin/settings',
+  ADMIN_STREAMS: '/admin/streams',
+}
+
+/* ── Supabase tables ── */
+export const TABLES = {
+  PROFILES: 'profiles',
+  BLOG_POSTS: 'blog_posts',
+  PROJECTS: 'projects',
+  ROOMS: 'rooms',
+  ROOM_MEMBERS: 'room_members',
+  STREAM_STATE: 'stream_state',
+  SIGNALING: 'signaling_messages',
+  RECORDINGS: 'recordings',
+  CHAT_MESSAGES: 'chat_messages',
+}
+
+/* ── Site metadata ── */
+export const SITE = {
+  NAME: 'hachimaki.dev',
+  TITLE: 'hachimaki.dev — Developer & Creator',
+  DESCRIPTION: 'Personal website, blog, and portfolio.',
+  URL: 'https://hachimaki-dev.github.io/hachimaki-dev',
+}
+
+/* ── Pagination ── */
+export const PAGINATION = {
+  BLOG_PAGE_SIZE: 10,
+  PORTFOLIO_PAGE_SIZE: 12,
+}
+
+/* ── Content ── */
+export const MAX_EXCERPT_LENGTH = 160

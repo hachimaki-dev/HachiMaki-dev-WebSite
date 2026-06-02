@@ -1,0 +1,130 @@
+/* ============================================
+   tokens.css — Design System Custom Properties
+   hachimaki.dev
+   ============================================ */
+
+:root {
+  /* ── Colores — Surveillance / Outsider palette ── */
+  --color-bg:          #0c0c10;
+  --color-bg-alt:      #101015;
+  --color-surface:     #16161d;
+  --color-surface-hover: #1e1e28;
+  --color-border:      #26262f;
+  --color-border-hover: #36363f;
+  --color-text:        #d8d8e0;
+  --color-text-muted:  #8888a0;
+  --color-text-dim:    #505068;
+  --color-accent:      #8b5cf6;
+  --color-accent-hover: #a78bfa;
+  --color-accent-dim:  #6d44d8;
+  --color-accent-bg:   rgba(139, 92, 246, 0.08);
+  --color-accent-bg-hover: rgba(139, 92, 246, 0.14);
+  --color-rec:         #c83030;
+  --color-danger:      #e04040;
+  --color-danger-dim:  #b03030;
+  --color-danger-bg:   rgba(224, 64, 64, 0.1);
+  --color-success:     #34d399;
+  --color-success-dim: #2ab880;
+  --color-success-bg:  rgba(52, 211, 153, 0.1);
+  --color-warning:     #f59e0b;
+  --color-warning-bg:  rgba(245, 158, 11, 0.1);
+  --color-info:        #60a5fa;
+  --color-info-bg:     rgba(96, 165, 250, 0.1);
+
+  /* ── Streaming ── */
+  --color-live:        #ef4444;
+  --color-live-glow:   rgba(239, 68, 68, 0.3);
+  --color-live-bg:     rgba(239, 68, 68, 0.12);
+  --color-offline:     var(--color-text-dim);
+  --color-viewer:      var(--color-info);
+
+  /* ── Overlay ── */
+  --color-overlay:     rgba(0, 0, 0, 0.7);
+  --color-glass:       rgba(22, 22, 29, 0.88);
+  --color-glass-border: rgba(139, 92, 246, 0.08);
+
+  /* ── Tipografía ── */
+  --font-sans:   'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
+
+  --font-size-xs:   0.75rem;   /* 12px */
+  --font-size-sm:   0.875rem;  /* 14px */
+  --font-size-md:   1rem;      /* 16px */
+  --font-size-lg:   1.125rem;  /* 18px */
+  --font-size-xl:   1.25rem;   /* 20px */
+  --font-size-2xl:  1.5rem;    /* 24px */
+  --font-size-3xl:  2rem;      /* 32px */
+  --font-size-4xl:  2.5rem;    /* 40px */
+  --font-size-5xl:  3.5rem;    /* 56px */
+
+  --font-weight-normal:  400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  --line-height-tight:   1.2;
+  --line-height-normal:  1.5;
+  --line-height-relaxed: 1.7;
+
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  /* ── Espaciado (escala 4px) ── */
+  --space-1:   0.25rem;   /* 4px */
+  --space-2:   0.5rem;    /* 8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+  --space-24:  6rem;      /* 96px */
+  --space-32:  8rem;      /* 128px */
+
+  /* ── Radios ── */
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── Sombras ── */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-xl:  0 16px 48px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.15);
+  --shadow-glow-strong: 0 0 40px rgba(139, 92, 246, 0.25);
+
+  /* ── Transiciones ── */
+  --transition-fast:     150ms ease;
+  --transition-normal:   250ms ease;
+  --transition-slow:     400ms ease;
+  --transition-bounce:   500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-spring:   600ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Layout ── */
+  --max-width-content:   720px;
+  --max-width-wide:      1200px;
+  --max-width-full:      1440px;
+  --header-height:       64px;
+  --sidebar-width:       260px;
+  --sidebar-width-collapsed: 72px;
+
+  /* ── Z-index ── */
+  --z-dropdown:  100;
+  --z-sticky:    200;
+  --z-fixed:     300;
+  --z-overlay:   400;
+  --z-modal:     500;
+  --z-toast:     600;
+  --z-tooltip:   700;
+}

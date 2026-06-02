@@ -1,0 +1,13 @@
+# Aider configuration — hachimaki-dev
+# https://aider.chat/docs/config/aider_conf.html
+
+# Read these files at startup for project context
+read:
+  - CLAUDE.md
+
+# Lint command
+lint-cmd: npm run build
+
+# Auto-commit messages
+auto-commits: true
+attribute-author: false

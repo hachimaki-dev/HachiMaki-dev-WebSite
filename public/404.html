@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // GitHub Pages SPA redirect
+      // Redirects all 404s to index.html for client-side routing
+      const path = window.location.pathname
+      const repo = '/hachimaki-dev'
+      if (path.startsWith(repo)) {
+        const route = path.slice(repo.length) || '/'
+        window.location.replace(repo + '/?route=' + encodeURIComponent(route))
+      }
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -1,0 +1,106 @@
+/* ============================================
+   ProjectDetailPage.css
+   ============================================ */
+
+.project-detail__back {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-8);
+  transition: color var(--transition-fast);
+}
+
+.project-detail__back:hover {
+  color: var(--color-accent);
+}
+
+.project-detail__header {
+  margin-bottom: var(--space-10);
+  max-width: var(--max-width-content);
+}
+
+.project-detail__title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
+}
+
+.project-detail__description {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-6);
+}
+
+.project-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.project-detail__actions {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.project-detail__cover {
+  margin-bottom: var(--space-10);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.project-detail__cover img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* ── Prose (reuse blog prose styles) ── */
+.project-detail__content.prose {
+  max-width: var(--max-width-content);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-muted);
+}
+
+.project-detail__content.prose h2 {
+  font-size: var(--font-size-2xl);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.project-detail__content.prose h3 {
+  font-size: var(--font-size-xl);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+  color: var(--color-text);
+}
+
+.project-detail__content.prose p {
+  margin-bottom: var(--space-6);
+  color: var(--color-text-muted);
+}
+
+.project-detail__content.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Footer ── */
+.project-detail__footer {
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 640px) {
+  .project-detail__title {
+    font-size: var(--font-size-2xl);
+  }
+}

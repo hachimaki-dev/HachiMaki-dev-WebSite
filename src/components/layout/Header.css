@@ -1,0 +1,180 @@
+/* ============================================
+   Header.css — Cassette Deck navigation
+   ============================================ */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  gap: var(--space-8);
+}
+
+/* ── Logo — tape marker ── */
+.header__logo {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent);
+  text-decoration: none;
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+.header__logo-mark {
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.header__logo:hover .header__logo-mark {
+  opacity: 1;
+}
+
+/* ── Nav links ── */
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.header__link {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid transparent;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.header__link:hover {
+  color: var(--color-text);
+}
+
+.header__link--active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* ── VHS indicator ── */
+.header__vhs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.header__rec {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.header__rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-rec);
+  display: inline-block;
+}
+
+.header__time {
+  color: var(--color-text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Burger ── */
+.header__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.header__burger span {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-text);
+  transition:
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.header__burger--open span:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 4px);
+}
+.header__burger--open span:nth-child(2) {
+  opacity: 0;
+}
+.header__burger--open span:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -4px);
+}
+
+/* ── Mobile nav ── */
+.header__mobile-nav {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;
+  background-color: var(--color-bg);
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header__mobile-nav nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.header__mobile-link {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+}
+
+.header__mobile-link:hover,
+.header__mobile-link--active {
+  color: var(--color-accent);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .header__nav {
+    display: none;
+  }
+
+  .header__vhs {
+    display: none;
+  }
+
+  .header__burger {
+    display: flex;
+  }
+}

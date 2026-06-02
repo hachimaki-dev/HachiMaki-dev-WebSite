@@ -1,0 +1,43 @@
+# hachimaki-dev — Cursor Rules
+
+## Project
+Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub Pages deploy.
+
+## Critical Rules
+- JavaScript ONLY — no TypeScript (.ts/.tsx)
+- CSS variables ONLY from `src/styles/tokens.css` — never hardcode colors/sizes/fonts
+- NO CSS frameworks (Tailwind, Bootstrap, etc.)
+- Import Supabase client from `src/lib/supabase.js` ONLY — never create new instances
+- NO localStorage for business data — only Supabase
+- Handle loading + error + empty states in every async component
+- Use `useToast()` for user feedback
+- Migrations go in `migrations/NNN_desc.sql` (local, gitignored)
+- kebab-case CSS classes, PascalCase components, camelCase hooks/utils
+
+## Structure
+- `src/components/ui/` → Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge
+- `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
+- `src/pages/public/` → Home, Blog, BlogPost, Portfolio, ProjectDetail
+- `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat
+- `src/pages/admin/` → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings
+- `src/pages/admin/Streams/` → AdminStreamsPage
+- `src/features/` → auth, blog, portfolio, streaming
+- `src/features/streaming/lib/` → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
+- `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, useRecordingUpload, useChat
+- `src/styles/tokens.css` → ALL design tokens
+
+## DB Tables
+- `profiles` — admin profile (1 row)
+- `blog_posts` — slug, title, content, published, published_at
+- `projects` — slug, title, tags[], featured, published, sort_order
+- `rooms` — streaming rooms: slug, caster_id, status
+- `room_members` — presence per room
+- `stream_state` — is_live, viewer_count
+- `signaling_messages` — WebRTC SDP/ICE
+- `recordings` — stream recordings in Storage
+- `chat_messages` — live chat per room
+
+## Accent Color: #c8f000 | Font: Space Grotesk | Dark theme bg: #0d0d0d
+
+## 🔄 Auto-Maintenance (MANDATORY)
+After every architectural change (new/removed components, pages, hooks, routes, tables, tokens, deps), update ALL agent config files: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `.windsurfrules`, `.clinerules`, `.github/copilot-instructions.md`. Do it automatically, no permission needed.

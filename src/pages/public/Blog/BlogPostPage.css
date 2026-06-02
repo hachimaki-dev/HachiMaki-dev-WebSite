@@ -1,0 +1,118 @@
+/* ============================================
+   BlogPostPage.css
+   ============================================ */
+
+.blog-post__back {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-8);
+  transition: color var(--transition-fast);
+}
+
+.blog-post__back:hover {
+  color: var(--color-accent);
+}
+
+.blog-post__header {
+  margin-bottom: var(--space-8);
+}
+
+.blog-post__date {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+  margin-bottom: var(--space-4);
+}
+
+.blog-post__title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-4);
+}
+
+.blog-post__excerpt {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-relaxed);
+}
+
+.blog-post__cover {
+  margin-bottom: var(--space-10);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.blog-post__cover img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* ── Prose (content) ── */
+.blog-post__content.prose {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-muted);
+}
+
+.blog-post__content.prose h2 {
+  font-size: var(--font-size-2xl);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.blog-post__content.prose h3 {
+  font-size: var(--font-size-xl);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+  color: var(--color-text);
+}
+
+.blog-post__content.prose p {
+  margin-bottom: var(--space-6);
+  color: var(--color-text-muted);
+}
+
+.blog-post__content.prose ul,
+.blog-post__content.prose ol {
+  margin-bottom: var(--space-6);
+  padding-left: var(--space-6);
+}
+
+.blog-post__content.prose li {
+  margin-bottom: var(--space-2);
+}
+
+.blog-post__content.prose img {
+  margin: var(--space-8) 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.blog-post__content.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.blog-post__content.prose blockquote {
+  margin: var(--space-6) 0;
+}
+
+/* ── Footer ── */
+.blog-post__footer {
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 640px) {
+  .blog-post__title {
+    font-size: var(--font-size-2xl);
+  }
+}

@@ -1,0 +1,129 @@
+/* ============================================
+   BlogEditor.css
+   ============================================ */
+
+.blog-editor__header {
+  margin-bottom: var(--space-8);
+}
+
+.blog-editor__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.blog-editor__form {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.blog-editor__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.blog-editor__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  position: sticky;
+  top: var(--space-8);
+}
+
+.blog-editor__section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.blog-editor__section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  margin-bottom: var(--space-4);
+}
+
+/* ── Toggle ── */
+.blog-editor__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.blog-editor__toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.blog-editor__toggle-slider {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.blog-editor__toggle-slider::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-text);
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+}
+
+.blog-editor__toggle input:checked + .blog-editor__toggle-slider {
+  background-color: var(--color-accent);
+}
+
+.blog-editor__toggle input:checked + .blog-editor__toggle-slider::after {
+  transform: translateX(18px);
+  background-color: var(--color-bg);
+}
+
+/* ── Preview ── */
+.blog-editor__preview-img {
+  margin-top: var(--space-3);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.blog-editor__preview-img img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* ── Actions ── */
+.blog-editor__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .blog-editor__form {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-editor__sidebar {
+    position: static;
+  }
+}

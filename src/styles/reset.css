@@ -1,0 +1,114 @@
+/* ============================================
+   reset.css — Modern CSS Reset
+   hachimaki.dev
+   ============================================ */
+
+/* Box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent font-size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  scroll-behavior: smooth;
+}
+
+/* Core body defaults */
+body {
+  min-height: 100vh;
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Remove list styles */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Anchor defaults */
+a {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+  text-decoration: none;
+}
+
+/* Media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Inherit fonts */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Text overflow */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Remove button styles */
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* Table defaults */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Remove default textarea resize */
+textarea {
+  resize: vertical;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Remove focus for non-keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* React root */
+#root {
+  isolation: isolate;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,191 @@
+/* ============================================
+   StreamChat.css — Live chat panel styles
+   ============================================ */
+
+.stream-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.stream-chat__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.stream-chat__title {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.stream-chat__count {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-dim);
+}
+
+/* ── Messages area ── */
+.stream-chat__messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 0;
+  scroll-behavior: smooth;
+}
+
+.stream-chat__messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.stream-chat__messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.stream-chat__messages::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+/* ── Message ── */
+.stream-chat__message {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+  position: relative;
+  group: message;
+}
+
+.stream-chat__message:hover {
+  background: var(--color-surface-hover);
+}
+
+.stream-chat__message-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.stream-chat__sender {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent);
+}
+
+.stream-chat__sender--caster {
+  color: var(--color-live);
+}
+
+.stream-chat__time {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-text-dim);
+}
+
+.stream-chat__text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+  word-break: break-word;
+}
+
+.stream-chat__delete {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  display: none;
+  padding: 2px 6px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.stream-chat__message:hover .stream-chat__delete {
+  display: block;
+}
+
+.stream-chat__delete:hover {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+/* ── Empty state ── */
+.stream-chat__empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+/* ── Input area ── */
+.stream-chat__input-area {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.stream-chat__input {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.stream-chat__input::placeholder {
+  color: var(--color-text-dim);
+}
+
+.stream-chat__input:focus {
+  border-color: var(--color-accent);
+}
+
+.stream-chat__send {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.stream-chat__send:hover {
+  background: var(--color-accent-hover);
+}
+
+.stream-chat__send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

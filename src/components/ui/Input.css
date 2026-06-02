@@ -1,0 +1,67 @@
+/* ============================================
+   Input.css
+   ============================================ */
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.input-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.input-field {
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  outline: none;
+  width: 100%;
+}
+
+.input-field::placeholder {
+  color: var(--color-text-dim);
+}
+
+.input-field:hover {
+  border-color: var(--color-border-hover);
+}
+
+.input-field:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-bg);
+}
+
+.input-field--textarea {
+  min-height: 120px;
+  line-height: var(--line-height-relaxed);
+  resize: vertical;
+}
+
+/* ── Error state ── */
+.input-group--error .input-field {
+  border-color: var(--color-danger);
+}
+
+.input-group--error .input-field:focus {
+  box-shadow: 0 0 0 3px var(--color-danger-bg);
+}
+
+.input-error {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.input-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

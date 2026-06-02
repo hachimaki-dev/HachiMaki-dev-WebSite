@@ -1,0 +1,226 @@
+/* ============================================
+   ViewerPage.css — Stream viewer styles
+   ============================================ */
+
+.viewer-page {
+  min-height: calc(100vh - var(--header-height));
+  background: var(--color-bg);
+  color: var(--color-text);
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+/* ── Top bar ── */
+.viewer-page__topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.viewer-page__title {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.viewer-page__badges {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.viewer-page__live-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-live);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 12px var(--color-live-glow);
+}
+
+.viewer-page__live-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: var(--radius-full);
+  animation: rec-blink 1.2s step-end infinite;
+}
+
+.viewer-page__stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.viewer-page__stat--viewers {
+  color: var(--color-viewer);
+}
+
+/* ── Video area ── */
+.viewer-page__video-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.viewer-page__video-wrapper {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.viewer-page__video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  border-radius: var(--radius-lg);
+}
+
+.viewer-page__video-wrapper:fullscreen {
+  border-radius: 0;
+}
+
+.viewer-page__video-wrapper:fullscreen .viewer-page__video {
+  border-radius: 0;
+}
+
+/* ── Fullscreen toggle ── */
+.viewer-page__fullscreen-btn {
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  padding: var(--space-2);
+  background: var(--color-glass);
+  backdrop-filter: blur(8px);
+  color: var(--color-text);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 10;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.viewer-page__video-wrapper:hover .viewer-page__fullscreen-btn {
+  opacity: 1;
+}
+
+.viewer-page__fullscreen-btn:hover {
+  background: var(--color-surface);
+  border-color: var(--color-accent);
+}
+
+/* ── Status overlays ── */
+.viewer-page__status-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-lg);
+  z-index: 5;
+}
+
+.viewer-page__status-icon {
+  font-size: 3rem;
+}
+
+.viewer-page__status-text {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.viewer-page__status-subtext {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+}
+
+/* ── Connecting spinner ── */
+.viewer-page__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+/* ── Reconnecting pulse ── */
+.viewer-page__reconnecting {
+  color: var(--color-warning);
+}
+
+/* ── Sidebar (chat) ── */
+.viewer-page__sidebar {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 400px;
+}
+
+/* ── Connection quality ── */
+.viewer-page__quality {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-glass);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-dim);
+  border: 1px solid var(--color-glass-border);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .viewer-page {
+    grid-template-columns: 1fr;
+  }
+
+  .viewer-page__sidebar {
+    max-height: 300px;
+  }
+}

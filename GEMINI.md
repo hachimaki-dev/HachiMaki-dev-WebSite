@@ -1,0 +1,105 @@
+# GEMINI.md — Project context for Gemini CLI
+
+## Project Overview
+
+**hachimaki-dev** — Personal website for a single admin user.
+Includes: landing page, blog, portfolio, and private admin panel.
+
+**Stack:** React 18 + Vite + CSS nativo (Custom Properties) + Supabase (Auth + PostgreSQL)
+**Deploy:** GitHub Pages via GitHub Actions
+
+## Architecture
+
+```
+src/
+├── components/
+│   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge
+│   └── layout/          # Header, Footer, PageWrapper, AdminLayout
+├── pages/
+│   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail
+│   │   └── Stream/      # StreamRoomPage, CasterPage, ViewerPage, StreamChat
+│   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings
+│       └── Streams/     # AdminStreamsPage
+├── features/
+│   ├── auth/            # useAuth hook, AuthGuard component, LoginPage
+│   ├── blog/            # useBlogPosts (public reads), useBlogAdmin (CRUD)
+│   ├── portfolio/       # useProjects (public reads), useProjectsAdmin (CRUD)
+│   └── streaming/
+│       ├── lib/         # signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
+│       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, useRecordingUpload, useChat
+├── hooks/               # useLocalStorage, useMediaQuery
+├── utils/               # formatDate, slugify, truncate
+├── lib/
+│   ├── supabase.js      # Singleton client — ALWAYS import from here
+│   └── constants.js     # Routes, table names, config
+├── styles/
+│   ├── tokens.css       # ALL design tokens (colors, typography, spacing, etc.)
+│   ├── reset.css        # Modern CSS reset
+│   ├── global.css       # Base styles + imports
+│   └── animations.css   # Keyframes + utility animation classes
+├── router.jsx           # React Router v6 — lazy loaded pages
+└── main.jsx             # Entry point
+```
+
+## Strict Rules
+
+1. **JavaScript only** — No TypeScript files (`.ts`, `.tsx`)
+2. **CSS variables only** — All visual values from `src/styles/tokens.css`, never hardcoded
+3. **No CSS frameworks** — No Tailwind, Bootstrap, Chakra, etc.
+4. **Single Supabase instance** — Import from `src/lib/supabase.js` only
+5. **No localStorage for data** — Only Supabase for business data
+6. **Handle all states** — Loading, error, and empty states in every async component
+7. **Toast for feedback** — Use `useToast()` from `src/components/ui/Toast.jsx`
+8. **Migrations are local** — `migrations/` is in `.gitignore`, never commit
+9. **No `console.log`** — Remove debug logs before finishing
+10. **No `!important`** — If needed, it's an architectural problem
+
+## Database (Supabase)
+
+| Table | Key Fields | RLS |
+|---|---|---|
+| `profiles` | `display_name`, `bio`, `avatar_url` | Public read, auth write |
+| `blog_posts` | `slug`, `title`, `content`, `published`, `published_at` | Published = public read, auth write |
+| `projects` | `slug`, `title`, `tags[]`, `featured`, `published`, `sort_order` | Published = public read, auth write |
+| `rooms` | `slug`, `title`, `caster_id`, `status` | Public read, auth write |
+| `room_members` | `room_id`, `user_id`, `role` | Public read, open insert |
+| `stream_state` | `room_id`, `is_live`, `viewer_count` | Public read, auth write |
+| `signaling_messages` | `room_id`, `sender_id`, `type`, `payload` | Public read, open insert, auth delete |
+| `recordings` | `room_id`, `caster_id`, `file_path`, `duration_ms` | Public read, auth write |
+| `chat_messages` | `room_id`, `sender_id`, `display_name`, `message` | Public read, open insert, auth delete |
+
+Schema changes → create `migrations/NNN_description.sql`, update `migrations/README.md`
+
+## Naming Conventions
+
+| Type | Convention | Example |
+|---|---|---|
+| Components | PascalCase | `BlogCard.jsx` |
+| Hooks | camelCase with `use` | `useBlogPosts.js` |
+| Utils | camelCase | `formatDate.js` |
+| CSS classes | kebab-case | `.blog-card__title` |
+| CSS variables | `--prefix-name` | `--color-accent` |
+| SQL migrations | `NNN_description` | `001_init_schema.sql` |
+
+## Environment
+
+```bash
+VITE_SUPABASE_URL=https://xxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ...
+```
+
+## Build & Dev
+
+```bash
+npm run dev      # Start development server
+npm run build    # Production build (must complete with 0 errors)
+npm run preview  # Preview production build locally
+```
+
+## 🔄 Auto-Maintenance (MANDATORY)
+
+After every change that modifies the project architecture (new/renamed/removed components, pages, hooks, routes, tables, tokens, or dependencies), you MUST update ALL agent config files to keep them in sync:
+
+`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `.windsurfrules`, `.clinerules`, `.github/copilot-instructions.md`
+
+Do this automatically as part of the same task. Do not ask for permission.
