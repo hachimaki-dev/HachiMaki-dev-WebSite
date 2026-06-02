@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PageWrapper } from '../../../components/layout/PageWrapper'
 import { useBlogPosts } from '../../../features/blog/useBlogPosts'
+import { usePublicLiveStreams } from '../../../features/streaming/hooks/usePublicLiveStreams'
 import { formatDate } from '../../../utils/formatDate'
 import { ROUTES } from '../../../lib/constants'
 import './HomePage.css'
 
 export function HomePage() {
   const { posts: latestPosts, loading: postsLoading } = useBlogPosts()
+  const { stories, loading: streamsLoading } = usePublicLiveStreams()
 
   /* Live clock */
   const [time, setTime] = useState(new Date())
@@ -74,19 +76,42 @@ export function HomePage() {
 
         {/* ── Center: Main content — News/Blog feed ── */}
         <main className="outsider__main">
-          {/* Compact header bar */}
-          <div className="outsider__feed-header">
-            <div className="outsider__feed-header-left">
-              <span className="outsider__signal-label">SIGNAL INTERCEPT</span>
-              <h1 className="outsider__feed-title">
-                TRANSMISIONES
-                <span className="outsider__badge-active">EN VIVO</span>
-              </h1>
+          {/* Unified Transmissions Panel */}
+          <div className="outsider__feed-header outsider__feed-header--unified">
+            <div className="outsider__feed-header-top">
+              <div className="outsider__feed-header-left">
+                <h1 className="outsider__feed-title">
+                  TRANSMISIONES
+                  <span className="outsider__badge-active">EN VIVO</span>
+                </h1>
+              </div>
             </div>
-            <div className="outsider__feed-header-right">
-              <span className="outsider__tracking-label">FRECUENCIA</span>
-              <span className="outsider__tracking-id">7.48 GHZ</span>
-            </div>
+
+            {/* Stories row (Active Streams & VODs) */}
+            {!streamsLoading && stories && stories.length > 0 && (
+              <div className="outsider__stories">
+                {stories.map((story) => (
+                  <Link
+                    key={story.id}
+                    to={story.link}
+                    target={story.type === 'vod' ? '_blank' : undefined}
+                    rel={story.type === 'vod' ? 'noopener noreferrer' : undefined}
+                    className={`outsider__story outsider__story--${story.type}`}
+                  >
+                    <div className="outsider__story-ring">
+                      <div className="outsider__story-avatar-wrap">
+                        <img src={story.avatar} alt="Avatar" className="outsider__story-avatar" />
+                        {story.type === 'vod' && (
+                          <div className="outsider__story-vod-icon">▶</div>
+                        )}
+                        <div className="vhs-case__worn-edges"></div>
+                      </div>
+                    </div>
+                    <span className="outsider__story-title">{story.title}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Blog feed */}

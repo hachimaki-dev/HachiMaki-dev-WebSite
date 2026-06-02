@@ -37,7 +37,8 @@ All values come from `src/styles/tokens.css`:
 - `profiles` — single admin profile row
 - `blog_posts` — blog with slug, title, content, published flag
 - `projects` — portfolio with slug, tags[], featured, sort_order
-- `rooms` — streaming rooms with slug, caster_id, status
+- `rooms` — streaming rooms with slug, caster_id, status, is_private
+- `room_passwords` — secures passwords for private rooms
 - `room_members` — presence tracking per room
 - `stream_state` — live status + viewer count
 - `signaling_messages` — WebRTC SDP/ICE exchange
@@ -58,7 +59,7 @@ src/pages/admin/               → Admin CRUD pages (behind AuthGuard)
 src/pages/admin/Streams/       → AdminStreamsPage
 src/features/{domain}/         → Domain hooks & helpers (auth, blog, portfolio, streaming)
 src/features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-src/features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, useRecordingUpload, useChat
+src/features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
 src/hooks/                     → Generic hooks (useMediaQuery, useLocalStorage)
 src/utils/                     → Pure functions (formatDate, slugify, truncate)
 ```

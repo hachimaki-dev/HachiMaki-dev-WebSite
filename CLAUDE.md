@@ -19,7 +19,7 @@ Single admin user authenticated via Supabase. Deployed to GitHub Pages.
 
 ```
 src/
-  components/ui/        → Primitives: Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge
+  components/ui/        → Primitives: Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
   components/layout/    → Header, Footer, PageWrapper, AdminLayout
   pages/public/         → Home, Blog, BlogPost, Portfolio, ProjectDetail
   pages/public/Stream/  → StreamRoomPage, CasterPage, ViewerPage, StreamChat
@@ -29,7 +29,7 @@ src/
   features/blog/        → useBlogPosts (public), useBlogAdmin (CRUD)
   features/portfolio/   → useProjects (public), useProjectsAdmin (CRUD)
   features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-  features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, useRecordingUpload, useChat
+  features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
   hooks/                → useLocalStorage, useMediaQuery
   utils/                → formatDate, slugify, truncate
   lib/supabase.js       → Supabase client singleton — NEVER create new instances

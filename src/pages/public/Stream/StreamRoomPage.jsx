@@ -12,6 +12,7 @@ import { useRooms } from '../../../features/streaming/hooks/useRooms'
 import { usePresence } from '../../../features/streaming/hooks/usePresence'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
+import { supabase } from '../../../lib/supabase'
 import './StreamRoomPage.css'
 
 export function StreamRoomPage() {
@@ -21,6 +22,11 @@ export function StreamRoomPage() {
 
   const [room, setRoom] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [passwordPrompt, setPasswordPrompt] = useState(false)
+  const [password, setPassword] = useState('')
+  const [authError, setAuthError] = useState('')
+  const [checkingPassword, setCheckingPassword] = useState(false)
+
   const { getRoomBySlug } = useRooms()
   const { viewerCount } = usePresence(room?.id, 'viewer')
 
@@ -78,7 +84,13 @@ export function StreamRoomPage() {
           {isLive && (
             <button
               className="stream-room__btn stream-room__btn--watch"
-              onClick={() => navigate(`/stream/${slug}/watch`)}
+              onClick={() => {
+                if (room.is_private && !isCaster && !sessionStorage.getItem(`room_auth_${room.id}`)) {
+                  setPasswordPrompt(true)
+                } else {
+                  navigate(`/stream/${slug}/watch`)
+                }
+              }}
             >
               ▶ Ver Stream
             </button>
@@ -111,6 +123,46 @@ export function StreamRoomPage() {
           )}
         </div>
       </div>
+
+      {/* Password Modal */}
+      {passwordPrompt && (
+        <div className="stream-room__modal-overlay">
+          <div className="stream-room__modal">
+            <h2>Sala Privada</h2>
+            <p>Ingresa la contraseña para acceder a la transmisión.</p>
+            <form onSubmit={async (e) => {
+              e.preventDefault()
+              setCheckingPassword(true)
+              setAuthError('')
+              const { data, error } = await supabase.rpc('verify_room_password', { p_slug: slug, p_password: password })
+              setCheckingPassword(false)
+              if (error || !data) {
+                setAuthError('Contraseña incorrecta.')
+              } else {
+                sessionStorage.setItem(`room_auth_${room.id}`, '1')
+                setPasswordPrompt(false)
+                navigate(`/stream/${slug}/watch`)
+              }
+            }}>
+              <input
+                type="password"
+                className="stream-room__input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Contraseña..."
+                autoFocus
+              />
+              {authError && <div className="stream-room__error">{authError}</div>}
+              <div className="stream-room__modal-actions">
+                <button type="button" className="stream-room__btn stream-room__btn--secondary" onClick={() => setPasswordPrompt(false)}>Cancelar</button>
+                <button type="submit" className="stream-room__btn stream-room__btn--watch" disabled={checkingPassword}>
+                  {checkingPassword ? 'Verificando...' : 'Entrar'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

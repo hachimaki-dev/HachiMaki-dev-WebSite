@@ -13,7 +13,7 @@ Includes: landing page, blog, portfolio, and private admin panel.
 ```
 src/
 ├── components/
-│   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge
+│   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
 │   └── layout/          # Header, Footer, PageWrapper, AdminLayout
 ├── pages/
 │   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail
@@ -26,7 +26,7 @@ src/
 │   ├── portfolio/       # useProjects (public reads), useProjectsAdmin (CRUD)
 │   └── streaming/
 │       ├── lib/         # signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-│       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, useRecordingUpload, useChat
+│       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
 ├── hooks/               # useLocalStorage, useMediaQuery
 ├── utils/               # formatDate, slugify, truncate
 ├── lib/
@@ -61,7 +61,7 @@ src/
 | `profiles` | `display_name`, `bio`, `avatar_url` | Public read, auth write |
 | `blog_posts` | `slug`, `title`, `content`, `published`, `published_at` | Published = public read, auth write |
 | `projects` | `slug`, `title`, `tags[]`, `featured`, `published`, `sort_order` | Published = public read, auth write |
-| `rooms` | `slug`, `title`, `caster_id`, `status` | Public read, auth write |
+| `rooms` | `slug`, `title`, `caster_id`, `status`, `is_private` | Public read, auth write |
 | `room_members` | `room_id`, `user_id`, `role` | Public read, open insert |
 | `stream_state` | `room_id`, `is_live`, `viewer_count` | Public read, auth write |
 | `signaling_messages` | `room_id`, `sender_id`, `type`, `payload` | Public read, open insert, auth delete |

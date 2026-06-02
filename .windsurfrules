@@ -15,13 +15,13 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - kebab-case CSS classes, PascalCase components, camelCase hooks/utils
 
 ## Structure
-- `src/components/ui/` → Primitives (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge)
+- `src/components/ui/` → Primitives (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown)
 - `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
 - `src/pages/public/` → Public pages | `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 - `src/pages/admin/` → Admin CRUD pages (behind AuthGuard) | `src/pages/admin/Streams/` → AdminStreamsPage
 - `src/features/` → Domain logic (auth, blog, portfolio, streaming)
 - `src/features/streaming/lib/` → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-- `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, useRecordingUpload, useChat
+- `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
 - `src/styles/tokens.css` → ALL design tokens — ALWAYS use these
 
 ## DB: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages (Supabase PostgreSQL + RLS)

@@ -40,7 +40,7 @@ Deployed to GitHub Pages via GitHub Actions.
 - Admin streams: `src/pages/admin/Streams/` (AdminStreamsPage)
 - Business logic: `src/features/{domain}/` (auth, blog, portfolio, streaming)
 - Streaming lib: `src/features/streaming/lib/` (signalingChannel, peerManager, viewerPeer, etc.)
-- Streaming hooks: `src/features/streaming/hooks/` (useMediaDevices, useRooms, usePresence, useChat, etc.)
+- Streaming hooks: `src/features/streaming/hooks/` (useMediaDevices, useRooms, usePresence, usePublicLiveStreams, useChat, etc.)
 - Generic hooks: `src/hooks/`
 - Pure utilities: `src/utils/`
 

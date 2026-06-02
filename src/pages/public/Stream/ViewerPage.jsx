@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useRooms } from '../../../features/streaming/hooks/useRooms'
 import { usePresence } from '../../../features/streaming/hooks/usePresence'
 import { useChat } from '../../../features/streaming/hooks/useChat'
@@ -27,6 +27,7 @@ const log = createStreamLogger('ViewerPage')
 
 export function ViewerPage() {
   const { slug } = useParams()
+  const navigate = useNavigate()
 
   /* State */
   const [room, setRoom] = useState(null)
@@ -58,6 +59,11 @@ export function ViewerPage() {
         setRoom(r)
         setViewerState('offline')
       } else {
+        // Auth check for private rooms
+        if (r.is_private && !sessionStorage.getItem(`room_auth_${r.id}`)) {
+          navigate(`/stream/${r.slug}`)
+          return
+        }
         setRoom(r)
         setViewerState('connecting')
       }

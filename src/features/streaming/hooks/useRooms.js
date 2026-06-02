@@ -62,9 +62,10 @@ export function useRooms() {
   /**
    * Create a new room
    * @param {string} title
+   * @param {string} [password]
    * @returns {Promise<Object|null>}
    */
-  const createRoom = useCallback(async (title) => {
+  const createRoom = useCallback(async (title, password = '') => {
     setError(null)
 
     const { data: { user } } = await supabase.auth.getUser()
@@ -75,9 +76,11 @@ export function useRooms() {
 
     const slug = generateSlug(title)
 
+    const is_private = Boolean(password && password.trim())
+
     const { data: room, error: insertError } = await supabase
       .from(TABLES.ROOMS)
-      .insert({ title, slug, caster_id: user.id })
+      .insert({ title, slug, caster_id: user.id, is_private })
       .select()
       .single()
 
@@ -85,6 +88,21 @@ export function useRooms() {
       log.error('Failed to create room:', insertError.message)
       setError(insertError.message)
       return null
+    }
+
+    /* Create password entry if private */
+    if (is_private) {
+      const { error: pwdError } = await supabase
+        .from('room_passwords')
+        .insert({ room_id: room.id, password: password.trim() })
+      
+      if (pwdError) {
+        log.error('Failed to set room password:', pwdError.message)
+        // Cleanup room if password fails
+        await supabase.from(TABLES.ROOMS).delete().eq('id', room.id)
+        setError('Error al configurar la contraseña de la sala.')
+        return null
+      }
     }
 
     /* Create initial stream state */
@@ -206,6 +224,41 @@ export function useRooms() {
     return true
   }, [])
 
+  /**
+   * Garbage Collector: Delete recordings older than 7 days
+   * Removes from storage and DB
+   * @returns {Promise<number>} Number of recordings deleted
+   */
+  const cleanupExpiredRecordings = useCallback(async () => {
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+
+    const { data: expired, error: fetchError } = await supabase
+      .from(TABLES.RECORDINGS)
+      .select('id, file_path')
+      .lt('created_at', sevenDaysAgo.toISOString())
+
+    if (fetchError) {
+      log.error('Failed to fetch expired recordings:', fetchError.message)
+      return 0
+    }
+
+    if (!expired || expired.length === 0) {
+      return 0
+    }
+
+    let deletedCount = 0
+    for (const rec of expired) {
+      const ok = await deleteRecording(rec.id, rec.file_path)
+      if (ok) deletedCount++
+    }
+
+    if (deletedCount > 0) {
+      log.info(`Garbage Collector: Deleted ${deletedCount} expired recordings.`)
+    }
+    return deletedCount
+  }, [deleteRecording])
+
   return {
     rooms,
     loading,
@@ -216,5 +269,6 @@ export function useRooms() {
     updateRoomStatus,
     deleteRoom,
     deleteRecording,
+    cleanupExpiredRecordings,
   }
 }

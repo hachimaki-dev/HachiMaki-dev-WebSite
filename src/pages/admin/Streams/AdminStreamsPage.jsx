@@ -12,6 +12,7 @@ import { TABLES } from '../../../lib/constants'
 import { useRooms } from '../../../features/streaming/hooks/useRooms'
 import { createStreamLogger } from '../../../features/streaming/lib/streamLogger'
 import { AdminStreamChatModal } from './AdminStreamChatModal'
+import { Countdown } from '../../../components/ui/Countdown'
 import './AdminStreamsPage.css'
 
 const log = createStreamLogger('AdminStreams')
@@ -47,17 +48,14 @@ function formatDate(iso) {
 
 export function AdminStreamsPage() {
   const navigate = useNavigate()
-  const { rooms, loading, error, listRooms, createRoom, deleteRoom, deleteRecording } = useRooms()
+  const { rooms, loading, error, listRooms, createRoom, deleteRoom, deleteRecording, cleanupExpiredRecordings } = useRooms()
   const [newTitle, setNewTitle] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [creating, setCreating] = useState(false)
   const [recordings, setRecordings] = useState([])
   const [chatRoom, setChatRoom] = useState(null)
 
-  /* Load rooms and recordings */
-  useEffect(() => {
-    listRooms()
-    loadRecordings()
-  }, [listRooms])
+
 
   const loadRecordings = useCallback(async () => {
     const { data, error: fetchErr } = await supabase
@@ -73,14 +71,29 @@ export function AdminStreamsPage() {
     }
   }, [])
 
+  /* Load rooms, recordings, and trigger GC */
+  useEffect(() => {
+    // Background garbage collection
+    cleanupExpiredRecordings().then((deleted) => {
+      if (deleted > 0) {
+        listRooms()
+        loadRecordings()
+      }
+    })
+
+    listRooms()
+    loadRecordings()
+  }, [listRooms, loadRecordings, cleanupExpiredRecordings])
+
   const handleCreate = async (e) => {
     e.preventDefault()
     if (!newTitle.trim()) return
 
     setCreating(true)
-    const room = await createRoom(newTitle.trim())
+    const room = await createRoom(newTitle.trim(), newPassword.trim())
     if (room) {
       setNewTitle('')
+      setNewPassword('')
       await listRooms()
     }
     setCreating(false)
@@ -128,14 +141,25 @@ export function AdminStreamsPage() {
 
       {/* Create room form */}
       <form className="admin-streams__create" onSubmit={handleCreate}>
-        <input
-          className="admin-streams__create-input"
-          type="text"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          placeholder="Nombre de la nueva sala…"
-          maxLength={100}
-        />
+        <div className="admin-streams__create-inputs">
+          <input
+            className="admin-streams__create-input"
+            type="text"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            placeholder="Nombre de la nueva sala…"
+            maxLength={100}
+            required
+          />
+          <input
+            className="admin-streams__create-input"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="Contraseña (opcional)..."
+            maxLength={50}
+          />
+        </div>
         <button
           type="submit"
           className="admin-streams__create-btn"
@@ -248,6 +272,8 @@ export function AdminStreamsPage() {
                   <td>{rec.rooms?.title || '—'}</td>
                   <td style={{ fontSize: 'var(--font-size-xs)' }}>
                     {formatDate(rec.created_at)}
+                    <br />
+                    <Countdown createdAt={rec.created_at} maxDays={7} onExpire={loadRecordings} />
                   </td>
                   <td>{formatDuration(rec.duration_ms)}</td>
                   <td>{formatBytes(rec.file_size)}</td>
