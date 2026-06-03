@@ -6,6 +6,7 @@ import { usePublicLiveStreams } from '../../../features/streaming/hooks/usePubli
 import { useProjects } from '../../../features/portfolio/useProjects'
 import { formatDate } from '../../../utils/formatDate'
 import { ROUTES } from '../../../lib/constants'
+import { NewsletterInvite } from '../../../components/ui/NewsletterInvite'
 import './HomePage.css'
 
 function getProjectIcon(tags = []) {
@@ -250,6 +251,8 @@ export function HomePage() {
               })
             )}
           </div>
+
+          <NewsletterInvite />
 
           {/* Agent info */}
           <div className="outsider__sidebar-agent">

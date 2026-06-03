@@ -13,6 +13,7 @@ export const ROUTES = {
   PHOTOS: '/photos',
   VISITORS: '/visitantes',
   LOGIN: '/login',
+  CONTACT: '/contacto',
 
   /* Streaming routes */
   STREAM_ROOM: '/stream/:slug',
@@ -29,6 +30,8 @@ export const ROUTES = {
   ADMIN_SETTINGS: '/admin/settings',
   ADMIN_STREAMS: '/admin/streams',
   ADMIN_PHOTOS: '/admin/photos',
+  ADMIN_CONTACT: '/admin/contact',
+  ADMIN_SUBSCRIPTIONS: '/admin/subscriptions',
 }
 
 /* ── Supabase tables ── */
@@ -44,6 +47,8 @@ export const TABLES = {
   CHAT_MESSAGES: 'chat_messages',
   PHOTOS: 'photos',
   VISITOR_LOGS: 'visitor_logs',
+  CONTACT_MESSAGES: 'contact_messages',
+  SUBSCRIPTIONS: 'subscriptions',
 }
 
 /* ── Site metadata ── */

@@ -31,17 +31,18 @@ Deployed to GitHub Pages via GitHub Actions.
 - Never use `localStorage` for business data
 - Database schema changes go in `migrations/NNN_description.sql` (local, gitignored)
 
-### File Organization
-- UI primitives: `src/components/ui/`
+- UI primitives: `src/components/ui/` (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite)
 - Layout components: `src/components/layout/`
-- Public pages: `src/pages/public/`
+- Public pages: `src/pages/public/` (Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage)
 - Stream pages: `src/pages/public/Stream/` (StreamRoomPage, CasterPage, ViewerPage, StreamChat)
-- Admin pages: `src/pages/admin/` (wrapped in `<AuthGuard>`)
+- Admin pages: `src/pages/admin/` (wrapped in `<AuthGuard>` - Dashboard, Settings, Contact, Subscriptions)
 - Admin streams: `src/pages/admin/Streams/` (AdminStreamsPage)
-- Business logic: `src/features/{domain}/` (auth, blog, portfolio, streaming, visitor)
+- Business logic: `src/features/{domain}/` (auth, blog, portfolio, streaming, visitor, contact, subscriptions)
 - Streaming lib: `src/features/streaming/lib/` (signalingChannel, peerManager, viewerPeer, etc.)
 - Streaming hooks: `src/features/streaming/hooks/` (useMediaDevices, useRooms, usePresence, usePublicLiveStreams, useChat, etc.)
 - Visitor hooks: `src/features/visitor/hooks/` (useVisitorTracker, useVisitorLogs)
+- Contact hooks: `src/features/contact/` (useContact, useContactAdmin)
+- Subscription hooks: `src/features/subscriptions/` (useSubscriptions, useSubscriptionsAdmin)
 - Generic hooks: `src/hooks/`
 - Pure utilities: `src/utils/`
 

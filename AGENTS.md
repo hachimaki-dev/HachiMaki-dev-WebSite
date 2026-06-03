@@ -46,26 +46,31 @@ All values come from `src/styles/tokens.css`:
 - `chat_messages` — live chat per room
 - `photos` — custom photo gallery
 - `visitor_logs` — visitor activity logs
+- `contact_messages` — contact form messages
+- `subscriptions` — newsletter/stream subscriptions
 
 RLS: public read when `published=true`, writes require authentication.
 Streaming: public read, anonymous signaling/chat, auth for rooms/recordings.
+Contact & Subscriptions: public insert, authenticated admin read/write.
 
 ## Folder Conventions
 
 ```
-src/components/ui/             → Reusable primitives (Button, Input, Card, Modal...)
+src/components/ui/             → Reusable primitives (Button, Input, Card, Modal, NewsletterInvite...)
 src/components/layout/         → Header, Footer, PageWrapper, AdminLayout
-src/pages/public/              → Public pages (Home, Blog, Portfolio)
+src/pages/public/              → Public pages (Home, Blog, Portfolio, Contact)
 src/pages/public/Stream/       → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 src/pages/public/Photos/       → PhotosPage
 src/pages/public/Visitantes/   → VisitantesPage
-src/pages/admin/               → Admin CRUD pages (behind AuthGuard)
+src/pages/admin/               → Admin CRUD pages (behind AuthGuard - Dashboard, Settings, Contact, Subscriptions)
 src/pages/admin/Streams/       → AdminStreamsPage
 src/pages/admin/Photos/        → AdminPhotosPage
-src/features/{domain}/         → Domain hooks & helpers (auth, blog, portfolio, streaming, visitor)
+src/features/{domain}/         → Domain hooks & helpers (auth, blog, portfolio, streaming, visitor, contact, subscriptions)
 src/features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 src/features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
 src/features/visitor/hooks/    → useVisitorTracker, useVisitorLogs
+src/features/contact/          → useContact, useContactAdmin
+src/features/subscriptions/    → useSubscriptions, useSubscriptionsAdmin
 src/hooks/                     → Generic hooks (useMediaQuery, useLocalStorage)
 src/utils/                     → Pure functions (formatDate, slugify, truncate)
 ```

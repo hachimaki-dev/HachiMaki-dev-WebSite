@@ -15,15 +15,17 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - kebab-case CSS classes, PascalCase components, camelCase hooks/utils
 
 ## Structure
-- `src/components/ui/` → Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
+- `src/components/ui/` → Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite
 - `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
-- `src/pages/public/` → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage
+- `src/pages/public/` → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage
 - `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat
-- `src/pages/admin/` → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings
+- `src/pages/admin/` → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminContactPage, AdminSubscriptionsPage
 - `src/pages/admin/Streams/` → AdminStreamsPage
-- `src/features/` → auth, blog, portfolio, streaming, visitor
+- `src/features/` → auth, blog, portfolio, streaming, visitor, contact, subscriptions
 - `src/features/streaming/lib/` → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 - `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
+- `src/features/contact/` → useContact, useContactAdmin
+- `src/features/subscriptions/` → useSubscriptions, useSubscriptionsAdmin
 - `src/styles/tokens.css` → ALL design tokens
 
 ## DB Tables
@@ -38,6 +40,8 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - `chat_messages` — live chat per room
 - `photos` — custom photo gallery
 - `visitor_logs` — visitor tracking logs
+- `contact_messages` — contact form messages
+- `subscriptions` — newsletter/stream subscriptions
 
 ## Accent Color: #c8f000 | Font: Space Grotesk | Dark theme bg: #0d0d0d
 

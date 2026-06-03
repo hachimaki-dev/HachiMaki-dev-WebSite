@@ -1,0 +1,207 @@
+/* ============================================
+   NewsletterInvite.css — Styled Newsletter box
+   ============================================ */
+
+.newsletter-invite {
+  position: relative;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  padding: var(--space-5);
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.newsletter-invite:hover {
+  border-color: var(--color-accent-dim);
+  box-shadow: var(--shadow-glow);
+}
+
+/* VHS tape marker look */
+.vhs-card__badge-strip {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+.vhs-card__badge {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
+  font-weight: var(--font-weight-bold);
+}
+
+.vhs-card__badge--live {
+  background-color: var(--color-live);
+  color: #fff;
+  animation: pulse 2s infinite alternate;
+}
+
+.vhs-card__badge--mono {
+  background-color: var(--color-border-hover);
+  color: var(--color-text);
+}
+
+.newsletter-invite__title {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.newsletter-invite__title-bracket {
+  color: var(--color-accent);
+  margin-right: var(--space-1);
+}
+
+.newsletter-invite__description {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--space-5);
+}
+
+/* Form Styles */
+.newsletter-invite__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.newsletter-invite__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.newsletter-invite__checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  padding: var(--space-1) 0;
+}
+
+/* Visually hide default checkbox but keep accessible */
+.newsletter-invite__checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.newsletter-invite__checkbox-custom {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-border-hover);
+  border-radius: var(--radius-xs);
+  background-color: var(--color-bg);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.newsletter-invite__checkbox-label:hover .newsletter-invite__checkbox-custom {
+  border-color: var(--color-accent);
+}
+
+.newsletter-invite__checkbox:checked + .newsletter-invite__checkbox-custom {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.newsletter-invite__checkbox:checked + .newsletter-invite__checkbox-custom::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.newsletter-invite__checkbox:focus-visible + .newsletter-invite__checkbox-custom {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.newsletter-invite__option-text {
+  font-weight: var(--font-weight-medium);
+}
+
+/* Input group styling */
+.newsletter-invite__input-group {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background-color: var(--color-bg);
+  transition: border-color var(--transition-normal);
+}
+
+.newsletter-invite__input-group:focus-within {
+  border-color: var(--color-accent);
+}
+
+.newsletter-invite__input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  padding: 0.75rem var(--space-4);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+.newsletter-invite__input:focus {
+  outline: none;
+}
+
+.newsletter-invite__submit-btn {
+  background-color: var(--color-accent-dim);
+  color: #fff;
+  border: none;
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wide);
+  padding: 0 var(--space-5);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  min-height: 48px;
+  white-space: nowrap;
+}
+
+.newsletter-invite__submit-btn:hover {
+  background-color: var(--color-accent);
+}
+
+.newsletter-invite__submit-btn:disabled {
+  background-color: var(--color-text-dim);
+  cursor: not-allowed;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 10px var(--color-live-glow);
+  }
+}

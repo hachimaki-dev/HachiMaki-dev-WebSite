@@ -30,6 +30,7 @@ export function Footer() {
               <Link to={ROUTES.PORTFOLIO} className="footer__link">Portfolio</Link>
               <Link to={ROUTES.PHOTOS} className="footer__link">Fotos</Link>
               <Link to={ROUTES.VISITORS} className="footer__link">Visitantes</Link>
+              <Link to={ROUTES.CONTACT} className="footer__link">Contacto</Link>
             </div>
             <div className="footer__col">
               <h4 className="footer__col-title">Social</h4>

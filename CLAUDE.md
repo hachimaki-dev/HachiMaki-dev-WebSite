@@ -19,16 +19,18 @@ Single admin user authenticated via Supabase. Deployed to GitHub Pages.
 
 ```
 src/
-  components/ui/        → Primitives: Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
+  components/ui/        → Primitives: Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite
   components/layout/    → Header, Footer, PageWrapper, AdminLayout
-  pages/public/         → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage
+  pages/public/         → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage
   pages/public/Stream/  → StreamRoomPage, CasterPage, ViewerPage, StreamChat
-  pages/admin/          → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings
+  pages/admin/          → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminContactPage, AdminSubscriptionsPage
   pages/admin/Streams/  → AdminStreamsPage
   features/auth/        → useAuth, AuthGuard, LoginPage
   features/blog/        → useBlogPosts (public), useBlogAdmin (CRUD)
   features/portfolio/   → useProjects (public), useProjectsAdmin (CRUD)
   features/visitor/     → useVisitorTracker, useVisitorLogs
+  features/contact/     → useContact (public), useContactAdmin (CRUD)
+  features/subscriptions/ → useSubscriptions (public), useSubscriptionsAdmin (CRUD)
   features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
   features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
   hooks/                → useLocalStorage, useMediaQuery
@@ -53,18 +55,21 @@ migrations/             → Local SQL files, in .gitignore — NEVER commit
 - `recordings` — Stream recordings: `room_id`, `caster_id`, `file_path`, `file_size`, `duration_ms`
 - `chat_messages` — Live chat: `room_id`, `sender_id`, `display_name`, `message`
 - `visitor_logs` — Visitor tracking logs: `session_id`, `ip`, `country`, `city`, `isp`, `browser`, `os`, `device_type`, `screen_resolution`, `referrer`, `page_path`, `action_type`, `action_details`
+- `contact_messages` — Contact form messages: `id`, `name`, `email`, `subject`, `message`, `is_read`, `created_at`
+- `subscriptions` — Newsletter/stream subscriptions: `id`, `email`, `subscribe_streams`, `subscribe_newsletter`, `created_at`
 
 RLS active: public read if `published=true`, write only for authenticated users.
 Streaming: public read, signaling/chat open for anonymous viewers, write auth for rooms/recordings.
+Contact & Subscriptions: insert open to public, full read/write for authenticated admin.
 
 ## Routes
 
 ```
-Public:  /  /blog  /blog/:slug  /portfolio  /portfolio/:slug  /photos  /visitantes  /login
+Public:  /  /blog  /blog/:slug  /portfolio  /portfolio/:slug  /photos  /visitantes  /contacto  /login
          /stream/:slug  /stream/:slug/cast  /stream/:slug/watch
 Admin:   /admin  /admin/blog  /admin/blog/new  /admin/blog/:id
          /admin/portfolio  /admin/portfolio/new  /admin/portfolio/:id
-         /admin/settings  /admin/streams
+         /admin/settings  /admin/streams  /admin/contact  /admin/subscriptions
 ```
 
 ## Coding Rules

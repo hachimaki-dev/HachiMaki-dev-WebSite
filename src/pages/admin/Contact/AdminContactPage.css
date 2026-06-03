@@ -1,0 +1,266 @@
+/* ============================================
+   AdminContactPage.css — Styling for admin mailbox
+   ============================================ */
+
+.admin-contact {
+  height: calc(100vh - var(--header-height) - var(--space-12));
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-contact__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
+}
+
+.admin-contact__title {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.admin-contact__subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Filters */
+.admin-contact__filters {
+  display: flex;
+  gap: var(--space-2);
+  background-color: var(--color-bg-alt);
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-contact__filter-btn {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.admin-contact__filter-btn:hover {
+  color: var(--color-text);
+}
+
+.admin-contact__filter-btn--active {
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent-hover);
+  border: 1px solid var(--color-border-hover);
+}
+
+.admin-contact__error {
+  color: var(--color-danger);
+  background-color: var(--color-danger-bg);
+  padding: var(--space-4);
+  border: 1px solid var(--color-danger-dim);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-6);
+}
+
+/* Workspace */
+.admin-contact__workspace {
+  display: flex;
+  gap: var(--space-6);
+  flex-grow: 1;
+  min-height: 0; /* Important for flex-child scrolling */
+}
+
+/* List panel */
+.admin-contact__list {
+  width: 38%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-contact__item {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.admin-contact__item:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.admin-contact__item--selected {
+  background-color: var(--color-accent-bg);
+  border-left: 3px solid var(--color-accent);
+}
+
+.admin-contact__item--unread {
+  background-color: rgba(139, 92, 246, 0.03);
+}
+
+.admin-contact__item--unread .admin-contact__item-subject {
+  font-weight: var(--font-weight-bold);
+  color: #fff;
+}
+
+.admin-contact__item--unread::before {
+  content: "●";
+  color: var(--color-accent);
+  margin-right: var(--space-2);
+  font-size: 10px;
+}
+
+.admin-contact__item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-1);
+}
+
+.admin-contact__item-author {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.admin-contact__item-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-dim);
+}
+
+.admin-contact__item-subject {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-contact__item-excerpt {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Details panel */
+.admin-contact__details {
+  width: 62%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-contact__details-inner {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.admin-contact__details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.admin-contact__details-subject {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.admin-contact__details-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.admin-contact__details-email {
+  color: var(--color-accent-hover);
+}
+
+.admin-contact__details-date {
+  color: var(--color-text-dim);
+}
+
+.admin-contact__details-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.admin-contact__action-btn {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  cursor: pointer;
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+}
+
+.admin-contact__action-btn:hover {
+  border-color: var(--color-border-hover);
+  background-color: var(--color-surface-hover);
+}
+
+.admin-contact__action-btn--danger:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  background-color: var(--color-danger-bg);
+}
+
+.admin-contact__details-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  line-height: var(--line-height-relaxed);
+  white-space: pre-wrap;
+}
+
+.admin-contact__details-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  text-align: center;
+  padding: var(--space-6);
+}

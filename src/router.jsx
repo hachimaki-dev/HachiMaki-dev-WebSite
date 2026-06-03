@@ -14,6 +14,7 @@ const PortfolioPage = lazy(() => import('./pages/public/Portfolio/PortfolioPage'
 const ProjectDetailPage = lazy(() => import('./pages/public/Portfolio/ProjectDetailPage').then(m => ({ default: m.ProjectDetailPage })))
 const PhotosPage = lazy(() => import('./pages/public/Photos/PhotosPage').then(m => ({ default: m.PhotosPage })))
 const VisitantesPage = lazy(() => import('./pages/public/Visitantes/VisitantesPage').then(m => ({ default: m.VisitantesPage })))
+const ContactPage = lazy(() => import('./pages/public/Contact/ContactPage').then(m => ({ default: m.ContactPage })))
 const LoginPage = lazy(() => import('./features/auth/LoginPage').then(m => ({ default: m.LoginPage })))
 
 import { useVisitorTracker } from './features/visitor/hooks/useVisitorTracker'
@@ -31,6 +32,8 @@ const ProjectEditor = lazy(() => import('./pages/admin/Portfolio/ProjectEditor')
 const SettingsPage = lazy(() => import('./pages/admin/Settings/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminStreamsPage = lazy(() => import('./pages/admin/Streams/AdminStreamsPage').then(m => ({ default: m.AdminStreamsPage })))
 const AdminPhotosPage = lazy(() => import('./pages/admin/Photos/AdminPhotosPage').then(m => ({ default: m.AdminPhotosPage })))
+const AdminContactPage = lazy(() => import('./pages/admin/Contact/AdminContactPage').then(m => ({ default: m.AdminContactPage })))
+const AdminSubscriptionsPage = lazy(() => import('./pages/admin/Subscriptions/AdminSubscriptionsPage').then(m => ({ default: m.AdminSubscriptionsPage })))
 
 /* ── Public layout wrapper ── */
 function PublicLayout() {
@@ -73,6 +76,7 @@ export const router = createBrowserRouter(
         { path: '/stream/:slug', element: <StreamRoomPage /> },
         { path: '/stream/:slug/cast', element: <CasterPage /> },
         { path: '/stream/:slug/watch', element: <ViewerPage /> },
+        { path: '/contacto', element: <ContactPage /> },
       ],
     },
     {
@@ -99,6 +103,8 @@ export const router = createBrowserRouter(
         { path: 'settings', element: <SettingsPage /> },
         { path: 'streams', element: <AdminStreamsPage /> },
         { path: 'photos', element: <AdminPhotosPage /> },
+        { path: 'contact', element: <AdminContactPage /> },
+        { path: 'subscriptions', element: <AdminSubscriptionsPage /> },
       ],
     },
   ],

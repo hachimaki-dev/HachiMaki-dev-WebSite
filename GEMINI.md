@@ -13,14 +13,14 @@ Includes: landing page, blog, portfolio, and private admin panel.
 ```
 src/
 ├── components/
-│   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown
+│   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite
 │   └── layout/          # Header, Footer, PageWrapper, AdminLayout
 ├── pages/
-│   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage
+│   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage
 │   │   ├── Stream/      # StreamRoomPage, CasterPage, ViewerPage, StreamChat
 │   │   ├── Photos/      # PhotosPage
 │   │   └── Visitantes/  # VisitantesPage
-│   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminPhotosPage
+│   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminPhotosPage, AdminContactPage, AdminSubscriptionsPage
 │       └── Streams/     # AdminStreamsPage
 │       └── Photos/      # AdminPhotosPage
 ├── features/
@@ -28,6 +28,8 @@ src/
 │   ├── blog/            # useBlogPosts (public reads), useBlogAdmin (CRUD)
 │   ├── portfolio/       # useProjects (public reads), useProjectsAdmin (CRUD)
 │   ├── visitor/         # useVisitorTracker (logs actions), useVisitorLogs (live sync)
+│   ├── contact/         # useContact (public), useContactAdmin (CRUD)
+│   ├── subscriptions/   # useSubscriptions (public), useSubscriptionsAdmin (CRUD)
 │   └── streaming/
 │       ├── lib/         # signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 │       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
@@ -73,6 +75,8 @@ src/
 | `chat_messages` | `room_id`, `sender_id`, `display_name`, `message` | Public read, open insert, auth delete |
 | `photos` | `storage_path`, `width`, `height` | Public read, auth write |
 | `visitor_logs` | `session_id`, `ip`, `country`, `city`, `browser`, `os`, `action_type`, `action_details` | Public read, open insert |
+| `contact_messages` | `name`, `email`, `subject`, `message`, `is_read` | Public insert, auth select/update/delete |
+| `subscriptions` | `email`, `subscribe_streams`, `subscribe_newsletter` | Public insert (via RPC), auth all |
 
 Schema changes → create `migrations/NNN_description.sql`, update `migrations/README.md`
 
