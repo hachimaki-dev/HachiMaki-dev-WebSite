@@ -34,6 +34,7 @@ const AdminStreamsPage = lazy(() => import('./pages/admin/Streams/AdminStreamsPa
 const AdminPhotosPage = lazy(() => import('./pages/admin/Photos/AdminPhotosPage').then(m => ({ default: m.AdminPhotosPage })))
 const AdminContactPage = lazy(() => import('./pages/admin/Contact/AdminContactPage').then(m => ({ default: m.AdminContactPage })))
 const AdminSubscriptionsPage = lazy(() => import('./pages/admin/Subscriptions/AdminSubscriptionsPage').then(m => ({ default: m.AdminSubscriptionsPage })))
+const AdminFriendLinksPage = lazy(() => import('./pages/admin/FriendLinks/AdminFriendLinksPage').then(m => ({ default: m.AdminFriendLinksPage })))
 
 /* ── Public layout wrapper ── */
 function PublicLayout() {
@@ -105,6 +106,7 @@ export const router = createBrowserRouter(
         { path: 'photos', element: <AdminPhotosPage /> },
         { path: 'contact', element: <AdminContactPage /> },
         { path: 'subscriptions', element: <AdminSubscriptionsPage /> },
+        { path: 'links', element: <AdminFriendLinksPage /> },
       ],
     },
   ],

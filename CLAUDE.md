@@ -31,8 +31,9 @@ src/
   features/visitor/     → useVisitorTracker, useVisitorLogs
   features/contact/     → useContact (public), useContactAdmin (CRUD)
   features/subscriptions/ → useSubscriptions (public), useSubscriptionsAdmin (CRUD)
+  features/friends/     → useFriendLinks (public), useFriendLinksAdmin (CRUD)
   features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-  features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
+  features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat, useSpeechTranscription
   hooks/                → useLocalStorage, useMediaQuery
   utils/                → formatDate, slugify, truncate
   lib/supabase.js       → Supabase client singleton — NEVER create new instances
@@ -57,6 +58,8 @@ migrations/             → Local SQL files, in .gitignore — NEVER commit
 - `visitor_logs` — Visitor tracking logs: `session_id`, `ip`, `country`, `city`, `isp`, `browser`, `os`, `device_type`, `screen_resolution`, `referrer`, `page_path`, `action_type`, `action_details`
 - `contact_messages` — Contact form messages: `id`, `name`, `email`, `subject`, `message`, `is_read`, `created_at`
 - `subscriptions` — Newsletter/stream subscriptions: `id`, `email`, `subscribe_streams`, `subscribe_newsletter`, `created_at`
+- `stream_transcriptions` — Stream speech transcriptions: `id`, `room_id`, `text`, `created_at`
+- `friend_links` — Friend links exchange: `id`, `name`, `url`, `image_url`, `animation_type`, `sort_order`, `created_at`
 
 RLS active: public read if `published=true`, write only for authenticated users.
 Streaming: public read, signaling/chat open for anonymous viewers, write auth for rooms/recordings.

@@ -20,6 +20,7 @@ export function AdminLayout() {
     { to: ROUTES.ADMIN_PHOTOS, label: 'Photos', icon: '📸', end: false },
     { to: ROUTES.ADMIN_CONTACT, label: 'Mensajes', icon: '✉', end: false },
     { to: ROUTES.ADMIN_SUBSCRIPTIONS, label: 'Suscriptores', icon: '👥', end: false },
+    { to: ROUTES.ADMIN_FRIEND_LINKS, label: 'Linkeame', icon: '🔗', end: false },
     { to: ROUTES.ADMIN_SETTINGS, label: 'Settings', icon: '⚙', end: false },
   ]
 

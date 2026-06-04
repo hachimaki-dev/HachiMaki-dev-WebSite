@@ -48,9 +48,11 @@ All values come from `src/styles/tokens.css`:
 - `visitor_logs` — visitor activity logs
 - `contact_messages` — contact form messages
 - `subscriptions` — newsletter/stream subscriptions
+- `stream_transcriptions` — stream speech transcriptions
+- `friend_links` — website buttons showcase (linkeame)
 
-RLS: public read when `published=true`, writes require authentication.
-Streaming: public read, anonymous signaling/chat, auth for rooms/recordings.
+RLS: public read when `published=true` or public list, writes require authentication.
+Streaming: public read, anonymous signaling/chat, auth for rooms/recordings/transcriptions.
 Contact & Subscriptions: public insert, authenticated admin read/write.
 
 ## Folder Conventions
@@ -67,10 +69,11 @@ src/pages/admin/Streams/       → AdminStreamsPage
 src/pages/admin/Photos/        → AdminPhotosPage
 src/features/{domain}/         → Domain hooks & helpers (auth, blog, portfolio, streaming, visitor, contact, subscriptions)
 src/features/streaming/lib/    → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-src/features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
+src/features/streaming/hooks/  → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat, useSpeechTranscription
 src/features/visitor/hooks/    → useVisitorTracker, useVisitorLogs
 src/features/contact/          → useContact, useContactAdmin
 src/features/subscriptions/    → useSubscriptions, useSubscriptionsAdmin
+src/features/friends/          → useFriendLinks, useFriendLinksAdmin
 src/hooks/                     → Generic hooks (useMediaQuery, useLocalStorage)
 src/utils/                     → Pure functions (formatDate, slugify, truncate)
 ```

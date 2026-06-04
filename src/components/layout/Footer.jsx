@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { SITE, ROUTES } from '../../lib/constants'
+import { FriendShowcase } from './FriendShowcase'
 import './Footer.css'
 
 export function Footer() {
@@ -51,6 +52,8 @@ export function Footer() {
             © {currentYear} {SITE.NAME}. All rights reserved.
           </p>
         </div>
+
+        <FriendShowcase />
       </div>
     </footer>
   )

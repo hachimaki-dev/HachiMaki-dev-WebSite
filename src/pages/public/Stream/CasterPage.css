@@ -337,6 +337,82 @@
   opacity: 0.4;
 }
 
+/* ── Speech Transcription Styles ── */
+.caster-page__speech-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.caster-page__speech-badge--supported {
+  background: rgba(200, 240, 0, 0.15);
+  border: 1px solid rgba(200, 240, 0, 0.3);
+  color: var(--color-accent);
+}
+
+.caster-page__speech-badge--unsupported {
+  background: var(--color-danger-bg);
+  border: 1px solid rgba(224, 64, 64, 0.3);
+  color: var(--color-danger);
+}
+
+.caster-page__captions-overlay {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  text-align: center;
+  pointer-events: none;
+  z-index: 15;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.caster-page__captions-text {
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-md);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.caster-page__live-actions {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.caster-page__btn--speech-active {
+  background: rgba(200, 240, 0, 0.1);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-dim);
+}
+
+.caster-page__btn--speech-active:hover {
+  background: rgba(200, 240, 0, 0.2);
+}
+
+.caster-page__btn--speech-inactive {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.caster-page__btn--speech-inactive:hover {
+  border-color: var(--color-border-hover);
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .caster-page {
@@ -347,3 +423,4 @@
     max-height: 300px;
   }
 }
+

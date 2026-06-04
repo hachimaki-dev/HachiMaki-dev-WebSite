@@ -30,9 +30,10 @@ src/
 │   ├── visitor/         # useVisitorTracker (logs actions), useVisitorLogs (live sync)
 │   ├── contact/         # useContact (public), useContactAdmin (CRUD)
 │   ├── subscriptions/   # useSubscriptions (public), useSubscriptionsAdmin (CRUD)
+│   ├── friends/         # useFriendLinks (public), useFriendLinksAdmin (CRUD)
 │   └── streaming/
 │       ├── lib/         # signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-│       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
+│       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat, useSpeechTranscription
 ├── hooks/               # useLocalStorage, useMediaQuery
 ├── utils/               # formatDate, slugify, truncate
 ├── lib/
@@ -77,6 +78,8 @@ src/
 | `visitor_logs` | `session_id`, `ip`, `country`, `city`, `browser`, `os`, `action_type`, `action_details` | Public read, open insert |
 | `contact_messages` | `name`, `email`, `subject`, `message`, `is_read` | Public insert, auth select/update/delete |
 | `subscriptions` | `email`, `subscribe_streams`, `subscribe_newsletter` | Public insert (via RPC), auth all |
+| `stream_transcriptions` | `room_id`, `text`, `created_at` | Public read, auth insert/delete |
+| `friend_links` | `name`, `url`, `image_url`, `animation_type`, `sort_order` | Public read, auth all |
 
 Schema changes → create `migrations/NNN_description.sql`, update `migrations/README.md`
 

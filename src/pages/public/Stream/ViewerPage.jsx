@@ -18,6 +18,7 @@ import { StreamChat } from './StreamChat'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
 import './ViewerPage.css'
+import { useSpeechTranscription } from '../../../features/streaming/hooks/useSpeechTranscription'
 
 const log = createStreamLogger('ViewerPage')
 
@@ -48,6 +49,25 @@ export function ViewerPage() {
   const { viewerCount, joinRoom, getOrCreateViewerId } = usePresence(room?.id, 'viewer')
   const viewerId = viewerIdRef.current
   const { messages, sendMessage } = useChat(room?.id, viewerId, `Viewer-${viewerId.slice(0, 4)}`)
+
+  const { transcripts } = useSpeechTranscription(room?.id, 'viewer')
+  const [showCC, setShowCC] = useState(true)
+  const [activeCaption, setActiveCaption] = useState('')
+
+  /* Update active subtitle when a new transcript arrives */
+  useEffect(() => {
+    if (transcripts.length > 0) {
+      const latest = transcripts[transcripts.length - 1]
+      setActiveCaption(latest.text)
+
+      /* Clear subtitle after 6 seconds of silence */
+      const timer = setTimeout(() => {
+        setActiveCaption('')
+      }, 6000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [transcripts])
 
   /* ── Load room ── */
   useEffect(() => {
@@ -209,6 +229,17 @@ export function ViewerPage() {
             </button>
           )}
 
+          {/* CC Toggle button */}
+          {viewerState === 'connected' && (
+            <button
+              className={`viewer-page__cc-btn ${showCC ? 'viewer-page__cc-btn--active' : ''}`}
+              onClick={() => setShowCC((prev) => !prev)}
+              title={showCC ? 'Desactivar Subtítulos (CC)' : 'Activar Subtítulos (CC)'}
+            >
+              CC
+            </button>
+          )}
+
           {/* Fullscreen button */}
           <button
             className="viewer-page__fullscreen-btn"
@@ -217,6 +248,13 @@ export function ViewerPage() {
           >
             ⛶
           </button>
+
+          {/* Closed Captions Overlay */}
+          {showCC && activeCaption && viewerState === 'connected' && (
+            <div className="viewer-page__captions-overlay">
+              <p className="viewer-page__captions-text">{activeCaption}</p>
+            </div>
+          )}
 
           {/* Status overlays */}
           {viewerState === 'connecting' && (

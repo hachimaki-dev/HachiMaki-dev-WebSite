@@ -22,6 +22,7 @@ import { StreamChat } from './StreamChat'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { useToast } from '../../../components/ui/Toast'
 import './CasterPage.css'
+import { useSpeechTranscription } from '../../../features/streaming/hooks/useSpeechTranscription'
 
 const log = createStreamLogger('CasterPage')
 
@@ -71,6 +72,14 @@ export function CasterPage() {
   const userId = user?.id || 'caster'
   const { messages, sendMessage, deleteMessage } = useChat(room?.id, userId, 'Caster')
   const { toast } = useToast()
+
+  const {
+    currentSpeech,
+    isSupported: isSpeechSupported,
+    isListening: isSpeechListening,
+    startTranscription,
+    stopTranscription,
+  } = useSpeechTranscription(room?.id, 'caster')
 
   /* Warn before closing tab or navigating when streaming or uploading */
   useEffect(() => {
@@ -146,6 +155,11 @@ export function CasterPage() {
       toast({ type: 'warning', message: 'No se pudo iniciar la grabación local de la transmisión.' })
     }
 
+    /* Start speech transcription if supported */
+    if (isSpeechSupported) {
+      startTranscription()
+    }
+
     /* Set up signaling */
     const signaling = createSignalingChannel(room.id, user.id)
     signalingRef.current = signaling
@@ -190,7 +204,7 @@ export function CasterPage() {
     cleanupStopRef.current = startPeriodicCleanup(room.id)
 
     log.info('🔴 Stream is LIVE')
-  }, [stream, room, user, updateRoomStatus, startRecording, toast])
+  }, [stream, room, user, updateRoomStatus, startRecording, toast, isSpeechSupported, startTranscription])
 
   /* ── Stop Stream ── */
   const handleStopStream = useCallback(async () => {
@@ -202,6 +216,11 @@ export function CasterPage() {
       recordingResult = await stopRecording()
     } catch (err) {
       log.error('Error stopping recorder:', err)
+    }
+
+    /* Stop speech transcription */
+    if (isSpeechSupported) {
+      stopTranscription()
     }
 
     try {
@@ -249,7 +268,7 @@ export function CasterPage() {
     }
 
     log.info('⬛ Stream ended')
-  }, [room, user, stopRecording, updateRoomStatus, uploadRecording, toast])
+  }, [room, user, stopRecording, updateRoomStatus, uploadRecording, toast, isSpeechSupported, stopTranscription])
 
   /* ── Cleanup on unmount ── */
   useEffect(() => {
@@ -320,6 +339,11 @@ export function CasterPage() {
               REC {formatDuration(duration)}
             </span>
           )}
+          {isLive && (
+            <span className={`caster-page__speech-badge ${isSpeechSupported ? 'caster-page__speech-badge--supported' : 'caster-page__speech-badge--unsupported'}`}>
+              {isSpeechSupported ? (isSpeechListening ? '🎙️ CC ON' : '🎙️ CC PAUSE') : '🎙️ No CC'}
+            </span>
+          )}
         </div>
       </div>
 
@@ -327,13 +351,20 @@ export function CasterPage() {
       <div className="caster-page__video-area">
         <div className="caster-page__video-wrapper">
           {stream ? (
-            <video
-              ref={videoRef}
-              className="caster-page__video"
-              autoPlay
-              playsInline
-              muted
-            />
+            <>
+              <video
+                ref={videoRef}
+                className="caster-page__video"
+                autoPlay
+                playsInline
+                muted
+              />
+              {isLive && isSpeechSupported && isSpeechListening && currentSpeech && (
+                <div className="caster-page__captions-overlay">
+                  <p className="caster-page__captions-text">{currentSpeech}</p>
+                </div>
+              )}
+            </>
           ) : (
             <div className="caster-page__offline">
               <span className="caster-page__offline-icon">📷</span>
@@ -405,12 +436,22 @@ export function CasterPage() {
               </button>
             </>
           ) : (
-            <button
-              className="caster-page__btn caster-page__btn--stop"
-              onClick={handleStopStream}
-            >
-              ⬛ Detener Transmisión
-            </button>
+            <div className="caster-page__live-actions">
+              <button
+                className="caster-page__btn caster-page__btn--stop"
+                onClick={handleStopStream}
+              >
+                ⬛ Detener Transmisión
+              </button>
+              {isSpeechSupported && (
+                <button
+                  className={`caster-page__btn ${isSpeechListening ? 'caster-page__btn--speech-active' : 'caster-page__btn--speech-inactive'}`}
+                  onClick={isSpeechListening ? stopTranscription : startTranscription}
+                >
+                  {isSpeechListening ? '🎙️ Transcripción: ON' : '🎙️ Transcripción: OFF'}
+                </button>
+              )}
+            </div>
           )}
         </div>
 

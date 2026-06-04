@@ -39,10 +39,11 @@ Deployed to GitHub Pages via GitHub Actions.
 - Admin streams: `src/pages/admin/Streams/` (AdminStreamsPage)
 - Business logic: `src/features/{domain}/` (auth, blog, portfolio, streaming, visitor, contact, subscriptions)
 - Streaming lib: `src/features/streaming/lib/` (signalingChannel, peerManager, viewerPeer, etc.)
-- Streaming hooks: `src/features/streaming/hooks/` (useMediaDevices, useRooms, usePresence, usePublicLiveStreams, useChat, etc.)
+- Streaming hooks: `src/features/streaming/hooks/` (useMediaDevices, useRooms, usePresence, usePublicLiveStreams, useChat, useSpeechTranscription, etc.)
 - Visitor hooks: `src/features/visitor/hooks/` (useVisitorTracker, useVisitorLogs)
 - Contact hooks: `src/features/contact/` (useContact, useContactAdmin)
 - Subscription hooks: `src/features/subscriptions/` (useSubscriptions, useSubscriptionsAdmin)
+- Friend links hooks: `src/features/friends/` (useFriendLinks, useFriendLinksAdmin)
 - Generic hooks: `src/hooks/`
 - Pure utilities: `src/utils/`
 

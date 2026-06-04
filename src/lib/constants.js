@@ -32,6 +32,7 @@ export const ROUTES = {
   ADMIN_PHOTOS: '/admin/photos',
   ADMIN_CONTACT: '/admin/contact',
   ADMIN_SUBSCRIPTIONS: '/admin/subscriptions',
+  ADMIN_FRIEND_LINKS: '/admin/links',
 }
 
 /* ── Supabase tables ── */
@@ -49,6 +50,8 @@ export const TABLES = {
   VISITOR_LOGS: 'visitor_logs',
   CONTACT_MESSAGES: 'contact_messages',
   SUBSCRIPTIONS: 'subscriptions',
+  STREAM_TRANSCRIPTIONS: 'stream_transcriptions',
+  FRIEND_LINKS: 'friend_links',
 }
 
 /* ── Site metadata ── */

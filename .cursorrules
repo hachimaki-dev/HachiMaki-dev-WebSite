@@ -21,9 +21,10 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 - `src/pages/admin/` → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminContactPage, AdminSubscriptionsPage
 - `src/pages/admin/Streams/` → AdminStreamsPage
-- `src/features/` → auth, blog, portfolio, streaming, visitor, contact, subscriptions
+- `src/features/` → auth, blog, portfolio, streaming, visitor, contact, subscriptions, friends
 - `src/features/streaming/lib/` → signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
-- `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat
+- `src/features/streaming/hooks/` → useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat, useSpeechTranscription
+- `src/features/friends/` → useFriendLinks, useFriendLinksAdmin
 - `src/features/contact/` → useContact, useContactAdmin
 - `src/features/subscriptions/` → useSubscriptions, useSubscriptionsAdmin
 - `src/styles/tokens.css` → ALL design tokens
@@ -42,6 +43,8 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - `visitor_logs` — visitor tracking logs
 - `contact_messages` — contact form messages
 - `subscriptions` — newsletter/stream subscriptions
+- `stream_transcriptions` — stream speech transcriptions
+- `friend_links` — website buttons showcase (linkeame)
 
 ## Accent Color: #c8f000 | Font: Space Grotesk | Dark theme bg: #0d0d0d
 
