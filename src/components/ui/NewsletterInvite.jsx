@@ -38,14 +38,16 @@ export function NewsletterInvite() {
   }
 
   return (
-    <div className="newsletter-invite vhs-card">
+    <div className="vhs-card">
+
+
       <div className="newsletter-invite__content">
         <h3 className="newsletter-invite__title">
           <span className="newsletter-invite__title-bracket">//</span>
-          LA NAVE - CONEXIÓN DIRECTA
+          LA NAVE - CANAL INFILTRADO
         </h3>
         <p className="newsletter-invite__description">
-          Únete a la red libre. Alertas de streaming y textos críticos sobre el monopolio digital, soberanía tecnológica y liberación del conocimiento. Sin intermediarios ni algoritmos.
+          Únete a la transmisión directa sin intermediarios. Recibe notificaciones sin censura y reflexiones críticas directamente del Outsider.
         </p>
 
         <form onSubmit={handleSubmit} className="newsletter-invite__form">
@@ -59,7 +61,7 @@ export function NewsletterInvite() {
               />
               <span className="newsletter-invite__checkbox-custom"></span>
               <span className="newsletter-invite__option-text">
-                📡 Señal en vivo (Streams)
+                📡 Notificaciones en Vivo (Streams)
               </span>
             </label>
 
@@ -72,7 +74,7 @@ export function NewsletterInvite() {
               />
               <span className="newsletter-invite__checkbox-custom"></span>
               <span className="newsletter-invite__option-text">
-                📝 Ensayos y bitácora de red
+                📝 Comunicados Críticos y Ensayos
               </span>
             </label>
           </div>
@@ -82,7 +84,7 @@ export function NewsletterInvite() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="correo@nodo-libre.net"
+              placeholder="tu-correo@disidencia.com"
               autoComplete="email"
               required
               className="newsletter-invite__input"
