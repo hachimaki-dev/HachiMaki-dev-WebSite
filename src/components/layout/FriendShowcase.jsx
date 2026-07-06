@@ -42,7 +42,7 @@ export function FriendShowcase() {
             <div className="friend-showcase__own-preview">
               <span className="friend-showcase__own-preview-label font-mono">Nuestro Banner:</span>
               <div className="friend-showcase__own-banner">
-                <img src="./minibannerlanave.jpg" alt={SITE.NAME} className="friend-showcase__img" />
+                <img src={`${import.meta.env.BASE_URL}minibannerlanave.jpg`} alt={SITE.NAME} className="friend-showcase__img" />
               </div>
             </div>
             <p className="friend-showcase__code-desc">
@@ -79,7 +79,7 @@ export function FriendShowcase() {
           title={SITE.NAME}
         >
           <div className="friend-showcase__own-banner">
-            <img src="./minibannerlanave.jpg" alt={SITE.NAME} className="friend-showcase__img" /></div>
+            <img src={`${import.meta.env.BASE_URL}minibannerlanave.jpg`} alt={SITE.NAME} className="friend-showcase__img" /></div>
         </a>
 
         {links.map((link) => (

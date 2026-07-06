@@ -10,6 +10,10 @@ import { SeriesNav } from '../../../components/blog/SeriesNav'
 import { TagPills } from '../../../components/blog/TagPills'
 import { useBlogPost } from '../../../features/blog/useBlogPosts'
 import { ROUTES } from '../../../lib/constants'
+import { BlogShare } from '../../../components/blog/BlogShare'
+import { BlogReactions } from '../../../components/blog/BlogReactions'
+import { BlogComments } from '../../../components/blog/BlogComments'
+import { NewsletterInvite } from '../../../components/ui/NewsletterInvite'
 import './BlogPostPage.css'
 import Icon from '../../../components/ui/Icon'
 
@@ -22,16 +26,37 @@ export function BlogPostPage() {
     if (!post) return
     document.title = `${post.title} — hachimaki.dev`
 
-    let metaDesc = document.querySelector('meta[name="description"]')
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta')
-      metaDesc.name = 'description'
-      document.head.appendChild(metaDesc)
+    const setMeta = (name, content, isProperty = false) => {
+      const attr = isProperty ? 'property' : 'name'
+      let el = document.querySelector(`meta[${attr}="${name}"]`)
+      if (!el) {
+        el = document.createElement('meta')
+        el.setAttribute(attr, name)
+        document.head.appendChild(el)
+      }
+      el.content = content
+      return el
     }
-    metaDesc.content = post.excerpt || post.title
+
+    const els = [
+      setMeta('description', post.excerpt || post.title),
+      setMeta('og:title', post.title, true),
+      setMeta('og:description', post.excerpt || post.title, true),
+      setMeta('og:type', 'article', true),
+      setMeta('og:url', window.location.href, true),
+    ]
+
+    if (post.cover_url) {
+      els.push(setMeta('og:image', post.cover_url, true))
+    }
 
     return () => {
       document.title = 'hachimaki.dev — Developer & Creator'
+      els.forEach(el => {
+        if (document.head.contains(el)) {
+          document.head.removeChild(el)
+        }
+      })
     }
   }, [post])
 
@@ -72,6 +97,7 @@ export function BlogPostPage() {
             layout="stacked"
           />
           <h1 className="blog-post__title">{post.title}</h1>
+          <BlogShare title={post.title} />
           {post.excerpt && (
             <p className="blog-post__excerpt">{post.excerpt}</p>
           )}
@@ -120,6 +146,17 @@ export function BlogPostPage() {
             currentPostId={post.id}
           />
         )}
+
+        {/* Reactions */}
+        <BlogReactions postId={post.id} />
+
+        {/* Newsletter */}
+        <div style={{ margin: 'var(--space-8) 0' }}>
+          <NewsletterInvite />
+        </div>
+
+        {/* Comments */}
+        <BlogComments postId={post.id} />
 
         {/* Related posts */}
         {relatedPosts.length > 0 && (

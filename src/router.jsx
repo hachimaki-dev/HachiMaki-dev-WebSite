@@ -18,6 +18,7 @@ const ProjectDetailPage = lazy(() => import('./pages/public/Portfolio/ProjectDet
 const PhotosPage = lazy(() => import('./pages/public/Photos/PhotosPage').then(m => ({ default: m.PhotosPage })))
 const VisitantesPage = lazy(() => import('./pages/public/Visitantes/VisitantesPage').then(m => ({ default: m.VisitantesPage })))
 const ContactPage = lazy(() => import('./pages/public/Contact/ContactPage').then(m => ({ default: m.ContactPage })))
+const NexusPage = lazy(() => import('./pages/public/Nexus/NexusPage').then(m => ({ default: m.default })))
 const LoginPage = lazy(() => import('./features/auth/LoginPage').then(m => ({ default: m.LoginPage })))
 
 import { useVisitorTracker } from './features/visitor/hooks/useVisitorTracker'
@@ -86,6 +87,7 @@ export const router = createBrowserRouter(
         { path: '/stream/:slug/cast', element: <CasterPage /> },
         { path: '/stream/:slug/watch', element: <ViewerPage /> },
         { path: '/contacto', element: <ContactPage /> },
+        { path: '/nexus', element: <NexusPage /> },
       ],
     },
     {

@@ -114,7 +114,7 @@ function PreBlock({ children, ...props }) {
             type="button"
             aria-label="Copiar código"
           >
-            {copied ? '<Icon name="check" /> Copiado' : 'Copiar'}
+            {copied ? <><Icon name="check" /> Copiado</> : 'Copiar'}
           </button>
         </div>
       )}

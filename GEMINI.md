@@ -20,6 +20,7 @@ src/
 │   │   ├── Stream/      # StreamRoomPage, CasterPage, ViewerPage, StreamChat
 │   │   ├── Photos/      # PhotosPage
 │   │   └── Visitantes/  # VisitantesPage
+│   │   └── Nexus/       # NexusPage
 │   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminPhotosPage, AdminContactPage, AdminSubscriptionsPage
 │       └── Streams/     # AdminStreamsPage
 │       └── Photos/      # AdminPhotosPage
@@ -31,6 +32,7 @@ src/
 │   ├── contact/         # useContact (public), useContactAdmin (CRUD)
 │   ├── subscriptions/   # useSubscriptions (public), useSubscriptionsAdmin (CRUD)
 │   ├── friends/         # useFriendLinks (public), useFriendLinksAdmin (CRUD)
+│   ├── nexus/           # useNexusLibrary, fileSystemDb, p2pDataChannel, nexusSignaling
 │   └── streaming/
 │       ├── lib/         # signalingChannel, peerManager, viewerPeer, signalingCleanup, streamLogger
 │       └── hooks/       # useMediaDevices, useMediaRecorder, useRooms, usePresence, usePublicLiveStreams, useRecordingUpload, useChat, useSpeechTranscription
@@ -56,7 +58,7 @@ src/
 4. **Single Supabase instance** — Import from `src/lib/supabase.js` only
 5. **No localStorage for data** — Only Supabase for business data
 6. **Handle all states** — Loading, error, and empty states in every async component
-7. **Toast for feedback** — Use `useToast()` from `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+7. **Toast for feedback** — Use `useToast()` from `src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
 src/components/ui/Toast.jsx`
 8. **Migrations are local** — `migrations/` is in `.gitignore`, never commit
 9. **No `console.log`** — Remove debug logs before finishing
@@ -69,6 +71,8 @@ src/components/ui/Toast.jsx`
 | `profiles` | `display_name`, `bio`, `avatar_url` | Public read, auth write |
 | `blog_posts` | `slug`, `title`, `content`, `published`, `published_at`, `reading_time_min`, `content_format`, `series_id`, `series_order` | Published = public read, auth write |
 | `blog_tags` | `name`, `slug`, `color` | Public read, auth write |
+| `blog_reactions` | `post_id`, `visitor_id`, `reaction_type` | Public read/insert |
+| `blog_comments` | `post_id`, `visitor_id`, `alias`, `content` | Public read/insert |
 | `blog_post_tags` | `post_id`, `tag_id` | Public read, auth write |
 | `blog_series` | `title`, `slug`, `description` | Public read, auth write |
 | `projects` | `slug`, `title`, `tags[]`, `featured`, `published`, `sort_order` | Published = public read, auth write |
@@ -84,6 +88,9 @@ src/components/ui/Toast.jsx`
 | `subscriptions` | `email`, `subscribe_streams`, `subscribe_newsletter` | Public insert (via RPC), auth all |
 | `stream_transcriptions` | `room_id`, `text`, `created_at` | Public read, auth insert/delete |
 | `friend_links` | `name`, `url`, `image_url`, `animation_type`, `sort_order` | Public read, auth all |
+| `peer_libraries` | `visitor_id`, `alias`, `files`, `is_online` | Public read/insert/update |
+| `peer_alerts` | `id`, `sender_id`, `receiver_id`, `file_id`, `status` | Public read/insert/update/delete |
+| `p2p_signaling` | `id`, `sender_id`, `target_id`, `type`, `payload` | Public read/insert/delete |
 
 Schema changes → create `migrations/NNN_description.sql`, update `migrations/README.md`
 

@@ -237,4 +237,9 @@ export function useVisitorTracker() {
       title: document.title
     })
   }, [location.pathname])
+
+  return {
+    visitorId: getIdentity().visitorId,
+    isLoading: false
+  }
 }

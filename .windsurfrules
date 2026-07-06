@@ -16,7 +16,7 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - Unit tests exist in `__tests__` directories, run via `npm test`
 
 ## Structure
-- `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+- `src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
 src/components/ui/` → Primitives (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite)
 - `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
 - `src/pages/public/` → Public pages (Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage) | `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat

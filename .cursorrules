@@ -16,7 +16,7 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - Tests are run via `npm test` using Vitest
 
 ## Structure
-- `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+- `src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
 src/components/ui/` → Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite
 - `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
 - `src/pages/public/` → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage
@@ -35,7 +35,9 @@ src/components/ui/` → Button, Input, Card, Modal, Toast, PageLoader, EmptyStat
 - `profiles` — admin profile (1 row)
 - `blog_posts`
 - `blog_tags` — blog taxonomy tags
-- `blog_post_tags` — many-to-many tags
+- `blog_post_tags`
+- `blog_reactions`
+- `blog_comments` — many-to-many tags
 - `blog_series` — blog series collections
 - `blog_posts` — slug, title, content, published, published_at
 - `projects` — slug, title, tags[], featured, published, sort_order

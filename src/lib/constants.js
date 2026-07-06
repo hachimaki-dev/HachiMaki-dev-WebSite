@@ -16,6 +16,7 @@ export const ROUTES = {
   VISITORS: '/visitantes',
   LOGIN: '/login',
   CONTACT: '/contacto',
+  NEXUS: '/nexus',
 
   /* Streaming routes */
   STREAM_ROOM: '/stream/:slug',
@@ -61,6 +62,9 @@ export const TABLES = {
   FRIEND_LINKS: 'friend_links',
   BLOG_REACTIONS: 'blog_reactions',
   BLOG_COMMENTS: 'blog_comments',
+  PEER_LIBRARIES: 'peer_libraries',
+  PEER_ALERTS: 'peer_alerts',
+  P2P_SIGNALING: 'p2p_signaling',
 }
 
 /* ── Site metadata ── */

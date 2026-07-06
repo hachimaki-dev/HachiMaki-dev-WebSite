@@ -37,7 +37,9 @@ All values come from `src/styles/tokens.css`:
 - `profiles` — single admin profile row
 - `blog_posts`
 - `blog_tags` — blog taxonomy tags
-- `blog_post_tags` — many-to-many tags
+- `blog_post_tags`
+- `blog_reactions`
+- `blog_comments` — many-to-many tags
 - `blog_series` — blog series collections
 - `blog_posts` — blog with slug, title, content, published flag
 - `projects` — portfolio with slug, tags[], featured, sort_order
@@ -54,6 +56,9 @@ All values come from `src/styles/tokens.css`:
 - `subscriptions` — newsletter/stream subscriptions
 - `stream_transcriptions` — stream speech transcriptions
 - `friend_links` — website buttons showcase (linkeame)
+- `peer_libraries` — P2P file sharing libraries
+- `peer_alerts` — P2P offline alerts
+- `p2p_signaling` — WebRTC P2P signaling
 
 RLS: public read when `published=true` or public list, writes require authentication.
 Streaming: public read, anonymous signaling/chat, auth for rooms/recordings/transcriptions.
@@ -62,13 +67,14 @@ Contact & Subscriptions: public insert, authenticated admin read/write.
 ## Folder Conventions
 
 ```
-src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
 src/components/ui/             → Reusable primitives (Button, Input, Card, Modal, NewsletterInvite...)
 src/components/layout/         → Header, Footer, PageWrapper, AdminLayout
 src/pages/public/              → Public pages (Home, Blog, Portfolio, Contact)
 src/pages/public/Stream/       → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 src/pages/public/Photos/       → PhotosPage
 src/pages/public/Visitantes/   → VisitantesPage
+src/pages/public/Nexus/        → NexusPage
 src/pages/admin/               → Admin CRUD pages (behind AuthGuard - Dashboard, Settings, Contact, Subscriptions)
 src/pages/admin/Streams/       → AdminStreamsPage
 src/pages/admin/Photos/        → AdminPhotosPage
@@ -79,6 +85,7 @@ src/features/visitor/hooks/    → useVisitorTracker, useVisitorLogs
 src/features/contact/          → useContact, useContactAdmin
 src/features/subscriptions/    → useSubscriptions, useSubscriptionsAdmin
 src/features/friends/          → useFriendLinks, useFriendLinksAdmin
+src/features/nexus/            → useNexusLibrary, fileSystemDb, p2pDataChannel, nexusSignaling
 src/hooks/                     → Generic hooks (useMediaQuery, useLocalStorage)
 src/utils/                     → Pure functions (formatDate, slugify, truncate)
 ```

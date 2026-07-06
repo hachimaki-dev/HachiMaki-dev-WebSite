@@ -12,6 +12,7 @@ export function Header() {
     { to: ROUTES.PORTFOLIO, label: 'PORTFOLIO' },
     { to: ROUTES.PHOTOS, label: 'PHOTOS' },
     { to: ROUTES.VISITORS, label: 'VISITANTES' },
+    { to: ROUTES.NEXUS, label: 'BÓVEDA' },
     { to: ROUTES.CONTACT, label: 'CONTACTO' },
   ]
 

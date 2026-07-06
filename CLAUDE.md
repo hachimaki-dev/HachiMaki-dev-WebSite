@@ -49,7 +49,9 @@ migrations/             → Local SQL files, in .gitignore — NEVER commit
 - `profiles` — Admin profile (1 row): `id`, `display_name`, `bio`, `avatar_url`
 - `blog_posts`
 - `blog_tags` — blog taxonomy tags
-- `blog_post_tags` — many-to-many tags
+- `blog_post_tags`
+- `blog_reactions`
+- `blog_comments` — many-to-many tags
 - `blog_series` — blog series collections
 - `blog_posts` — Blog: `slug`, `title`, `excerpt`, `content`, `cover_url`, `published`, `published_at`
 - `projects` — Portfolio: `slug`, `title`, `description`, `content`, `tags[]`, `featured`, `published`, `sort_order`
