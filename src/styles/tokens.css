@@ -17,6 +17,25 @@
   --color-accent: #8b5cf6;
   --color-accent-hover: #a78bfa;
   --color-accent-dim: #6d44d8;
+
+  /* ── Primitivos extras ── */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-black-alt: #121212;
+
+  /* ── Syntax Highlighting ── */
+  --color-syntax-keyword: #c678dd;
+  --color-syntax-string: #98c379;
+  --color-syntax-number: #d19a66;
+  --color-syntax-function: #61afef;
+  --color-syntax-class: #e5c07b;
+
+  /* ── Friend showcase animations ── */
+  --color-neon-pink: #ff007f;
+  --color-neon-cyan: #00f0ff;
+  --color-neon-lime: #c8f000;
+
+  /* ── Estado Semántico ── */
   --color-accent-bg: rgba(139, 92, 246, 0.08);
   --color-accent-bg-hover: rgba(139, 92, 246, 0.14);
   --color-rec: #c83030;

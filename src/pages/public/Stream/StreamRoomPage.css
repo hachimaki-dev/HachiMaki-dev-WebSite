@@ -107,7 +107,7 @@
 
 .stream-room__status-badge--live {
   background: var(--color-live);
-  color: #fff;
+  color: var(--color-white);
   box-shadow: 0 0 12px var(--color-live-glow);
   animation: glow-pulse 2s ease-in-out infinite;
 }
@@ -172,7 +172,7 @@
 
 .stream-room__btn--watch {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .stream-room__btn--watch:hover {
@@ -182,7 +182,7 @@
 
 .stream-room__btn--cast {
   background: var(--color-live);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .stream-room__btn--cast:hover {

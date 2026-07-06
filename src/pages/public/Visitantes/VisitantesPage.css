@@ -20,7 +20,7 @@
   font-family: var(--font-sans);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-3xl);
-  color: #fff;
+  color: var(--color-white);
   letter-spacing: var(--letter-spacing-tight);
 }
 
@@ -152,7 +152,7 @@
   bottom: -4px;
   right: -4px;
   background: #10b981;
-  color: #fff;
+  color: var(--color-white);
   font-size: 9px;
   font-weight: var(--font-weight-bold);
   padding: 2px 4px;
@@ -164,7 +164,7 @@
 .story-circle__name {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
-  color: #fff;
+  color: var(--color-white);
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -235,7 +235,7 @@
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-wider);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .dossier-card__content {
@@ -534,7 +534,7 @@
 .data-lab__title {
   font-family: var(--font-sans);
   font-size: var(--font-size-2xl);
-  color: #fff;
+  color: var(--color-white);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-tight);
 }
@@ -625,7 +625,7 @@
 .tab-pane__theory h3 {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
-  color: #fff;
+  color: var(--color-white);
   letter-spacing: var(--letter-spacing-wide);
 }
 
@@ -636,7 +636,7 @@
 }
 
 .tab-pane__formula {
-  background: #000;
+  background: var(--color-black);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: var(--space-3);
@@ -677,7 +677,7 @@
 
 .churn-meter__gauge {
   height: 20px;
-  background: #000;
+  background: var(--color-black);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -693,7 +693,7 @@
 .churn-meter__value {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .verdict-note {
@@ -728,7 +728,7 @@
 
 .affinity-bar {
   height: 8px;
-  background: #000;
+  background: var(--color-black);
   border-radius: var(--radius-full);
   overflow: hidden;
 }
@@ -741,14 +741,14 @@
 }
 
 .affinity-val {
-  color: #fff;
+  color: var(--color-white);
   font-weight: var(--font-weight-bold);
   text-align: right;
 }
 
 /* Intent and Persona Cards */
 .intent-card, .persona-card {
-  background: #000;
+  background: var(--color-black);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: var(--space-4);
@@ -801,7 +801,7 @@
 
 .privacy-conclusion__action {
   font-size: var(--font-size-xs);
-  color: #fff;
+  color: var(--color-white);
   border-top: 1px solid rgba(245, 158, 11, 0.15);
   padding-top: var(--space-2);
   margin-top: var(--space-1);
@@ -867,7 +867,7 @@
 .dossier-modal__title {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
-  color: #fff;
+  color: var(--color-white);
   letter-spacing: var(--letter-spacing-wider);
 }
 
@@ -882,7 +882,7 @@
 }
 
 .dossier-modal__close:hover {
-  color: #fff;
+  color: var(--color-white);
 }
 
 .dossier-modal__body {

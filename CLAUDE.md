@@ -59,7 +59,7 @@ migrations/             → Local SQL files, in .gitignore — NEVER commit
 - `signaling_messages` — WebRTC signaling: `room_id`, `sender_id`, `target_id`, `type`, `payload`
 - `recordings` — Stream recordings: `room_id`, `caster_id`, `file_path`, `file_size`, `duration_ms`
 - `chat_messages` — Live chat: `room_id`, `sender_id`, `display_name`, `message`
-- `visitor_logs` — Visitor tracking logs: `session_id`, `ip`, `country`, `city`, `isp`, `browser`, `os`, `device_type`, `screen_resolution`, `referrer`, `page_path`, `action_type`, `action_details`
+- `visitor_logs` — Visitor tracking logs: `session_id`, `visitor_id`, `ip`, `country`, `city`, `isp`, `browser`, `os`, `device_type`, `screen_resolution`, `referrer`, `page_path`, `action_type`, `action_details`, `canvas_fingerprint`, `gpu_model`, `visit_count`, `last_visit_date`
 - `contact_messages` — Contact form messages: `id`, `name`, `email`, `subject`, `message`, `is_read`, `created_at`
 - `subscriptions` — Newsletter/stream subscriptions: `id`, `email`, `subscribe_streams`, `subscribe_newsletter`, `created_at`
 - `stream_transcriptions` — Stream speech transcriptions: `id`, `room_id`, `text`, `created_at`
@@ -86,8 +86,10 @@ Admin:   /admin  /admin/blog  /admin/blog/new  /admin/blog/:id
 - Use kebab-case for CSS classes: `.blog-card`, `.admin-sidebar`
 - One component per file, PascalCase naming: `BlogCard.jsx`
 - Hooks with `use` prefix: `useBlogPosts.js`
-- Handle loading, error, and empty states in every async component
-- Show user feedback via toast notifications (use `useToast()` hook)
+- Always implement loading, error, and empty states for data-fetching components
+- Use `useToast()` from `src/components/ui/Toast.jsx` for user notifications
+- Max ~150 lines per component
+- Use `useAuth()` inside children of `<AuthProvider>` (app is wrapped in it)
 - Import Supabase client from `src/lib/supabase.js` only
 
 ### MUST NOT DO
@@ -121,11 +123,11 @@ VITE_SUPABASE_ANON_KEY — Supabase anonymous key (public)
 ## Commands
 
 ```bash
-npm run dev      # Start dev server
-npm run build    # Production build
-npm run preview  # Preview production build
+npm run dev      # Start development server
+npm run build    # Production build (must pass with 0 errors)
+npm run preview  # Preview production build locally
+npm test         # Run unit tests via Vitest
 ```
-
 
 ## UI / UX Guidelines (Retro VHS / Surveillance System)
 
@@ -137,7 +139,7 @@ npm run preview  # Preview production build
    - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
    - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
    - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
-   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
 \n## 🔄 Auto-Maintenance Rule (MANDATORY)

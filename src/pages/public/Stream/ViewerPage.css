@@ -49,7 +49,7 @@
   gap: var(--space-2);
   padding: var(--space-1) var(--space-3);
   background: var(--color-live);
-  color: #fff;
+  color: var(--color-white);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
@@ -63,7 +63,7 @@
   content: '';
   width: 8px;
   height: 8px;
-  background: #fff;
+  background: var(--color-white);
   border-radius: var(--radius-full);
   animation: rec-blink 1.2s step-end infinite;
 }
@@ -92,7 +92,7 @@
 .viewer-page__video-wrapper {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: #000;
+  background: var(--color-black);
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--color-border);
@@ -102,7 +102,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #000;
+  background: var(--color-black);
   border-radius: var(--radius-lg);
 }
 
@@ -279,13 +279,13 @@
 
 .viewer-page__cc-btn--active {
   background: var(--color-accent);
-  color: #000;
+  color: var(--color-black);
   border-color: var(--color-accent);
 }
 
 .viewer-page__cc-btn--active:hover {
   background: var(--color-accent-hover);
-  color: #000;
+  color: var(--color-black);
   border-color: var(--color-accent-hover);
 }
 
@@ -308,7 +308,7 @@
 }
 
 .viewer-page__captions-text {
-  color: #ffffff;
+  color: var(--color-white);
   font-family: var(--font-sans);
   font-size: var(--font-size-md);
   margin: 0;

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../lib/supabase'
 import { TABLES, PAGINATION } from '../../lib/constants'
+import { attachTagsToPosts } from './attachTagsToPosts'
 
 /**
  * useBlogPosts — Fetch published blog posts with filtering & pagination
@@ -253,29 +254,3 @@ export function useBlogPost(slug) {
   return { post, seriesPosts, relatedPosts, loading, error }
 }
 
-/**
- * Attach tags to an array of posts
- * @param {Array} posts
- * @returns {Promise<Array>}
- */
-async function attachTagsToPosts(posts) {
-  if (posts.length === 0) return posts
-
-  const postIds = posts.map(p => p.id)
-
-  const { data: postTags } = await supabase
-    .from(TABLES.BLOG_POST_TAGS)
-    .select(`post_id, ${TABLES.BLOG_TAGS} ( id, name, slug, color )`)
-    .in('post_id', postIds)
-
-  const tagMap = {}
-  for (const pt of (postTags || [])) {
-    if (!tagMap[pt.post_id]) tagMap[pt.post_id] = []
-    if (pt[TABLES.BLOG_TAGS]) tagMap[pt.post_id].push(pt[TABLES.BLOG_TAGS])
-  }
-
-  return posts.map(p => ({
-    ...p,
-    tags: tagMap[p.id] || [],
-  }))
-}

@@ -23,9 +23,9 @@ Deployed to GitHub Pages via GitHub Actions.
 ### Components
 - One component per file, PascalCase naming
 - Always implement loading, error, and empty states for data-fetching components
-- Use `useToast()` from `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
-src/components/ui/Toast.jsx` for user notifications
+- Use `useToast()` from `src/components/ui/Toast.jsx` for user notifications
 - Max ~150 lines per component
+- Write unit tests using Vitest (run via `npm test`)
 
 ### Data
 - **Single Supabase client** — always import from `src/lib/supabase.js`
@@ -49,7 +49,7 @@ src/components/ui/Toast.jsx` for user notifications
 - Pure utilities: `src/utils/`
 
 ### Design System Reference
-- Accent color: `--color-accent: #c8f000`
+- Accent color: `--color-accent: #8b5cf6`
 - Background: `--color-bg: #0d0d0d`
 - Font: `--font-sans: 'Space Grotesk'`
 - Mono font: `--font-mono: 'JetBrains Mono'`
@@ -65,7 +65,7 @@ src/components/ui/Toast.jsx` for user notifications
    - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
    - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
    - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
-   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
 \n## 🔄 Auto-Maintenance (MANDATORY)

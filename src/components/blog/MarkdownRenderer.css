@@ -188,7 +188,7 @@
 .hljs-literal,
 .hljs-section,
 .hljs-link {
-  color: #c678dd;
+  color: var(--color-syntax-keyword);
 }
 
 .hljs-string,
@@ -202,7 +202,7 @@
 .hljs-variable,
 .hljs-template-tag,
 .hljs-template-variable {
-  color: #98c379;
+  color: var(--color-syntax-string);
 }
 
 .hljs-comment,
@@ -217,15 +217,15 @@
 .hljs-regexp,
 .hljs-literal,
 .hljs-built_in {
-  color: #d19a66;
+  color: var(--color-syntax-number);
 }
 
 .hljs-function .hljs-title {
-  color: #61afef;
+  color: var(--color-syntax-function);
 }
 
 .hljs-attr {
-  color: #e5c07b;
+  color: var(--color-syntax-class);
 }
 
 /* ── Images ── */

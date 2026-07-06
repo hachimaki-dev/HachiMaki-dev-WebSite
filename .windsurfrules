@@ -13,6 +13,7 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - Use `useToast()` for user feedback
 - Migrations go in `migrations/NNN_desc.sql` (local, gitignored)
 - kebab-case CSS classes, PascalCase components, camelCase hooks/utils
+- Unit tests exist in `__tests__` directories, run via `npm test`
 
 ## Structure
 - `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
@@ -30,7 +31,7 @@ src/components/ui/` → Primitives (Button, Input, Card, Modal, Toast, PageLoade
 - `src/styles/tokens.css` → ALL design tokens — ALWAYS use these
 
 ## DB: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages, photos, visitor_logs, contact_messages, subscriptions, stream_transcriptions, friend_links (Supabase PostgreSQL + RLS)
-## Accent: #c8f000 | Font: Space Grotesk | Theme: dark (#0d0d0d)
+## Accent: #8b5cf6 | Font: Space Grotesk | Theme: dark (#0d0d0d)
 
 
 ## UI / UX Guidelines (Retro VHS / Surveillance System)
@@ -43,7 +44,7 @@ src/components/ui/` → Primitives (Button, Input, Card, Modal, Toast, PageLoade
    - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
    - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
    - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
-   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
 \n## 🔄 Auto-Maintenance (MANDATORY)

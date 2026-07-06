@@ -39,7 +39,7 @@
 
 .admin-chat-modal__clear-btn:hover:not(:disabled) {
   background: var(--color-danger);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .admin-chat-modal__clear-btn:disabled {
@@ -147,5 +147,5 @@
 
 .admin-chat-modal__del-btn:hover {
   background: var(--color-danger);
-  color: #fff;
+  color: var(--color-white);
 }

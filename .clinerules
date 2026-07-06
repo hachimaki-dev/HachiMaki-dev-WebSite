@@ -14,6 +14,7 @@ Deploy: GitHub Pages.
 - Loading + error + empty states always
 - Toast notifications via `useToast()`
 - Migrations in `migrations/NNN.sql` — gitignored
+- Tests are run via `npm test`
 
 ## Key Files
 - `src/styles/tokens.css` — Design tokens (colors, fonts, spacing)
@@ -42,7 +43,7 @@ Deploy: GitHub Pages.
    - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
    - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
    - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
-   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
 \n## 🔄 Auto-Maintenance (MANDATORY)

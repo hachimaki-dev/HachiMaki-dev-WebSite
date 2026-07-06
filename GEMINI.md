@@ -79,7 +79,7 @@ src/components/ui/Toast.jsx`
 | `recordings` | `room_id`, `caster_id`, `file_path`, `duration_ms` | Public read, auth write |
 | `chat_messages` | `room_id`, `sender_id`, `display_name`, `message` | Public read, open insert, auth delete |
 | `photos` | `storage_path`, `width`, `height` | Public read, auth write |
-| `visitor_logs` | `session_id`, `ip`, `country`, `city`, `browser`, `os`, `action_type`, `action_details` | Public read, open insert |
+| `visitor_logs` | `session_id`, `visitor_id`, `ip`, `country`, `city`, `browser`, `os`, `action_type`, `action_details`, `canvas_fingerprint`, `gpu_model`, `visit_count` | Public read, open insert |
 | `contact_messages` | `name`, `email`, `subject`, `message`, `is_read` | Public insert, auth select/update/delete |
 | `subscriptions` | `email`, `subscribe_streams`, `subscribe_newsletter` | Public insert (via RPC), auth all |
 | `stream_transcriptions` | `room_id`, `text`, `created_at` | Public read, auth insert/delete |
@@ -111,6 +111,7 @@ VITE_SUPABASE_ANON_KEY=eyJ...
 npm run dev      # Start development server
 npm run build    # Production build (must complete with 0 errors)
 npm run preview  # Preview production build locally
+npm test         # Run unit tests via Vitest
 ```
 
 
@@ -124,7 +125,7 @@ npm run preview  # Preview production build locally
    - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
    - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
    - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
-   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
 \n## 🔄 Auto-Maintenance (MANDATORY)

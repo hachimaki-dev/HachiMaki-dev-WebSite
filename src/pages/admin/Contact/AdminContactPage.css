@@ -113,7 +113,7 @@
 
 .admin-contact__item--unread .admin-contact__item-subject {
   font-weight: var(--font-weight-bold);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .admin-contact__item--unread::before {

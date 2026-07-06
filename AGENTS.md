@@ -27,7 +27,7 @@ Single admin user. React 18 + Vite + CSS native + Supabase. GitHub Pages deploy.
 ## CSS Design System
 
 All values come from `src/styles/tokens.css`:
-- Colors: `--color-bg`, `--color-surface`, `--color-accent (#c8f000)`, `--color-text`, etc.
+- Colors: `--color-bg`, `--color-surface`, `--color-accent (#8b5cf6)`, `--color-text`, etc.
 - Typography: `--font-sans (Space Grotesk)`, `--font-mono (JetBrains Mono)`
 - Spacing: `--space-1` through `--space-32` (4px scale)
 - Classes: kebab-case (`.blog-card__title`, `.btn-primary`)
@@ -49,7 +49,7 @@ All values come from `src/styles/tokens.css`:
 - `recordings` — stream recordings in Supabase Storage
 - `chat_messages` — live chat per room
 - `photos` — custom photo gallery
-- `visitor_logs` — visitor activity logs
+- `visitor_logs` — session_id, visitor_id, ip, country, city, browser, os, action_type, action_details, canvas_fingerprint, gpu_model, visit_count
 - `contact_messages` — contact form messages
 - `subscriptions` — newsletter/stream subscriptions
 - `stream_transcriptions` — stream speech transcriptions
@@ -96,6 +96,7 @@ src/utils/                     → Pure functions (formatDate, slugify, truncate
 ```bash
 npm run dev      # Dev server
 npm run build    # Prod build (must pass with 0 errors)
+npm test         # Run unit tests via Vitest
 ```
 
 
@@ -109,7 +110,7 @@ npm run build    # Prod build (must pass with 0 errors)
    - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
    - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
    - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
-   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
 \n## 🔄 Auto-Maintenance (MANDATORY)

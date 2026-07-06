@@ -36,7 +36,7 @@
 
 .vhs-card__badge--live {
   background-color: var(--color-live);
-  color: #fff;
+  color: var(--color-white);
   animation: pulse 2s infinite alternate;
 }
 
@@ -174,7 +174,7 @@
 
 .newsletter-invite__submit-btn {
   background-color: var(--color-accent-dim);
-  color: #fff;
+  color: var(--color-white);
   border: none;
   font-family: var(--font-sans);
   font-weight: var(--font-weight-bold);

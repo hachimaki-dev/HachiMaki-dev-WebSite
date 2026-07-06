@@ -59,6 +59,8 @@ export const TABLES = {
   SUBSCRIPTIONS: 'subscriptions',
   STREAM_TRANSCRIPTIONS: 'stream_transcriptions',
   FRIEND_LINKS: 'friend_links',
+  BLOG_REACTIONS: 'blog_reactions',
+  BLOG_COMMENTS: 'blog_comments',
 }
 
 /* ── Site metadata ── */

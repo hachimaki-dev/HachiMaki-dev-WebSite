@@ -5,6 +5,7 @@ import { Footer } from './components/layout/Footer'
 import { AdminLayout } from './components/layout/AdminLayout'
 import { AuthGuard } from './features/auth/AuthGuard'
 import { PageLoader } from './components/ui/PageLoader'
+import { RouteErrorFallback } from './components/ui/ErrorFallback'
 
 /* ── Lazy load pages ── */
 const HomePage = lazy(() => import('./pages/public/Home/HomePage').then(m => ({ default: m.HomePage })))
@@ -70,6 +71,7 @@ export const router = createBrowserRouter(
     {
       /* Public routes */
       element: <PublicLayout />,
+      errorElement: <RouteErrorFallback />,
       children: [
         { path: '/', element: <HomePage /> },
         { path: '/blog', element: <BlogPage /> },
@@ -89,6 +91,7 @@ export const router = createBrowserRouter(
     {
       /* Login (no header/footer) */
       path: '/login',
+      errorElement: <RouteErrorFallback />,
       element: (
         <Suspense fallback={<PageLoader />}>
           <LoginPage />
@@ -99,6 +102,7 @@ export const router = createBrowserRouter(
       /* Admin routes (behind AuthGuard) */
       path: '/admin',
       element: <ProtectedAdminLayout />,
+      errorElement: <RouteErrorFallback />,
       children: [
         { index: true, element: <DashboardPage /> },
         { path: 'blog', element: <AdminBlogPage /> },

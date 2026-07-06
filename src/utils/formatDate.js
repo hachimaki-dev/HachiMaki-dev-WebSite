@@ -7,7 +7,10 @@
  * @returns {string}
  */
 export function formatDate(date, { locale = 'es-ES', relative = false } = {}) {
+  if (!date) return ''
+  
   const d = new Date(date)
+  if (isNaN(d.getTime())) return 'Fecha inválida'
 
   if (relative) {
     const now = new Date()

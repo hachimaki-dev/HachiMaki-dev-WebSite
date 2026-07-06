@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../lib/supabase'
 import { TABLES } from '../../lib/constants'
 import { calculateReadingTime } from '../../components/blog/ReadingTime'
+import { attachTagsToPosts } from './attachTagsToPosts'
 
 /**
  * useBlogAdmin — CRUD hook for blog posts (admin) with tags & series support
@@ -24,7 +25,7 @@ export function useBlogAdmin() {
       setError(fetchError.message)
     } else {
       // Attach tags to each post
-      const postsWithTags = await attachTagsToAdminPosts(data || [])
+      const postsWithTags = await attachTagsToPosts(data || [])
       setPosts(postsWithTags)
     }
     setLoading(false)
@@ -163,27 +164,3 @@ async function syncPostTags(postId, tagIds) {
   }
 }
 
-/**
- * Attach tags to admin posts list
- */
-async function attachTagsToAdminPosts(posts) {
-  if (posts.length === 0) return posts
-
-  const postIds = posts.map(p => p.id)
-
-  const { data: postTags } = await supabase
-    .from(TABLES.BLOG_POST_TAGS)
-    .select(`post_id, ${TABLES.BLOG_TAGS} ( id, name, slug, color )`)
-    .in('post_id', postIds)
-
-  const tagMap = {}
-  for (const pt of (postTags || [])) {
-    if (!tagMap[pt.post_id]) tagMap[pt.post_id] = []
-    if (pt[TABLES.BLOG_TAGS]) tagMap[pt.post_id].push(pt[TABLES.BLOG_TAGS])
-  }
-
-  return posts.map(p => ({
-    ...p,
-    tags: tagMap[p.id] || [],
-  }))
-}

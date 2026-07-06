@@ -17,7 +17,7 @@ export function useVisitorLogs() {
   // Calculate metrics locally from retrieved logs
   const calculateStats = (currentLogs) => {
     const totalLogs = currentLogs.length
-    const uniqueSessions = new Set(currentLogs.map(l => l.session_id)).size
+    const uniqueSessions = new Set(currentLogs.map(l => l.visitor_id || l.session_id)).size
 
     const countryTally = {}
     const pageTally = {}

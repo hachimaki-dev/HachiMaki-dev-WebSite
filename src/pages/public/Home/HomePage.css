@@ -775,7 +775,7 @@
 }
 
 .outsider__app-item:hover .outsider__app-label {
-  color: #fff;
+  color: var(--color-white);
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 

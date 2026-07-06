@@ -3,46 +3,11 @@ import { PageWrapper } from '../../../components/layout/PageWrapper'
 import { useVisitorLogs } from '../../../features/visitor/hooks/useVisitorLogs'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
+import { parseUserAgent } from '../../../utils/parseUserAgent'
 import './VisitantesPage.css'
 import Icon from '../../../components/ui/Icon'
 
-// Helper to parse User Agent
-function parseUserAgent(ua) {
-  let browser = 'Unknown Browser'
-  let os = 'Unknown OS'
-  let deviceType = 'Desktop'
-
-  if (/mobi|android|iphone|ipad/i.test(ua)) {
-    deviceType = /ipad|tablet/i.test(ua) ? 'Tablet' : 'Mobile'
-  }
-
-  if (/chrome|crios/i.test(ua) && !/edge|edg|opr/i.test(ua)) {
-    browser = 'Chrome'
-  } else if (/safari/i.test(ua) && !/chrome|crios|android/i.test(ua)) {
-    browser = 'Safari'
-  } else if (/firefox|fxios/i.test(ua)) {
-    browser = 'Firefox'
-  } else if (/opr|opera/i.test(ua)) {
-    browser = 'Opera'
-  } else if (/edg|edge/i.test(ua)) {
-    browser = 'Edge'
-  }
-
-  if (/windows/i.test(ua)) {
-    os = 'Windows'
-  } else if (/macintosh|mac os x/i.test(ua)) {
-    os = 'macOS'
-  } else if (/linux/i.test(ua)) {
-    os = 'Linux'
-  } else if (/android/i.test(ua)) {
-    os = 'Android'
-  } else if (/iphone|ipad|ipod/i.test(ua)) {
-    os = 'iOS'
-  }
-
-  return { browser, os, deviceType }
-}
-
+// Helper: get OS icon
 function getOSEmoji(os) {
   const osLower = (os || '').toLowerCase()
   if (osLower.includes('linux')) return <Icon name="terminal" />
@@ -88,7 +53,12 @@ export function VisitantesPage() {
     lang: navigator.language,
     referrer: document.referrer || 'Acceso Directo',
     deniedGeo: false,
-    coords: null
+    coords: null,
+    visitorId: localStorage.getItem('hachimaki_visitor_id') || 'Generando...',
+    visitCount: localStorage.getItem('hachimaki_visitor_count') || '1',
+    lastVisitDate: localStorage.getItem('hachimaki_last_visit') || new Date().toISOString(),
+    canvasFingerprint: localStorage.getItem('hachimaki_canvas_hash') || 'Calculando...',
+    gpuModel: localStorage.getItem('hachimaki_gpu_model') || 'Escaneando...'
   })
 
   // Control de inactividad en tiempo real (para Churn)
@@ -184,11 +154,12 @@ export function VisitantesPage() {
   // Group logs by session for "Exposed Stories"
   const sessionsMap = {}
   logs.forEach(log => {
-    const sid = log.session_id
+    const sid = log.visitor_id || log.session_id
     if (!sid) return
     if (!sessionsMap[sid]) {
       sessionsMap[sid] = {
         sessionId: sid,
+        visitorId: log.visitor_id,
         ip: log.ip || 'Oculto',
         city: log.city || 'Desconocido',
         country: log.country || 'Desconocido',
@@ -198,6 +169,10 @@ export function VisitantesPage() {
         resolution: log.screen_resolution || 'Desconocido',
         referrer: log.referrer || 'Acceso Directo',
         createdAt: log.created_at,
+        canvasFingerprint: log.canvas_fingerprint,
+        gpuModel: log.gpu_model,
+        visitCount: log.visit_count,
+        lastVisitDate: log.last_visit_date,
         actions: []
       }
     }
@@ -253,8 +228,8 @@ export function VisitantesPage() {
   }
 
   // --- Lógica del Laboratorio Académico de Datos ---
-  const sessionKey = sessionStorage.getItem('hachimaki_visitor_session')
-  const currentUserLogs = logs.filter(log => log.session_id === sessionKey)
+  const sessionKey = localStorage.getItem('hachimaki_visitor_id') || sessionStorage.getItem('hachimaki_visitor_session')
+  const currentUserLogs = logs.filter(log => (log.visitor_id || log.session_id) === sessionKey)
   const totalClicks = currentUserLogs.filter(l => l.action_type === 'click').length
 
   // 1. Churn
@@ -336,7 +311,7 @@ export function VisitantesPage() {
           {sessionsList.map((session) => {
             const emoji = getOSEmoji(session.os)
             const initials = session.sessionId.substring(0, 4).toUpperCase()
-            const isCurrentUser = session.sessionId === sessionStorage.getItem('hachimaki_visitor_session')
+            const isCurrentUser = session.sessionId === (localStorage.getItem('hachimaki_visitor_id') || sessionStorage.getItem('hachimaki_visitor_session'))
             
             return (
               <button
@@ -368,6 +343,22 @@ export function VisitantesPage() {
           </div>
 
           <div className="dossier-card__content">
+            <div className="dossier-row">
+              <span className="dossier-label">IDENTIDAD PERSISTENTE (ID):</span>
+              <span className="dossier-value dossier-value--warning">{currentUser.visitorId}</span>
+            </div>
+            <div className="dossier-row">
+              <span className="dossier-label">HISTORIAL DE VISITAS:</span>
+              <span className="dossier-value">Visita Nº {currentUser.visitCount} (Última: {new Date(currentUser.lastVisitDate).toLocaleDateString()})</span>
+            </div>
+            <div className="dossier-row">
+              <span className="dossier-label">HUELLA BIOMÉTRICA (CANVAS):</span>
+              <span className="dossier-value dossier-value--highlight" title="Generada por micro-variaciones en cómo tu GPU dibuja píxeles. Imposible de ocultar.">{currentUser.canvasFingerprint}</span>
+            </div>
+            <div className="dossier-row">
+              <span className="dossier-label">UNIDAD GRÁFICA (GPU):</span>
+              <span className="dossier-value">{currentUser.gpuModel}</span>
+            </div>
             <div className="dossier-row">
               <span className="dossier-label">DIRECCIÓN IP:</span>
               <span className="dossier-value dossier-value--highlight">{currentUser.ip}</span>
@@ -624,12 +615,15 @@ export function VisitantesPage() {
                 </div>
                 
                 <div className="privacy-conclusion">
-                  <h5><Icon name="lightbulb" /> ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
+                  <h5><Icon name="lightbulb" /> EL CASO TIKTOK Y EL CONTROL SOCIAL</h5>
                   <p>
-                    El cálculo de afinidad es la base del "filtro burbuja". Los motores de las redes sociales capturan estas métricas para mostrarte únicamente lo que refuerza tus sesgos preexistentes, polarizándote y vendiendo tu perfil a anunciantes de micro-marketing político o comercial. Tus clicks definen qué caja de resonancia construyen para ti.
+                    El cálculo de afinidad es el motor del <strong>"Filtro Burbuja"</strong>, llevado a su extremo por plataformas como TikTok. Al medir el tiempo exacto en milisegundos que pasas viendo un video antes de hacer scroll, el algoritmo de TikTok crea un perfil psicométrico perfecto de tus inseguridades, sesgos políticos y visión de vida.
+                  </p>
+                  <p>
+                    Esto es perverso: los gobiernos pueden usar (y han sido acusados de usar) estas redes como armas de ingeniería social masiva. Al controlar el algoritmo, deciden qué ve, oye y reacciona una población entera. Pueden suprimir contenido político disidente de forma invisible (shadowbanning), o inundar el feed de jóvenes con tendencias depresivas o hiper-polarizantes. No eres el cliente, eres el producto siendo moldeado.
                   </p>
                   <span className="privacy-conclusion__action">
-                    <Icon name="shield" />️ <strong>Recomendación de Seguridad:</strong> Utiliza buscadores no rastreables (DuckDuckGo, SearX) y alterna deliberadamente tus búsquedas o clics en categorías aleatorias para romper los perfiles de interés consolidados de las redes de anuncios (Ad Networks).
+                    <Icon name="shield" />️ <strong>Defensa Activa:</strong> Desconfía del "scroll infinito". Alimenta deliberadamente al algoritmo con intereses falsos o contradictorios, usa plataformas open-source sin algoritmos predictivos (como Mastodon), y limita el uso de aplicaciones que exigen acceso al portapapeles, contactos y sensores sin justificación.
                   </span>
                 </div>
               </div>
@@ -745,6 +739,18 @@ export function VisitantesPage() {
                   <div className="modal-meta-row dossier-row--vertical">
                     <span className="meta-label">PORTAL DE ENTRADA:</span>
                     <span className="meta-value dossier-value--url">{selectedSession.referrer}</span>
+                  </div>
+                  <div className="modal-meta-row">
+                    <span className="meta-label">VISITAS:</span>
+                    <span className="meta-value">Visita Nº {selectedSession.visitCount || '1'}</span>
+                  </div>
+                  <div className="modal-meta-row">
+                    <span className="meta-label">GPU:</span>
+                    <span className="meta-value">{selectedSession.gpuModel || 'Desconocido'}</span>
+                  </div>
+                  <div className="modal-meta-row">
+                    <span className="meta-label">CANVAS HASH:</span>
+                    <span className="meta-value dossier-value--highlight">{selectedSession.canvasFingerprint || 'Oculto'}</span>
                   </div>
                 </div>
 
