@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Icon from './Icon'
 
 /**
  * Muestra el tiempo restante antes de que se borre un recurso
@@ -36,7 +37,7 @@ export function Countdown({ createdAt, maxDays = 7, onExpire }) {
 
   return (
     <span className={`countdown ${timeLeft === 'Expirado' ? 'countdown--expired' : ''}`}>
-      ⏱ {timeLeft}
+      <Icon name="clock" /> {timeLeft}
     </span>
   )
 }

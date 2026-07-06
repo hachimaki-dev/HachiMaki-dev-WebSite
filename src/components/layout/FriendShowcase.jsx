@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useFriendLinks } from '../../features/friends/useFriendLinks'
 import { SITE, ROUTES } from '../../lib/constants'
 import './FriendShowcase.css'
+import Icon from '../ui/Icon'
 
 export function FriendShowcase() {
   const { links, loading, error } = useFriendLinks()
@@ -17,7 +18,7 @@ export function FriendShowcase() {
   if (loading) return null // Hide while loading to prevent footer layout shifts
   if (error) return null   // Fail silently on footer widgets
 
-  const bannerCode = `<a href="${SITE.URL}" target="_blank" title="${SITE.NAME}">\n  <img src="${SITE.URL}/minibannerlanave.jpg" alt="${SITE.NAME}" width="88" height="31" border="0" />\n</a>`
+  const bannerCode = `<a href="${SITE.URL}" target="_blank" title="${SITE.NAME}">\n  <img src="https://rieloabfccxbczsbxtnh.supabase.co/storage/v1/object/public/photos/1783013541204-jgkg4qyeq3l.jpg" alt="${SITE.NAME}" width="88" height="31" border="0" />\n</a>`
 
   return (
     <div className="friend-showcase">
@@ -25,13 +26,13 @@ export function FriendShowcase() {
 
       <div className="friend-showcase__header">
         <h3 className="friend-showcase__title">
-          <span className="friend-showcase__icon">🌐</span> Webs Amigas &amp; Linkeame
+          <span className="friend-showcase__icon"><Icon name="globe" /></span> Webs Amigas &amp; Linkeame
         </h3>
         <button
           className="friend-showcase__code-toggle"
           onClick={() => setShowCode((prev) => !prev)}
         >
-          {showCode ? '✕ Cerrar' : '🔗 Intercambio'}
+          {showCode ? <><Icon name="close" /> Cerrar</> : <><Icon name="link" /> Intercambio</>}
         </button>
       </div>
 

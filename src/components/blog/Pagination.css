@@ -1,0 +1,96 @@
+/* ============================================
+   Pagination.css — Page navigation
+   ============================================ */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-12);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+}
+
+.pagination__btn {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.pagination__btn:hover:not(:disabled) {
+  color: var(--color-accent);
+  border-color: var(--color-accent-dim);
+  background-color: var(--color-accent-bg);
+}
+
+.pagination__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pagination__pages {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.pagination__page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.pagination__page:hover {
+  color: var(--color-text);
+  border-color: var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.pagination__page--active {
+  color: var(--color-bg);
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagination__page--active:hover {
+  color: var(--color-bg);
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.pagination__ellipsis {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+  padding: 0 var(--space-1);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .pagination__pages {
+    display: none;
+  }
+}

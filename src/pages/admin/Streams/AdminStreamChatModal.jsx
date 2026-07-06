@@ -7,6 +7,7 @@ import { Modal } from '../../../components/ui/Modal'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { useChatAdmin } from '../../../features/streaming/hooks/useChatAdmin'
 import './AdminStreamChatModal.css'
+import Icon from '../../../components/ui/Icon'
 
 export function AdminStreamChatModal({ isOpen, onClose, room }) {
   const { messages, loading, error, loadChatHistory, deleteMessage, clearChatHistory } = useChatAdmin()
@@ -29,7 +30,7 @@ export function AdminStreamChatModal({ isOpen, onClose, room }) {
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="admin-chat-modal">
         <div className="admin-chat-modal__header">
-          <h2 className="admin-chat-modal__title">💬 Historial: {room.title}</h2>
+          <h2 className="admin-chat-modal__title"><Icon name="message" /> Historial: {room.title}</h2>
           <button 
             className="admin-chat-modal__clear-btn" 
             onClick={handleClear}

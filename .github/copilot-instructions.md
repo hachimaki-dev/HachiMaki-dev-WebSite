@@ -23,7 +23,8 @@ Deployed to GitHub Pages via GitHub Actions.
 ### Components
 - One component per file, PascalCase naming
 - Always implement loading, error, and empty states for data-fetching components
-- Use `useToast()` from `src/components/ui/Toast.jsx` for user notifications
+- Use `useToast()` from `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+src/components/ui/Toast.jsx` for user notifications
 - Max ~150 lines per component
 
 ### Data
@@ -53,7 +54,21 @@ Deployed to GitHub Pages via GitHub Actions.
 - Font: `--font-sans: 'Space Grotesk'`
 - Mono font: `--font-mono: 'JetBrains Mono'`
 
-## 🔄 Auto-Maintenance (MANDATORY)
+
+## UI / UX Guidelines (Retro VHS / Surveillance System)
+
+1. **Aesthetic Identity**: The public-facing site follows a Retro VHS / Surveillance / Cyberpunk aesthetic.
+2. **Key Elements**:
+   - **Monospace Fonts**: Use var(--font-mono) for metadata, badges, system logs, dates, and IDs.
+   - **Sans-serif Fonts**: Use var(--font-sans) for primary titles and heavy readable text.
+   - **Terminal Language**: Use technical/system terms in uppercase (e.g., TRANSMISIONES, SEÑAL ACTIVA, DECODIFICANDO, ERROR DE TRANSMISIÓN).
+   - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
+   - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
+   - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
+   4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
+\n## 🔄 Auto-Maintenance (MANDATORY)
 
 After every change that modifies the project architecture (new/renamed/removed components, pages, hooks, routes, tables, tokens, or dependencies), update ALL agent config files to keep them in sync:
 

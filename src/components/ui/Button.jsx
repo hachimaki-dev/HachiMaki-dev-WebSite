@@ -1,4 +1,5 @@
 import './Button.css'
+import Icon from './Icon'
 
 /**
  * Button — Primary UI button component
@@ -35,7 +36,7 @@ export function Button({
       disabled={disabled || loading}
       {...rest}
     >
-      {loading && <span className="btn__spinner animate-spin">⟳</span>}
+      {loading && <span className="btn__spinner animate-spin"><Icon name="reload" /></span>}
       <span className={loading ? 'btn__content btn__content--hidden' : 'btn__content'}>
         {children}
       </span>

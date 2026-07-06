@@ -25,7 +25,7 @@ src/
 │       └── Photos/      # AdminPhotosPage
 ├── features/
 │   ├── auth/            # useAuth hook, AuthGuard component, LoginPage
-│   ├── blog/            # useBlogPosts (public reads), useBlogAdmin (CRUD)
+│   ├── blog/            # useBlogPosts, useBlogTags, useBlogSeries, useBlogAdmin, useBlogTagsAdmin, useBlogSeriesAdmin
 │   ├── portfolio/       # useProjects (public reads), useProjectsAdmin (CRUD)
 │   ├── visitor/         # useVisitorTracker (logs actions), useVisitorLogs (live sync)
 │   ├── contact/         # useContact (public), useContactAdmin (CRUD)
@@ -56,7 +56,8 @@ src/
 4. **Single Supabase instance** — Import from `src/lib/supabase.js` only
 5. **No localStorage for data** — Only Supabase for business data
 6. **Handle all states** — Loading, error, and empty states in every async component
-7. **Toast for feedback** — Use `useToast()` from `src/components/ui/Toast.jsx`
+7. **Toast for feedback** — Use `useToast()` from `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+src/components/ui/Toast.jsx`
 8. **Migrations are local** — `migrations/` is in `.gitignore`, never commit
 9. **No `console.log`** — Remove debug logs before finishing
 10. **No `!important`** — If needed, it's an architectural problem
@@ -66,7 +67,10 @@ src/
 | Table | Key Fields | RLS |
 |---|---|---|
 | `profiles` | `display_name`, `bio`, `avatar_url` | Public read, auth write |
-| `blog_posts` | `slug`, `title`, `content`, `published`, `published_at` | Published = public read, auth write |
+| `blog_posts` | `slug`, `title`, `content`, `published`, `published_at`, `reading_time_min`, `content_format`, `series_id`, `series_order` | Published = public read, auth write |
+| `blog_tags` | `name`, `slug`, `color` | Public read, auth write |
+| `blog_post_tags` | `post_id`, `tag_id` | Public read, auth write |
+| `blog_series` | `title`, `slug`, `description` | Public read, auth write |
 | `projects` | `slug`, `title`, `tags[]`, `featured`, `published`, `sort_order` | Published = public read, auth write |
 | `rooms` | `slug`, `title`, `caster_id`, `status`, `is_private` | Public read, auth write |
 | `room_members` | `room_id`, `user_id`, `role` | Public read, open insert |
@@ -109,7 +113,21 @@ npm run build    # Production build (must complete with 0 errors)
 npm run preview  # Preview production build locally
 ```
 
-## 🔄 Auto-Maintenance (MANDATORY)
+
+## UI / UX Guidelines (Retro VHS / Surveillance System)
+
+1. **Aesthetic Identity**: The public-facing site follows a Retro VHS / Surveillance / Cyberpunk aesthetic.
+2. **Key Elements**:
+   - **Monospace Fonts**: Use var(--font-mono) for metadata, badges, system logs, dates, and IDs.
+   - **Sans-serif Fonts**: Use var(--font-sans) for primary titles and heavy readable text.
+   - **Terminal Language**: Use technical/system terms in uppercase (e.g., TRANSMISIONES, SEÑAL ACTIVA, DECODIFICANDO, ERROR DE TRANSMISIÓN).
+   - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
+   - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
+   - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
+   4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
+\n## 🔄 Auto-Maintenance (MANDATORY)
 
 After every change that modifies the project architecture (new/renamed/removed components, pages, hooks, routes, tables, tokens, or dependencies), you MUST update ALL agent config files to keep them in sync:
 

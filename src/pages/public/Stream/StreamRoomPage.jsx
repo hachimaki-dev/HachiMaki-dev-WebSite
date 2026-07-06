@@ -14,6 +14,7 @@ import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
 import { supabase } from '../../../lib/supabase'
 import './StreamRoomPage.css'
+import Icon from '../../../components/ui/Icon'
 
 export function StreamRoomPage() {
   const { slug } = useParams()
@@ -63,7 +64,7 @@ export function StreamRoomPage() {
     <div className="stream-room">
       <div className="stream-room__card">
         <span className={`stream-room__status-badge stream-room__status-badge${statusClass}`}>
-          {isLive && '🔴 '}
+          {isLive && '<Icon name="circle" /> '}
           {statusLabel}
         </span>
 
@@ -75,7 +76,7 @@ export function StreamRoomPage() {
 
         {isLive && (
           <div className="stream-room__viewers">
-            👁 {viewerCount} espectador{viewerCount !== 1 ? 'es' : ''} conectados
+            <Icon name="eye" /> {viewerCount} espectador{viewerCount !== 1 ? 'es' : ''} conectados
           </div>
         )}
 
@@ -92,7 +93,7 @@ export function StreamRoomPage() {
                 }
               }}
             >
-              ▶ Ver Stream
+              <Icon name="play" /> Ver Stream
             </button>
           )}
 
@@ -102,7 +103,7 @@ export function StreamRoomPage() {
               className="stream-room__btn stream-room__btn--cast"
               onClick={() => navigate(`/stream/${slug}/cast`)}
             >
-              🔴 Iniciar Transmisión
+              <Icon name="circle" /> Iniciar Transmisión
             </button>
           )}
 
@@ -111,7 +112,7 @@ export function StreamRoomPage() {
               className="stream-room__btn stream-room__btn--secondary"
               onClick={() => navigate(`/stream/${slug}/cast`)}
             >
-              🎛 Panel del Emisor
+              <Icon name="settings-cog" /> Panel del Emisor
             </button>
           )}
 

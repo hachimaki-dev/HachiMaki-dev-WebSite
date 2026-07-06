@@ -47,6 +47,10 @@ migrations/             → Local SQL files, in .gitignore — NEVER commit
 ## Supabase Tables
 
 - `profiles` — Admin profile (1 row): `id`, `display_name`, `bio`, `avatar_url`
+- `blog_posts`
+- `blog_tags` — blog taxonomy tags
+- `blog_post_tags` — many-to-many tags
+- `blog_series` — blog series collections
 - `blog_posts` — Blog: `slug`, `title`, `excerpt`, `content`, `cover_url`, `published`, `published_at`
 - `projects` — Portfolio: `slug`, `title`, `description`, `content`, `tags[]`, `featured`, `published`, `sort_order`
 - `rooms` — Streaming rooms: `slug`, `title`, `caster_id`, `status` (offline/live/ended)
@@ -122,7 +126,21 @@ npm run build    # Production build
 npm run preview  # Preview production build
 ```
 
-## 🔄 Auto-Maintenance Rule (MANDATORY)
+
+## UI / UX Guidelines (Retro VHS / Surveillance System)
+
+1. **Aesthetic Identity**: The public-facing site follows a Retro VHS / Surveillance / Cyberpunk aesthetic.
+2. **Key Elements**:
+   - **Monospace Fonts**: Use var(--font-mono) for metadata, badges, system logs, dates, and IDs.
+   - **Sans-serif Fonts**: Use var(--font-sans) for primary titles and heavy readable text.
+   - **Terminal Language**: Use technical/system terms in uppercase (e.g., TRANSMISIONES, SEÑAL ACTIVA, DECODIFICANDO, ERROR DE TRANSMISIÓN).
+   - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
+   - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
+   - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
+   4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
+\n## 🔄 Auto-Maintenance Rule (MANDATORY)
 
 **After every iteration that modifies the project architecture, you MUST update ALL agent config files to keep them in sync.** This includes:
 

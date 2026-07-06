@@ -5,6 +5,7 @@ import { EmptyState } from '../../../components/ui/EmptyState'
 import { useToast } from '../../../components/ui/Toast'
 import { formatDate } from '../../../utils/formatDate'
 import './AdminSubscriptionsPage.css'
+import Icon from '../../../components/ui/Icon'
 
 export function AdminSubscriptionsPage() {
   const { subscribers, loading, error, updatePreferences, remove } = useSubscriptionsAdmin()
@@ -99,7 +100,7 @@ export function AdminSubscriptionsPage() {
 
       {filteredSubscribers.length === 0 ? (
         <EmptyState
-          icon="👥"
+          icon={<Icon name="users" />}
           title="No hay suscriptores"
           description={
             searchTerm
@@ -115,8 +116,8 @@ export function AdminSubscriptionsPage() {
             <thead>
               <tr>
                 <th>Correo Electrónico</th>
-                <th className="text-center">Notif. Streams (📡)</th>
-                <th className="text-center">Boletín Crítico (📝)</th>
+                <th className="text-center">Notif. Streams (<Icon name="radio" />)</th>
+                <th className="text-center">Boletín Crítico (<Icon name="notes" />)</th>
                 <th>Fecha de Registro</th>
                 <th className="text-right">Acción</th>
               </tr>
@@ -156,7 +157,7 @@ export function AdminSubscriptionsPage() {
                       onClick={() => handleDelete(sub.id)}
                       title="Eliminar suscriptor"
                     >
-                      🗑️ Dar de Baja
+                      <Icon name="trash" /> Dar de Baja
                     </button>
                   </td>
                 </tr>

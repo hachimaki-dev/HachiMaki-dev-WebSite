@@ -6,6 +6,7 @@ import { EmptyState } from '../../../components/ui/EmptyState'
 import { useProject } from '../../../features/portfolio/useProjects'
 import { ROUTES } from '../../../lib/constants'
 import './ProjectDetailPage.css'
+import Icon from '../../../components/ui/Icon'
 
 const ensureExternalLink = (url) => {
   if (!url) return ''
@@ -23,12 +24,12 @@ export function ProjectDetailPage() {
     return (
       <PageWrapper narrow>
         <EmptyState
-          icon="🔍"
+          icon={<Icon name="search" />}
           title="Proyecto no encontrado"
           description="El proyecto que buscas no existe o no está publicado."
           action={
             <Link to={ROUTES.PORTFOLIO} className="btn btn--secondary btn--md">
-              ← Volver al portfolio
+              <Icon name="arrow-left" /> Volver al portfolio
             </Link>
           }
         />
@@ -41,7 +42,7 @@ export function ProjectDetailPage() {
       <article className="project-detail page-enter">
         {/* Back */}
         <Link to={ROUTES.PORTFOLIO} className="project-detail__back">
-          ← Portfolio
+          <Icon name="arrow-left" /> Portfolio
         </Link>
 
         {/* Header */}
@@ -103,7 +104,7 @@ export function ProjectDetailPage() {
         {/* Footer */}
         <footer className="project-detail__footer">
           <Link to={ROUTES.PORTFOLIO} className="btn btn--secondary btn--md">
-            ← Volver al portfolio
+            <Icon name="arrow-left" /> Volver al portfolio
           </Link>
         </footer>
       </article>

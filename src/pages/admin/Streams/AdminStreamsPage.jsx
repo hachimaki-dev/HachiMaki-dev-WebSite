@@ -14,6 +14,7 @@ import { createStreamLogger } from '../../../features/streaming/lib/streamLogger
 import { AdminStreamChatModal } from './AdminStreamChatModal'
 import { Countdown } from '../../../components/ui/Countdown'
 import './AdminStreamsPage.css'
+import Icon from '../../../components/ui/Icon'
 
 const log = createStreamLogger('AdminStreams')
 
@@ -136,7 +137,7 @@ export function AdminStreamsPage() {
   return (
     <div className="admin-streams">
       <div className="admin-streams__header">
-        <h1 className="admin-streams__title">📡 Streaming</h1>
+        <h1 className="admin-streams__title"><Icon name="radio" /> Streaming</h1>
       </div>
 
       {/* Create room form */}
@@ -193,7 +194,7 @@ export function AdminStreamsPage() {
                 </td>
                 <td>
                   <span className={`admin-streams__status admin-streams__status--${room.status}`}>
-                    {room.status === 'live' && '🔴 '}
+                    {room.status === 'live' && '<Icon name="circle" /> '}
                     {room.status.toUpperCase()}
                   </span>
                 </td>
@@ -208,35 +209,35 @@ export function AdminStreamsPage() {
                       onClick={() => navigate(`/stream/${room.slug}`)}
                       title="Ver sala"
                     >
-                      👁
+                      <Icon name="eye" />
                     </button>
                     <button
                       className="admin-streams__action-btn"
                       onClick={() => navigate(`/stream/${room.slug}/cast`)}
                       title="Emitir"
                     >
-                      🔴
+                      <Icon name="circle" />
                     </button>
                     <button
                       className="admin-streams__action-btn"
                       onClick={() => handleCopyLink(room.slug)}
                       title="Copiar Enlace Público"
                     >
-                      🔗
+                      <Icon name="link" />
                     </button>
                     <button
                       className="admin-streams__action-btn"
                       onClick={() => setChatRoom(room)}
                       title="Ver Historial de Chat"
                     >
-                      💬
+                      <Icon name="message" />
                     </button>
                     <button
                       className="admin-streams__action-btn admin-streams__action-btn--danger"
                       onClick={() => handleDelete(room.id)}
                       title="Eliminar Sala"
                     >
-                      🗑
+                      <Icon name="trash" />
                     </button>
                   </div>
                 </td>
@@ -255,7 +256,7 @@ export function AdminStreamsPage() {
       {/* Recordings */}
       {recordings.length > 0 && (
         <>
-          <h2 className="admin-streams__recordings-title">🎬 Grabaciones</h2>
+          <h2 className="admin-streams__recordings-title"><Icon name="clapperboard" /> Grabaciones</h2>
           <table className="admin-streams__table">
             <thead>
               <tr>
@@ -293,7 +294,7 @@ export function AdminStreamsPage() {
                         onClick={() => handleDeleteRecording(rec.id, rec.file_path)}
                         title="Eliminar Grabación"
                       >
-                        🗑
+                        <Icon name="trash" />
                       </button>
                     </div>
                   </td>

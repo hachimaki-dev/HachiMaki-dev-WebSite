@@ -26,7 +26,7 @@ export function usePublicLiveStreams() {
     
     const { data: recData, error: recError } = await supabase
       .from(TABLES.RECORDINGS)
-      .select('id, file_path, created_at, caster_id, rooms!inner(title, is_private)')
+      .select('id, file_path, created_at, caster_id, rooms!inner(id, title, is_private)')
       .eq('rooms.is_private', false)
       .gte('created_at', sevenDaysAgo.toISOString())
       .order('created_at', { ascending: false })
@@ -102,6 +102,8 @@ export function usePublicLiveStreams() {
         avatar: r.avatar_url || '/hachimaki-dev/hachimaki-profile.png',
         url: data?.publicUrl,
         link: data?.publicUrl, // Direct link to video
+        roomId: r.rooms?.id,
+        createdAt: r.created_at,
       }
     })
   ]

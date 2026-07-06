@@ -7,6 +7,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import './StreamChat.css'
+import Icon from '../../../components/ui/Icon'
 
 /**
  * Format a timestamp to HH:MM
@@ -26,7 +27,7 @@ function formatTime(isoString) {
  * @param {function} [props.onDelete] - Delete message callback (admin only)
  * @param {boolean} [props.isAdmin] - Whether the current user is admin
  */
-export function StreamChat({ messages, onSend, onDelete, isAdmin = false }) {
+export function StreamChat({ messages, onSend, onDelete, isAdmin = false, readOnly = false }) {
   const [text, setText] = useState('')
   const messagesEndRef = useRef(null)
   const messagesContainerRef = useRef(null)
@@ -60,7 +61,9 @@ export function StreamChat({ messages, onSend, onDelete, isAdmin = false }) {
   return (
     <div className="stream-chat">
       <div className="stream-chat__header">
-        <span className="stream-chat__title">💬 Chat en Vivo</span>
+        <span className="stream-chat__title">
+          <Icon name="message" /> {readOnly ? 'Registro de Chat' : 'Chat en Vivo'}
+        </span>
         <span className="stream-chat__count">{messages.length}</span>
       </div>
 
@@ -81,13 +84,13 @@ export function StreamChat({ messages, onSend, onDelete, isAdmin = false }) {
                 <span className="stream-chat__time">{formatTime(msg.created_at)}</span>
               </div>
               <span className="stream-chat__text">{msg.message}</span>
-              {isAdmin && onDelete && (
+              {isAdmin && onDelete && !readOnly && (
                 <button
                   className="stream-chat__delete"
                   onClick={() => onDelete(msg.id)}
                   title="Eliminar mensaje"
                 >
-                  ✕
+                  <Icon name="close" />
                 </button>
               )}
             </div>
@@ -96,24 +99,26 @@ export function StreamChat({ messages, onSend, onDelete, isAdmin = false }) {
         <div ref={messagesEndRef} />
       </div>
 
-      <form className="stream-chat__input-area" onSubmit={handleSubmit}>
-        <input
-          className="stream-chat__input"
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Escribe un mensaje…"
-          maxLength={500}
-        />
-        <button
-          type="submit"
-          className="stream-chat__send"
-          disabled={!text.trim()}
-        >
-          Enviar
-        </button>
-      </form>
+      {!readOnly && (
+        <form className="stream-chat__input-area" onSubmit={handleSubmit}>
+          <input
+            className="stream-chat__input"
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Escribe un mensaje…"
+            maxLength={500}
+          />
+          <button
+            type="submit"
+            className="stream-chat__send"
+            disabled={!text.trim()}
+          >
+            Enviar
+          </button>
+        </form>
+      )}
     </div>
   )
 }

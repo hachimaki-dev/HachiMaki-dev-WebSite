@@ -2,36 +2,16 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PageWrapper } from '../../../components/layout/PageWrapper'
 import { useBlogPosts } from '../../../features/blog/useBlogPosts'
-import { usePublicLiveStreams } from '../../../features/streaming/hooks/usePublicLiveStreams'
-import { useProjects } from '../../../features/portfolio/useProjects'
 import { formatDate } from '../../../utils/formatDate'
 import { ROUTES } from '../../../lib/constants'
 import { NewsletterInvite } from '../../../components/ui/NewsletterInvite'
+import { StreamStories } from '../Stream/StreamStories'
 import './HomePage.css'
+import Icon from '../../../components/ui/Icon'
 
-function getProjectIcon(tags = []) {
-  const tagsStr = (tags || []).map(t => t.toLowerCase()).join(' ')
-  if (tagsStr.includes('game') || tagsStr.includes('juego') || tagsStr.includes('play')) return '🎮'
-  if (tagsStr.includes('web') || tagsStr.includes('sitio') || tagsStr.includes('app')) return '🌐'
-  if (tagsStr.includes('mobile') || tagsStr.includes('android') || tagsStr.includes('ios')) return '📱'
-  if (tagsStr.includes('tool') || tagsStr.includes('cli') || tagsStr.includes('util') || tagsStr.includes('library')) return '🛠️'
-  if (tagsStr.includes('music') || tagsStr.includes('audio') || tagsStr.includes('sound')) return '📻'
-  if (tagsStr.includes('photo') || tagsStr.includes('image') || tagsStr.includes('gallery')) return '📷'
-  return '📁'
-}
-
-const MOCK_PROJECTS = [
-  { id: 'mock-1', slug: 'bailando-solo', title: 'Bailando Solo', tags: ['web', 'react', 'music'] },
-  { id: 'mock-2', slug: 'ev3-guias', title: 'EV3 Robots', tags: ['tool', 'education', 'game'] },
-  { id: 'mock-3', slug: 'flickr-gallery', title: 'Flickr Clone', tags: ['photo', 'gallery'] },
-  { id: 'mock-4', slug: 'retro-synth', title: 'Retro Synth', tags: ['music', 'audio'] },
-  { id: 'mock-5', slug: 'live-stream', title: 'Stream Nave', tags: ['streaming', 'web'] }
-]
 
 export function HomePage() {
   const { posts: latestPosts, loading: postsLoading } = useBlogPosts()
-  const { stories, loading: streamsLoading } = usePublicLiveStreams()
-  const { projects, loading: projectsLoading } = useProjects()
 
   /* Live clock */
   const [time, setTime] = useState(new Date())
@@ -41,7 +21,6 @@ export function HomePage() {
   }, [])
   const timestamp = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
-  const displayProjects = projects.length > 0 ? projects : MOCK_PROJECTS
 
   return (
     <PageWrapper>
@@ -54,8 +33,8 @@ export function HomePage() {
           <div className="vhs-case">
             {/* Spine / Lomo */}
             <div className="vhs-case__spine">
-              <span className="vhs-case__spine-text">HACHIMAKI</span>
-              <span className="vhs-case__spine-code">T-120</span>
+              <span className="vhs-case__spine-text">Hachimaki dev ?</span>
+              <span className="vhs-case__spine-code">¿Que es ser un </span>
             </div>
 
             {/* Case body */}
@@ -77,12 +56,8 @@ export function HomePage() {
 
               {/* VHS label info */}
               <div className="vhs-case__label">
-                <div className="vhs-case__label-row">
-                  <span className="vhs-case__badge">VHS</span>
-                  <span className="vhs-case__badge">HQ</span>
-                </div>
                 <div className="vhs-case__meta">
-                  <span>CLEARANCE: OMEGA-6</span>
+                  <span>HachiMaki dev</span>
                 </div>
               </div>
 
@@ -111,31 +86,8 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Stories row (Active Streams & VODs) */}
-            {!streamsLoading && stories && stories.length > 0 && (
-              <div className="outsider__stories">
-                {stories.map((story) => (
-                  <Link
-                    key={story.id}
-                    to={story.link}
-                    target={story.type === 'vod' ? '_blank' : undefined}
-                    rel={story.type === 'vod' ? 'noopener noreferrer' : undefined}
-                    className={`outsider__story outsider__story--${story.type}`}
-                  >
-                    <div className="outsider__story-ring">
-                      <div className="outsider__story-avatar-wrap">
-                        <img src={story.avatar} alt="Avatar" className="outsider__story-avatar" />
-                        {story.type === 'vod' && (
-                          <div className="outsider__story-vod-icon">▶</div>
-                        )}
-                        <div className="vhs-case__worn-edges"></div>
-                      </div>
-                    </div>
-                    <span className="outsider__story-title">{story.title}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
+            {/* Stories row */}
+            <StreamStories className="outsider__stories-wrapper" />
           </div>
 
           {/* Blog feed */}
@@ -188,7 +140,7 @@ export function HomePage() {
                       <span className="outsider__status-dot"></span>
                       TRANSMITIDO
                     </span>
-                    <span className="outsider__feed-item-action">LEER SEÑAL →</span>
+                    <span className="outsider__feed-item-action">LEER SEÑAL <Icon name="arrow-right" /></span>
                   </div>
                 </Link>
               ))}
@@ -201,12 +153,12 @@ export function HomePage() {
           <div className="outsider__sidebar-title">
             APLICACIONES.SYS
           </div>
-          
+
           <div className="outsider__app-grid">
             {/* System Apps */}
             <Link to={ROUTES.BLOG} className="outsider__app-item" title="Blog / Transmisiones">
               <div className="outsider__app-icon-wrapper">
-                <span className="outsider__app-emoji">📝</span>
+                <span className="outsider__app-emoji"><Icon name="notes" /></span>
                 <div className="outsider__app-glow"></div>
               </div>
               <span className="outsider__app-label">Blog</span>
@@ -214,7 +166,7 @@ export function HomePage() {
 
             <Link to={ROUTES.PHOTOS} className="outsider__app-item" title="Galería de Fotos">
               <div className="outsider__app-icon-wrapper">
-                <span className="outsider__app-emoji">📷</span>
+                <span className="outsider__app-emoji"><Icon name="camera" /></span>
                 <div className="outsider__app-glow"></div>
               </div>
               <span className="outsider__app-label">Fotos</span>
@@ -222,55 +174,23 @@ export function HomePage() {
 
             <Link to={ROUTES.VISITORS} className="outsider__app-item" title="Registro de Visitantes">
               <div className="outsider__app-icon-wrapper">
-                <span className="outsider__app-emoji">🕵️</span>
+                <span className="outsider__app-emoji"><Icon name="user" />️</span>
                 <div className="outsider__app-glow"></div>
               </div>
               <span className="outsider__app-label">Visitantes</span>
             </Link>
 
-            {/* Portfolio Projects */}
-            {projectsLoading ? (
-              <div className="outsider__app-loading">CARGANDO...</div>
-            ) : (
-              displayProjects.map((project) => {
-                const icon = getProjectIcon(project.tags)
-                return (
-                  <Link
-                    key={project.id}
-                    to={`${ROUTES.PORTFOLIO}/${project.slug}`}
-                    className="outsider__app-item"
-                    title={project.title}
-                  >
-                    <div className="outsider__app-icon-wrapper">
-                      <span className="outsider__app-emoji">{icon}</span>
-                      <div className="outsider__app-glow"></div>
-                    </div>
-                    <span className="outsider__app-label">{project.title}</span>
-                  </Link>
-                )
-              })
-            )}
           </div>
 
           <NewsletterInvite />
 
-          {/* Agent info */}
-          <div className="outsider__sidebar-agent">
-            <img
-              src="/hachimaki-dev/hachimaki-profile.png"
-              alt="HachiMaki"
-              className="outsider__sidebar-avatar"
-            />
-            <div>
-              <div className="outsider__sidebar-user">USUARIO: OUTSIDER</div>
-              <div className="outsider__sidebar-key">CLAVE: ************</div>
-            </div>
-          </div>
+
 
           {/* Clock */}
           <div className="outsider__sidebar-clock">{timestamp}</div>
         </aside>
       </div>
+
     </PageWrapper>
   )
 }

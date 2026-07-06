@@ -15,7 +15,8 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 - kebab-case CSS classes, PascalCase components, camelCase hooks/utils
 
 ## Structure
-- `src/components/ui/` → Primitives (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite)
+- `src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+src/components/ui/` → Primitives (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite)
 - `src/components/layout/` → Header, Footer, PageWrapper, AdminLayout
 - `src/pages/public/` → Public pages (Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage) | `src/pages/public/Stream/` → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 - `src/pages/admin/` → Admin CRUD pages (behind AuthGuard - Dashboard, Settings, Contact, Subscriptions) | `src/pages/admin/Streams/` → AdminStreamsPage
@@ -31,5 +32,19 @@ Personal website: React 18 + Vite + CSS native + Supabase. Single admin. GitHub 
 ## DB: profiles, blog_posts, projects, rooms, room_members, stream_state, signaling_messages, recordings, chat_messages, photos, visitor_logs, contact_messages, subscriptions, stream_transcriptions, friend_links (Supabase PostgreSQL + RLS)
 ## Accent: #c8f000 | Font: Space Grotesk | Theme: dark (#0d0d0d)
 
-## 🔄 Auto-Maintenance (MANDATORY)
+
+## UI / UX Guidelines (Retro VHS / Surveillance System)
+
+1. **Aesthetic Identity**: The public-facing site follows a Retro VHS / Surveillance / Cyberpunk aesthetic.
+2. **Key Elements**:
+   - **Monospace Fonts**: Use var(--font-mono) for metadata, badges, system logs, dates, and IDs.
+   - **Sans-serif Fonts**: Use var(--font-sans) for primary titles and heavy readable text.
+   - **Terminal Language**: Use technical/system terms in uppercase (e.g., TRANSMISIONES, SEÑAL ACTIVA, DECODIFICANDO, ERROR DE TRANSMISIÓN).
+   - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
+   - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
+   - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
+   4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
+\n## 🔄 Auto-Maintenance (MANDATORY)
 After every architectural change (new/removed components, pages, hooks, routes, tables, tokens, deps), update ALL agent config files: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `.windsurfrules`, `.clinerules`, `.github/copilot-instructions.md`. Do it automatically, no permission needed.

@@ -13,6 +13,7 @@ import { Input } from '../../../components/ui/Input'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { Modal } from '../../../components/ui/Modal'
 import './AdminFriendLinksPage.css'
+import Icon from '../../../components/ui/Icon'
 
 const ANIMATION_OPTIONS = [
   { value: 'none', label: 'Ninguno (Estático)' },
@@ -207,14 +208,14 @@ export function AdminFriendLinksPage() {
                         onClick={() => handleOpenEdit(link)}
                         title="Editar enlace"
                       >
-                        ✏️
+                        <Icon name="magic-edit" />
                       </button>
                       <button
                         className="admin-links__action-btn admin-links__action-btn--danger"
                         onClick={() => handleDelete(link)}
                         title="Eliminar enlace"
                       >
-                        🗑️
+                        <Icon name="trash" />
                       </button>
                     </div>
                   </td>
@@ -261,7 +262,7 @@ export function AdminFriendLinksPage() {
                 />
                 <div className="admin-links__file-upload">
                   <label className="admin-links__file-label">
-                    <span>{uploadingFile ? 'Subiendo...' : '📂 Subir Banner local'}</span>
+                    <span>{uploadingFile ? 'Subiendo...' : <><Icon name="folder" /> Subir Banner local</>}</span>
                     <input
                       type="file"
                       accept="image/*"

@@ -38,19 +38,32 @@ export function usePhotosAdmin(onSuccess) {
         if (uploadError) throw uploadError
 
         // 3. Insert record into database
-        const { error: dbError } = await supabase.from(TABLES.PHOTOS).insert({
+        const { data: dbData, error: dbError } = await supabase.from(TABLES.PHOTOS).insert({
           storage_path: filePath,
           width,
           height,
-        })
+        }).select().single()
 
         if (dbError) throw dbError
 
+        // Get public URL
+        const { data: urlData } = supabase.storage
+          .from('photos')
+          .getPublicUrl(filePath)
+
+        const uploadedPhoto = {
+          ...dbData,
+          publicUrl: urlData.publicUrl
+        }
+
         toast({ message: 'Photo uploaded successfully', type: 'success' })
         if (onSuccess) onSuccess()
+        
+        return uploadedPhoto
       } catch (error) {
         console.error('Upload error:', error)
         toast({ message: error.message, type: 'error' })
+        throw error // Rethrow so callers can handle it
       } finally {
         setIsUploading(false)
       }

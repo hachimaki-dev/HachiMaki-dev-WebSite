@@ -6,6 +6,7 @@ import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
 import { useProjects } from '../../../features/portfolio/useProjects'
 import './PortfolioPage.css'
+import Icon from '../../../components/ui/Icon'
 
 export function PortfolioPage() {
   const { projects, loading, error } = useProjects()
@@ -16,7 +17,7 @@ export function PortfolioPage() {
     return (
       <PageWrapper>
         <EmptyState
-          icon="⚠️"
+          icon={<Icon name="warning-diamond" />}
           title="Error al cargar proyectos"
           description={error}
         />
@@ -36,7 +37,7 @@ export function PortfolioPage() {
 
         {projects.length === 0 ? (
           <EmptyState
-            icon="🚀"
+            icon={<Icon name="speed-fast" />}
             title="Proyectos en camino"
             description="Los proyectos aparecerán aquí cuando se publiquen."
           />

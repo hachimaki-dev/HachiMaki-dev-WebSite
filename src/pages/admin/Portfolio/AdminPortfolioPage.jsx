@@ -9,6 +9,7 @@ import { Modal } from '../../../components/ui/Modal'
 import { ROUTES } from '../../../lib/constants'
 import { useState } from 'react'
 import './AdminPortfolioPage.css'
+import Icon from '../../../components/ui/Icon'
 
 export function AdminPortfolioPage() {
   const { projects, loading, togglePublished, toggleFeatured, remove } = useProjectsAdmin()
@@ -67,7 +68,7 @@ export function AdminPortfolioPage() {
 
       {projects.length === 0 ? (
         <EmptyState
-          icon="🚀"
+          icon={<Icon name="speed-fast" />}
           title="Sin proyectos"
           description="Crea tu primer proyecto."
           action={
@@ -88,7 +89,7 @@ export function AdminPortfolioPage() {
                   <Badge variant={project.published ? 'success' : 'default'}>
                     {project.published ? 'Publicado' : 'Borrador'}
                   </Badge>
-                  {project.featured && <Badge variant="accent">⭐ Destacado</Badge>}
+                  {project.featured && <Badge variant="accent"><Icon name="star" /> Destacado</Badge>}
                   {project.tags?.slice(0, 3).map(tag => (
                     <Badge key={tag}>{tag}</Badge>
                   ))}
@@ -100,7 +101,7 @@ export function AdminPortfolioPage() {
                   onClick={() => handleToggleFeatured(project)}
                   loading={actionLoading === project.id}
                 >
-                  {project.featured ? '☆' : '⭐'}
+                  {project.featured ? <Icon name="star" /> : <Icon name="star" />}
                 </Button>
                 <Button
                   variant="ghost" size="sm"
@@ -113,7 +114,7 @@ export function AdminPortfolioPage() {
                   <Button variant="secondary" size="sm">Editar</Button>
                 </Link>
                 <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(project)}>
-                  🗑
+                  <Icon name="trash" />
                 </Button>
               </div>
             </div>

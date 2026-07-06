@@ -4,6 +4,7 @@ import { useVisitorLogs } from '../../../features/visitor/hooks/useVisitorLogs'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
 import './VisitantesPage.css'
+import Icon from '../../../components/ui/Icon'
 
 // Helper to parse User Agent
 function parseUserAgent(ua) {
@@ -44,11 +45,11 @@ function parseUserAgent(ua) {
 
 function getOSEmoji(os) {
   const osLower = (os || '').toLowerCase()
-  if (osLower.includes('linux')) return '🐧'
-  if (osLower.includes('mac') || osLower.includes('ios') || osLower.includes('apple') || osLower.includes('darwin')) return '🍎'
-  if (osLower.includes('win')) return '💻'
-  if (osLower.includes('android')) return '🤖'
-  return '🛸'
+  if (osLower.includes('linux')) return <Icon name="terminal" />
+  if (osLower.includes('mac') || osLower.includes('ios') || osLower.includes('apple') || osLower.includes('darwin')) return <Icon name="app-mac" />
+  if (osLower.includes('win')) return <Icon name="app-windows" />
+  if (osLower.includes('android')) return <Icon name="robot" />
+  return <Icon name="radio" />
 }
 
 function getSatiricalComment(index, action) {
@@ -388,7 +389,7 @@ export function VisitantesPage() {
                 </span>
               ) : currentUser.deniedGeo ? (
                 <span className="dossier-value dossier-value--danger dossier-value--blink">
-                  ⚠️ ALERTA: PARANOICO DETECTADO. Has bloqueado el GPS. Intentas esconderte... No servirá de nada.
+                  <Icon name="warning-diamond" /> ALERTA: PARANOICO DETECTADO. Has bloqueado el GPS. Intentas esconderte... No servirá de nada.
                 </span>
               ) : (
                 <span className="dossier-value dossier-value--warning">
@@ -514,25 +515,25 @@ export function VisitantesPage() {
             className={`data-lab__tab-btn ${activeLabTab === 'churn' ? 'data-lab__tab-btn--active' : ''}`}
             onClick={() => setActiveLabTab('churn')}
           >
-            🏃‍♂️ Predicción de Fuga
+            <Icon name="speed-fast" />‍<Icon name="user" />️ Predicción de Fuga
           </button>
           <button 
             className={`data-lab__tab-btn ${activeLabTab === 'affinity' ? 'data-lab__tab-btn--active' : ''}`}
             onClick={() => setActiveLabTab('affinity')}
           >
-            📊 Afinidad de Contenido
+            <Icon name="analytics" /> Afinidad de Contenido
           </button>
           <button 
             className={`data-lab__tab-btn ${activeLabTab === 'intent' ? 'data-lab__tab-btn--active' : ''}`}
             onClick={() => setActiveLabTab('intent')}
           >
-            🎯 Intención de Compra
+            <Icon name="target" /> Intención de Compra
           </button>
           <button 
             className={`data-lab__tab-btn ${activeLabTab === 'persona' ? 'data-lab__tab-btn--active' : ''}`}
             onClick={() => setActiveLabTab('persona')}
           >
-            🤖 Perfil de Consumidor
+            <Icon name="robot" /> Perfil de Consumidor
           </button>
         </div>
 
@@ -566,17 +567,17 @@ export function VisitantesPage() {
                 </div>
                 <div className="verdict-note">
                   {inactivitySeconds > 5 
-                    ? `⚠️ Llevas ${inactivitySeconds} segundos inactivo. El temporizador incrementa el riesgo de rebote.` 
-                    : `🟢 Estado Activo. Te mantienes moviendo el cursor o cliqueando dentro de la pestaña.`}
+                    ? `<Icon name="warning-diamond" /> Llevas ${inactivitySeconds} segundos inactivo. El temporizador incrementa el riesgo de rebote.` 
+                    : `<Icon name="circle" /> Estado Activo. Te mantienes moviendo el cursor o cliqueando dentro de la pestaña.`}
                 </div>
                 
                 <div className="privacy-conclusion">
-                  <h5>💡 ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
+                  <h5><Icon name="lightbulb" /> ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
                   <p>
                     Las aerolíneas y plataformas de reservas hoteleras detectan cuando navegas con batería críticamente baja. Si su algoritmo detecta urgencia (poca batería, inactividad larga seguida de clics erráticos), puede incrementar dinámicamente las tarifas de lo que buscas, asumiendo que comprarás apresuradamente antes de que tu dispositivo se apague.
                   </p>
                   <span className="privacy-conclusion__action">
-                    🛡️ <strong>Recomendación de Seguridad:</strong> Instala extensiones que bloqueen telemetría de hardware (Battery API Blocker), evita realizar transacciones importantes con batería crítica y mantén siempre el cursor en movimiento o desactiva JavaScript si no es estrictamente necesario al comparar tarifas de vuelos.
+                    <Icon name="shield" />️ <strong>Recomendación de Seguridad:</strong> Instala extensiones que bloqueen telemetría de hardware (Battery API Blocker), evita realizar transacciones importantes con batería crítica y mantén siempre el cursor en movimiento o desactiva JavaScript si no es estrictamente necesario al comparar tarifas de vuelos.
                   </span>
                 </div>
               </div>
@@ -623,12 +624,12 @@ export function VisitantesPage() {
                 </div>
                 
                 <div className="privacy-conclusion">
-                  <h5>💡 ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
+                  <h5><Icon name="lightbulb" /> ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
                   <p>
                     El cálculo de afinidad es la base del "filtro burbuja". Los motores de las redes sociales capturan estas métricas para mostrarte únicamente lo que refuerza tus sesgos preexistentes, polarizándote y vendiendo tu perfil a anunciantes de micro-marketing político o comercial. Tus clicks definen qué caja de resonancia construyen para ti.
                   </p>
                   <span className="privacy-conclusion__action">
-                    🛡️ <strong>Recomendación de Seguridad:</strong> Utiliza buscadores no rastreables (DuckDuckGo, SearX) y alterna deliberadamente tus búsquedas o clics en categorías aleatorias para romper los perfiles de interés consolidados de las redes de anuncios (Ad Networks).
+                    <Icon name="shield" />️ <strong>Recomendación de Seguridad:</strong> Utiliza buscadores no rastreables (DuckDuckGo, SearX) y alterna deliberadamente tus búsquedas o clics en categorías aleatorias para romper los perfiles de interés consolidados de las redes de anuncios (Ad Networks).
                   </span>
                 </div>
               </div>
@@ -660,12 +661,12 @@ export function VisitantesPage() {
                 </div>
                 
                 <div className="privacy-conclusion">
-                  <h5>💡 ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
+                  <h5><Icon name="lightbulb" /> ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
                   <p>
                     Si un sitio de reservas aéreas o comercio electrónico detecta una alta "intención de conversión" (por ejemplo, buscaste el mismo hotel 3 veces), ocultará cupones activos o inflará la escasez con alertas de "¡Solo queda 1 habitación disponible!". Tu propio historial de clics se usa en tu contra para obligarte a pagar más rápido.
                   </p>
                   <span className="privacy-conclusion__action">
-                    🛡️ <strong>Recomendación de Seguridad:</strong> Realiza las búsquedas iniciales de productos o vuelos usando ventanas de navegación privada limpias, y no inicies sesión en la tienda hasta que estés seguro de realizar la transacción para evitar que asocien tu intención alta con tu perfil.
+                    <Icon name="shield" />️ <strong>Recomendación de Seguridad:</strong> Realiza las búsquedas iniciales de productos o vuelos usando ventanas de navegación privada limpias, y no inicies sesión en la tienda hasta que estés seguro de realizar la transacción para evitar que asocien tu intención alta con tu perfil.
                   </span>
                 </div>
               </div>
@@ -694,12 +695,12 @@ export function VisitantesPage() {
                 </div>
                 
                 <div className="privacy-conclusion">
-                  <h5>💡 ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
+                  <h5><Icon name="lightbulb" /> ¿POR QUÉ ES IMPORTANTE Y DEBERÍAS ESTAR INFORMADO?</h5>
                   <p>
                     La discriminación de precios basada en el User-Agent y el hardware es una realidad silenciosa. Múltiples plataformas de reservas hoteleras y de alquiler de autos han sido reportadas por mostrar tarifas incrementadas si detectan que accedes desde sistemas operativos premium como macOS o iOS en comparación con Android o Windows.
                   </p>
                   <span className="privacy-conclusion__action">
-                    🛡️ <strong>Recomendación de Seguridad:</strong> Utiliza extensiones de navegador que alteren aleatoriamente tu User-Agent (User-Agent Switcher) para simular dispositivos de escritorio comunes o genéricos, bloqueando la telemetría exhaustiva de hardware en tus navegadores de uso diario.
+                    <Icon name="shield" />️ <strong>Recomendación de Seguridad:</strong> Utiliza extensiones de navegador que alteren aleatoriamente tu User-Agent (User-Agent Switcher) para simular dispositivos de escritorio comunes o genéricos, bloqueando la telemetría exhaustiva de hardware en tus navegadores de uso diario.
                   </span>
                 </div>
               </div>
@@ -715,7 +716,7 @@ export function VisitantesPage() {
             <div className="dossier-modal__header">
               <span className="dossier-modal__badge">INFORMACIÓN EXPUESTA</span>
               <h3 className="dossier-modal__title">SUJETO-[{selectedSession.sessionId.substring(0, 8).toUpperCase()}]</h3>
-              <button className="dossier-modal__close" onClick={() => setSelectedSession(null)}>×</button>
+              <button className="dossier-modal__close" onClick={() => setSelectedSession(null)}><Icon name="close" /></button>
             </div>
             
             <div className="dossier-modal__body">

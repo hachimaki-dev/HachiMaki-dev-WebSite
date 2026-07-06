@@ -35,6 +35,10 @@ All values come from `src/styles/tokens.css`:
 ## Database Tables (Supabase PostgreSQL)
 
 - `profiles` — single admin profile row
+- `blog_posts`
+- `blog_tags` — blog taxonomy tags
+- `blog_post_tags` — many-to-many tags
+- `blog_series` — blog series collections
 - `blog_posts` — blog with slug, title, content, published flag
 - `projects` — portfolio with slug, tags[], featured, sort_order
 - `rooms` — streaming rooms with slug, caster_id, status, is_private
@@ -58,6 +62,7 @@ Contact & Subscriptions: public insert, authenticated admin read/write.
 ## Folder Conventions
 
 ```
+src/components/blog/           → MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
 src/components/ui/             → Reusable primitives (Button, Input, Card, Modal, NewsletterInvite...)
 src/components/layout/         → Header, Footer, PageWrapper, AdminLayout
 src/pages/public/              → Public pages (Home, Blog, Portfolio, Contact)
@@ -93,7 +98,21 @@ npm run dev      # Dev server
 npm run build    # Prod build (must pass with 0 errors)
 ```
 
-## 🔄 Auto-Maintenance (MANDATORY)
+
+## UI / UX Guidelines (Retro VHS / Surveillance System)
+
+1. **Aesthetic Identity**: The public-facing site follows a Retro VHS / Surveillance / Cyberpunk aesthetic.
+2. **Key Elements**:
+   - **Monospace Fonts**: Use var(--font-mono) for metadata, badges, system logs, dates, and IDs.
+   - **Sans-serif Fonts**: Use var(--font-sans) for primary titles and heavy readable text.
+   - **Terminal Language**: Use technical/system terms in uppercase (e.g., TRANSMISIONES, SEÑAL ACTIVA, DECODIFICANDO, ERROR DE TRANSMISIÓN).
+   - **Badges & Glows**: Active or primary states should use the var(--color-accent) with subtle glows (box-shadow).
+   - **Scanlines & Noise**: Use .vhs-scanlines.vhs-noise backgrounds for the main page wrappers.
+   - **Feed Items (Cards)**: Use blog-feed-item or .outsider__feed-item style (border-left accent, dashed inner shadows, terminal header).
+   - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#c8f000).
+3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
+   4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
+\n## 🔄 Auto-Maintenance (MANDATORY)
 
 After every change that modifies the project architecture (new/renamed/removed components, pages, hooks, routes, tables, tokens, or dependencies), you MUST update ALL agent config files to keep them in sync:
 

@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from './useAuth'
 import { ROUTES, SITE } from '../../lib/constants'
 import './LoginPage.css'
+import Icon from '../../components/ui/Icon'
 
 export function LoginPage() {
   const { user, loading, signIn, error } = useAuth()
@@ -11,7 +12,7 @@ export function LoginPage() {
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  /* Already logged in → redirect to admin */
+  /* Already logged in <Icon name="arrow-right" /> redirect to admin */
   if (!loading && user) {
     return <Navigate to={ROUTES.ADMIN} replace />
   }
@@ -75,10 +76,7 @@ export function LoginPage() {
 
           {error && (
             <div className="login-error animate-slide-down">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
-                <path d="M8 4.5v4M8 10.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
+              <Icon name="warning-diamond" size={16} />
               <span>{error}</span>
             </div>
           )}
@@ -89,7 +87,7 @@ export function LoginPage() {
             disabled={submitting || loading}
           >
             {submitting ? (
-              <span className="login-button__loader animate-spin">⟳</span>
+              <span className="login-button__loader animate-spin"><Icon name="reload" /></span>
             ) : (
               'Iniciar sesión'
             )}
@@ -97,7 +95,7 @@ export function LoginPage() {
         </form>
 
         <div className="login-footer">
-          <a href="/" className="login-back">← Volver al sitio</a>
+          <a href="/" className="login-back"><Icon name="arrow-left" /> Volver al sitio</a>
         </div>
       </div>
 

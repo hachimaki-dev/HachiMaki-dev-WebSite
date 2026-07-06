@@ -1,4 +1,5 @@
 import './EmptyState.css'
+import Icon from './Icon'
 
 /**
  * EmptyState — Placeholder for empty lists/pages
@@ -8,7 +9,7 @@ import './EmptyState.css'
  * @param {string} [props.description]
  * @param {React.ReactNode} [props.action]
  */
-export function EmptyState({ icon = '📭', title, description, action }) {
+export function EmptyState({ icon = <Icon name="mailbox" />, title, description, action }) {
   return (
     <div className="empty-state animate-fade-in">
       <span className="empty-state__icon">{icon}</span>

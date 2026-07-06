@@ -6,6 +6,7 @@
 @import './tokens.css';
 @import './reset.css';
 @import './animations.css';
+@import 'pixelarticons/fonts/pixelart-icons-font.css';
 
 /* ── Base ── */
 body {

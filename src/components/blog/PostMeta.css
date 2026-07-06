@@ -1,0 +1,47 @@
+/* ============================================
+   PostMeta.css — Post metadata display
+   ============================================ */
+
+.post-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.post-meta--inline {
+  flex-direction: column;
+}
+
+.post-meta--stacked {
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.post-meta__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+}
+
+.post-meta__date {
+  color: var(--color-text-dim);
+}
+
+.post-meta__sep {
+  color: var(--color-border);
+}
+
+.reading-time {
+  color: var(--color-text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.post-meta__views {
+  color: var(--color-text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}

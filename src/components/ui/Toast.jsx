@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react'
 import './Toast.css'
+import Icon from './Icon'
 
 const ToastContext = createContext(null)
 
@@ -51,7 +52,7 @@ export function ToastProvider({ children }) {
               onClick={() => dismiss(t.id)}
               aria-label="Cerrar notificación"
             >
-              ✕
+              <Icon name="close" />
             </button>
           </div>
         ))}
@@ -61,8 +62,8 @@ export function ToastProvider({ children }) {
 }
 
 const ICONS = {
-  success: '✓',
-  error: '✕',
-  warning: '⚠',
+  success: <Icon name="check" />,
+  error: <Icon name="close" />,
+  warning: <Icon name="warning-diamond" />,
   info: 'ℹ',
 }

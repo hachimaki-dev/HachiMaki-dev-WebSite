@@ -23,6 +23,7 @@ import { PageLoader } from '../../../components/ui/PageLoader'
 import { useToast } from '../../../components/ui/Toast'
 import './CasterPage.css'
 import { useSpeechTranscription } from '../../../features/streaming/hooks/useSpeechTranscription'
+import Icon from '../../../components/ui/Icon'
 
 const log = createStreamLogger('CasterPage')
 
@@ -203,7 +204,7 @@ export function CasterPage() {
     /* Start periodic signaling cleanup */
     cleanupStopRef.current = startPeriodicCleanup(room.id)
 
-    log.info('🔴 Stream is LIVE')
+    log.info('<Icon name="circle" /> Stream is LIVE')
   }, [stream, room, user, updateRoomStatus, startRecording, toast, isSpeechSupported, startTranscription])
 
   /* ── Stop Stream ── */
@@ -331,7 +332,7 @@ export function CasterPage() {
         </h1>
         <div className="caster-page__topbar-actions">
           <span className="caster-page__stat caster-page__stat--viewers">
-            👁 {viewerCount} viewer{viewerCount !== 1 ? 's' : ''}
+            <Icon name="eye" /> {viewerCount} viewer{viewerCount !== 1 ? 's' : ''}
           </span>
           {isRecording && (
             <span className="caster-page__rec-indicator">
@@ -341,7 +342,7 @@ export function CasterPage() {
           )}
           {isLive && (
             <span className={`caster-page__speech-badge ${isSpeechSupported ? 'caster-page__speech-badge--supported' : 'caster-page__speech-badge--unsupported'}`}>
-              {isSpeechSupported ? (isSpeechListening ? '🎙️ CC ON' : '🎙️ CC PAUSE') : '🎙️ No CC'}
+              {isSpeechSupported ? (isSpeechListening ? <><Icon name="mic" /> CC ON</> : <><Icon name="mic" /> CC PAUSE</>) : <><Icon name="mic" /> No CC</>}
             </span>
           )}
         </div>
@@ -367,7 +368,7 @@ export function CasterPage() {
             </>
           ) : (
             <div className="caster-page__offline">
-              <span className="caster-page__offline-icon">📷</span>
+              <span className="caster-page__offline-icon"><Icon name="camera" /></span>
               <p>Selecciona dispositivos y haz clic en &quot;Preview&quot; para comenzar</p>
             </div>
           )}
@@ -419,20 +420,20 @@ export function CasterPage() {
                 className="caster-page__btn caster-page__btn--preview"
                 onClick={handlePreview}
               >
-                📷 Preview
+                <Icon name="camera" /> Preview
               </button>
               <button
                 className="caster-page__btn caster-page__btn--screen"
                 onClick={handleScreenShare}
               >
-                🖥 Compartir Pantalla
+                <Icon name="monitor" /> Compartir Pantalla
               </button>
               <button
                 className="caster-page__btn caster-page__btn--live"
                 onClick={handleGoLive}
                 disabled={!stream}
               >
-                🔴 Go Live
+                <Icon name="circle" /> Go Live
               </button>
             </>
           ) : (
@@ -448,7 +449,7 @@ export function CasterPage() {
                   className={`caster-page__btn ${isSpeechListening ? 'caster-page__btn--speech-active' : 'caster-page__btn--speech-inactive'}`}
                   onClick={isSpeechListening ? stopTranscription : startTranscription}
                 >
-                  {isSpeechListening ? '🎙️ Transcripción: ON' : '🎙️ Transcripción: OFF'}
+                  {isSpeechListening ? <><Icon name="mic" /> Transcripción: ON</> : <><Icon name="mic" /> Transcripción: OFF</>}
                 </button>
               )}
             </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSubscriptions } from '../../features/subscriptions/useSubscriptions'
 import { useToast } from './Toast'
 import './NewsletterInvite.css'
+import Icon from './Icon'
 
 export function NewsletterInvite() {
   const { subscribe, loading } = useSubscriptions()
@@ -44,11 +45,8 @@ export function NewsletterInvite() {
       <div className="newsletter-invite__content">
         <h3 className="newsletter-invite__title">
           <span className="newsletter-invite__title-bracket">//</span>
-          LA NAVE - CANAL INFILTRADO
+          Súbete a la nave
         </h3>
-        <p className="newsletter-invite__description">
-          Únete a la transmisión directa sin intermediarios. Recibe notificaciones sin censura y reflexiones críticas directamente del Outsider.
-        </p>
 
         <form onSubmit={handleSubmit} className="newsletter-invite__form">
           <div className="newsletter-invite__options">
@@ -60,9 +58,11 @@ export function NewsletterInvite() {
                 className="newsletter-invite__checkbox"
               />
               <span className="newsletter-invite__checkbox-custom"></span>
+
               <span className="newsletter-invite__option-text">
-                📡 Notificaciones en Vivo (Streams)
               </span>
+              <Icon name="radio" /> Notificarme de transmiciones en vivo
+
             </label>
 
             <label className="newsletter-invite__checkbox-label">
@@ -73,8 +73,8 @@ export function NewsletterInvite() {
                 className="newsletter-invite__checkbox"
               />
               <span className="newsletter-invite__checkbox-custom"></span>
+              <Icon name="notes" /> Nuevas publicaciones
               <span className="newsletter-invite__option-text">
-                📝 Comunicados Críticos y Ensayos
               </span>
             </label>
           </div>
@@ -84,7 +84,7 @@ export function NewsletterInvite() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu-correo@disidencia.com"
+              placeholder="tu-correo@hackealotodo.yes"
               autoComplete="email"
               required
               className="newsletter-invite__input"
@@ -99,7 +99,7 @@ export function NewsletterInvite() {
             </button>
           </div>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }

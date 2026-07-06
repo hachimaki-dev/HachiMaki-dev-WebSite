@@ -5,6 +5,7 @@ import { EmptyState } from '../../../components/ui/EmptyState'
 import { useToast } from '../../../components/ui/Toast'
 import { formatDate } from '../../../utils/formatDate'
 import './AdminContactPage.css'
+import Icon from '../../../components/ui/Icon'
 
 export function AdminContactPage() {
   const { messages, loading, error, markAsRead, remove } = useContactAdmin()
@@ -89,7 +90,7 @@ export function AdminContactPage() {
 
       {filteredMessages.length === 0 ? (
         <EmptyState
-          icon="📬"
+          icon={<Icon name="mail-open" />}
           title="Buzón vacío"
           description={
             filter === 'unread'
@@ -144,14 +145,14 @@ export function AdminContactPage() {
                       onClick={() => handleToggleRead(selectedMessage)}
                       title={selectedMessage.is_read ? 'Marcar como no leído' : 'Marcar como leído'}
                     >
-                      {selectedMessage.is_read ? '👁️‍🗨️' : '👁️'}
+                      {selectedMessage.is_read ? <Icon name="eye" /> : <Icon name="eye" />}
                     </button>
                     <button
                       className="admin-contact__action-btn admin-contact__action-btn--danger"
                       onClick={() => handleDelete(selectedMessage.id)}
                       title="Eliminar permanentemente"
                     >
-                      🗑️
+                      <Icon name="trash" />
                     </button>
                   </div>
                 </div>

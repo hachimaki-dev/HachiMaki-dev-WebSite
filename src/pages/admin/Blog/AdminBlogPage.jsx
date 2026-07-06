@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { useBlogAdmin } from '../../../features/blog/useBlogAdmin'
 import { useToast } from '../../../components/ui/Toast'
 import { Button } from '../../../components/ui/Button'
@@ -6,10 +7,11 @@ import { Badge } from '../../../components/ui/Badge'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
 import { Modal } from '../../../components/ui/Modal'
+import { TagPills } from '../../../components/blog/TagPills'
 import { formatDate } from '../../../utils/formatDate'
 import { ROUTES } from '../../../lib/constants'
-import { useState } from 'react'
 import './AdminBlogPage.css'
+import Icon from '../../../components/ui/Icon'
 
 export function AdminBlogPage() {
   const { posts, loading, togglePublished, remove } = useBlogAdmin()
@@ -53,14 +55,22 @@ export function AdminBlogPage() {
           <h1 className="admin-blog__title">Blog Posts</h1>
           <p className="admin-blog__subtitle">{posts.length} posts en total</p>
         </div>
-        <Link to={ROUTES.ADMIN_BLOG_NEW}>
-          <Button variant="primary">+ Nuevo post</Button>
-        </Link>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <Link to={ROUTES.ADMIN_BLOG_TAGS}>
+            <Button variant="outline"><Icon name="bookmark" />️ Tags</Button>
+          </Link>
+          <Link to={ROUTES.ADMIN_BLOG_SERIES}>
+            <Button variant="outline"><Icon name="notebook" /> Series</Button>
+          </Link>
+          <Link to={ROUTES.ADMIN_BLOG_NEW}>
+            <Button variant="primary">+ Nuevo post</Button>
+          </Link>
+        </div>
       </div>
 
       {posts.length === 0 ? (
         <EmptyState
-          icon="📝"
+          icon={<Icon name="notes" />}
           title="Sin posts"
           description="Crea tu primer post del blog."
           action={
@@ -81,9 +91,15 @@ export function AdminBlogPage() {
                   <Badge variant={post.published ? 'success' : 'default'}>
                     {post.published ? 'Publicado' : 'Borrador'}
                   </Badge>
+                  {post.featured && (
+                    <Badge variant="accent"><Icon name="star" /> Destacado</Badge>
+                  )}
                   <span className="admin-blog__item-date">
                     {formatDate(post.updated_at || post.created_at, { relative: true })}
                   </span>
+                  {post.tags && post.tags.length > 0 && (
+                    <TagPills tags={post.tags} size="sm" />
+                  )}
                 </div>
               </div>
               <div className="admin-blog__item-actions">
@@ -103,7 +119,7 @@ export function AdminBlogPage() {
                   size="sm"
                   onClick={() => setDeleteTarget(post)}
                 >
-                  🗑
+                  <Icon name="trash" />
                 </Button>
               </div>
             </div>

@@ -4,6 +4,7 @@ import { useProjectsAdmin } from '../../../features/portfolio/useProjectsAdmin'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { ROUTES } from '../../../lib/constants'
 import './DashboardPage.css'
+import Icon from '../../../components/ui/Icon'
 
 export function DashboardPage() {
   const { posts, loading: postsLoading } = useBlogAdmin()
@@ -17,10 +18,10 @@ export function DashboardPage() {
   const featuredProjects = projects.filter(p => p.featured).length
 
   const stats = [
-    { label: 'Posts publicados', value: publishedPosts, icon: '📝', color: 'accent' },
-    { label: 'Borradores', value: draftPosts, icon: '📋', color: 'warning' },
-    { label: 'Proyectos publicados', value: publishedProjects, icon: '🚀', color: 'success' },
-    { label: 'Destacados', value: featuredProjects, icon: '⭐', color: 'info' },
+    { label: 'Posts publicados', value: publishedPosts, icon: <Icon name="notes" />, color: 'accent' },
+    { label: 'Borradores', value: draftPosts, icon: <Icon name="clipboard" />, color: 'warning' },
+    { label: 'Proyectos publicados', value: publishedProjects, icon: <Icon name="speed-fast" />, color: 'success' },
+    { label: 'Destacados', value: featuredProjects, icon: <Icon name="star" />, color: 'info' },
   ]
 
   const recentPosts = posts.slice(0, 5)
@@ -48,15 +49,15 @@ export function DashboardPage() {
         <h2 className="dashboard__section-title">Acciones rápidas</h2>
         <div className="dashboard__action-grid">
           <Link to={ROUTES.ADMIN_BLOG_NEW} className="dashboard__action">
-            <span className="dashboard__action-icon">✏️</span>
+            <span className="dashboard__action-icon"><Icon name="magic-edit" /></span>
             <span>Nuevo post</span>
           </Link>
           <Link to={ROUTES.ADMIN_PORTFOLIO_NEW} className="dashboard__action">
-            <span className="dashboard__action-icon">🆕</span>
+            <span className="dashboard__action-icon"><Icon name="star" /></span>
             <span>Nuevo proyecto</span>
           </Link>
           <Link to={ROUTES.ADMIN_SETTINGS} className="dashboard__action">
-            <span className="dashboard__action-icon">⚙️</span>
+            <span className="dashboard__action-icon"><Icon name="settings-2" /></span>
             <span>Configuración</span>
           </Link>
         </div>
@@ -68,7 +69,7 @@ export function DashboardPage() {
           <div className="dashboard__section-header">
             <h2 className="dashboard__section-title">Últimos posts</h2>
             <Link to={ROUTES.ADMIN_BLOG} className="dashboard__section-link">
-              Ver todos →
+              Ver todos <Icon name="arrow-right" />
             </Link>
           </div>
           <div className="dashboard__recent-list">

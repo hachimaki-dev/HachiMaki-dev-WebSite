@@ -1,14 +1,22 @@
 /* ============================================
-   BlogEditor.css
+   BlogEditor.css — Reworked blog editor
    ============================================ */
 
 .blog-editor__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: var(--space-8);
 }
 
 .blog-editor__title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
+}
+
+.blog-editor__header-actions {
+  display: flex;
+  gap: var(--space-2);
 }
 
 .blog-editor__form {
@@ -46,6 +54,83 @@
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wider);
   margin-bottom: var(--space-4);
+}
+
+/* ── Markdown toolbar ── */
+.blog-editor__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.blog-editor__tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.blog-editor__tool:hover {
+  color: var(--color-accent);
+  background-color: var(--color-accent-bg);
+}
+
+.blog-editor__tool-sep {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-border);
+  margin: 0 var(--space-1);
+}
+
+/* ── Content textarea ── */
+.blog-editor__content-area {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: var(--space-5);
+  resize: vertical;
+  min-height: 400px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+  tab-size: 2;
+}
+
+.blog-editor__toolbar + .blog-editor__content-area {
+  border-top: 1px solid var(--color-border);
+}
+
+.blog-editor__content-area:focus {
+  border-color: var(--color-accent-dim);
+}
+
+/* ── Preview pane ── */
+.blog-editor__preview {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  background-color: var(--color-bg);
+  min-height: 400px;
 }
 
 /* ── Toggle ── */
@@ -93,6 +178,141 @@
 .blog-editor__toggle input:checked + .blog-editor__toggle-slider::after {
   transform: translateX(18px);
   background-color: var(--color-bg);
+}
+
+/* ── Format buttons ── */
+.blog-editor__format-btns {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.blog-editor__format-btn {
+  flex: 1;
+  padding: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.blog-editor__format-btn:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-hover);
+}
+
+.blog-editor__format-btn--active {
+  color: var(--color-accent);
+  border-color: var(--color-accent-dim);
+  background-color: var(--color-accent-bg);
+}
+
+/* ── Tags ── */
+.blog-editor__tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.blog-editor__tag-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-2);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.blog-editor__tag-chip:hover {
+  border-color: var(--tag-color);
+  color: var(--tag-color);
+}
+
+.blog-editor__tag-chip--active {
+  color: var(--tag-color);
+  border-color: var(--tag-color);
+  background-color: color-mix(in srgb, var(--tag-color) 12%, transparent);
+}
+
+.blog-editor__tag-create {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.blog-editor__tag-input {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  outline: none;
+}
+
+.blog-editor__tag-input:focus {
+  border-color: var(--color-accent-dim);
+}
+
+.blog-editor__tag-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent);
+  background: none;
+  border: 1px solid var(--color-accent-dim);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.blog-editor__tag-add:hover:not(:disabled) {
+  background-color: var(--color-accent-bg);
+}
+
+.blog-editor__tag-add:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── Series select ── */
+.blog-editor__select {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  outline: none;
+  cursor: pointer;
+}
+
+.blog-editor__select:focus {
+  border-color: var(--color-accent-dim);
 }
 
 /* ── Preview ── */

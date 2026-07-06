@@ -10,6 +10,8 @@ import { PageLoader } from './components/ui/PageLoader'
 const HomePage = lazy(() => import('./pages/public/Home/HomePage').then(m => ({ default: m.HomePage })))
 const BlogPage = lazy(() => import('./pages/public/Blog/BlogPage').then(m => ({ default: m.BlogPage })))
 const BlogPostPage = lazy(() => import('./pages/public/Blog/BlogPostPage').then(m => ({ default: m.BlogPostPage })))
+const BlogTagPage = lazy(() => import('./pages/public/Blog/BlogTagPage').then(m => ({ default: m.BlogTagPage })))
+const BlogSeriesPage = lazy(() => import('./pages/public/Blog/BlogSeriesPage').then(m => ({ default: m.BlogSeriesPage })))
 const PortfolioPage = lazy(() => import('./pages/public/Portfolio/PortfolioPage').then(m => ({ default: m.PortfolioPage })))
 const ProjectDetailPage = lazy(() => import('./pages/public/Portfolio/ProjectDetailPage').then(m => ({ default: m.ProjectDetailPage })))
 const PhotosPage = lazy(() => import('./pages/public/Photos/PhotosPage').then(m => ({ default: m.PhotosPage })))
@@ -27,6 +29,8 @@ const ViewerPage = lazy(() => import('./pages/public/Stream/ViewerPage').then(m 
 const DashboardPage = lazy(() => import('./pages/admin/Dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })))
 const AdminBlogPage = lazy(() => import('./pages/admin/Blog/AdminBlogPage').then(m => ({ default: m.AdminBlogPage })))
 const BlogEditor = lazy(() => import('./pages/admin/Blog/BlogEditor').then(m => ({ default: m.BlogEditor })))
+const AdminTagsPage = lazy(() => import('./pages/admin/Blog/AdminTagsPage').then(m => ({ default: m.AdminTagsPage })))
+const AdminSeriesPage = lazy(() => import('./pages/admin/Blog/AdminSeriesPage').then(m => ({ default: m.AdminSeriesPage })))
 const AdminPortfolioPage = lazy(() => import('./pages/admin/Portfolio/AdminPortfolioPage').then(m => ({ default: m.AdminPortfolioPage })))
 const ProjectEditor = lazy(() => import('./pages/admin/Portfolio/ProjectEditor').then(m => ({ default: m.ProjectEditor })))
 const SettingsPage = lazy(() => import('./pages/admin/Settings/SettingsPage').then(m => ({ default: m.SettingsPage })))
@@ -70,6 +74,8 @@ export const router = createBrowserRouter(
         { path: '/', element: <HomePage /> },
         { path: '/blog', element: <BlogPage /> },
         { path: '/blog/:slug', element: <BlogPostPage /> },
+        { path: '/blog/tag/:slug', element: <BlogTagPage /> },
+        { path: '/blog/series/:slug', element: <BlogSeriesPage /> },
         { path: '/portfolio', element: <PortfolioPage /> },
         { path: '/portfolio/:slug', element: <ProjectDetailPage /> },
         { path: '/photos', element: <PhotosPage /> },
@@ -98,6 +104,8 @@ export const router = createBrowserRouter(
         { path: 'blog', element: <AdminBlogPage /> },
         { path: 'blog/new', element: <BlogEditor /> },
         { path: 'blog/:id', element: <BlogEditor /> },
+        { path: 'blog/tags', element: <AdminTagsPage /> },
+        { path: 'blog/series', element: <AdminSeriesPage /> },
         { path: 'portfolio', element: <AdminPortfolioPage /> },
         { path: 'portfolio/new', element: <ProjectEditor /> },
         { path: 'portfolio/:id', element: <ProjectEditor /> },
