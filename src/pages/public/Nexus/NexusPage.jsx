@@ -282,74 +282,6 @@ export default function NexusPage() {
           </div>
         )}
 
-        {/* Incoming Request Banner */}
-        {incomingRequest && (
-          <Card className="mb-8 p-6 border-warning bg-warning bg-opacity-10 shadow-[0_0_25px_rgba(245,158,11,0.2)] animate-pulse-slow">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-start gap-4">
-                <Icon name="warning-box" size={32} className="text-warning mt-1" />
-                <div>
-                  <h3 className="font-sans font-black text-xl text-text tracking-wide">SOLICITUD DE INTERCEPCIÓN</h3>
-                  <p className="font-mono text-sm text-muted mt-1">
-                    El Terminal <span className="text-warning font-bold">{incomingRequest.senderId.substring(0, 6).toUpperCase()}</span> ha solicitado el archivo:
-                  </p>
-                  <p className="font-mono text-text font-bold mt-2 bg-bg px-3 py-1 rounded inline-block border border-surface">
-                    {incomingRequest.file.name}
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-3 w-full md:w-auto">
-                <Button variant="outline" className="flex-1 md:flex-none border-error text-error hover:bg-error hover:bg-opacity-10" onClick={handleRejectRequest}>
-                  <Icon name="close" /> DENEGAR
-                </Button>
-                <Button variant="primary" className="flex-1 md:flex-none bg-warning hover:bg-opacity-80 text-bg" onClick={handleAcceptRequest}>
-                  <Icon name="check" /> PERMITIR
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        {/* Active Transfer Status */}
-        {transferState && !incomingRequest && (
-          <Card className="mb-8 p-6 border-accent bg-bg bg-opacity-90 backdrop-blur-md shadow-[0_0_30px_rgba(139,92,246,0.15)] relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-surface">
-              <div 
-                className="h-full bg-accent transition-all duration-300 shadow-[0_0_10px_rgba(139,92,246,1)]" 
-                style={{ width: transferState === 'waiting_approval' ? '100%' : `${progress}%` }}
-              ></div>
-            </div>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 font-mono mt-2">
-              <div className="flex items-center gap-4 w-full md:w-auto">
-                <div className="relative">
-                  <Icon name={transferState === 'waiting_approval' ? 'clock' : 'sync'} size={32} className={`text-accent ${transferState === 'transferring' ? 'animate-spin' : 'animate-pulse'}`} />
-                  <div className="absolute inset-0 bg-accent blur-md opacity-40"></div>
-                </div>
-                <div>
-                  <p className="text-accent font-bold text-lg tracking-wider">{activeTransferName}</p>
-                  <p className="text-xs text-muted mt-1">
-                    {transferState === 'waiting_approval' ? 'ESPERANDO CONFIRMACIÓN DEL TERMINAL REMOTO...' : 
-                     transferState === 'connecting' ? 'ESTABLECIENDO CONEXIÓN DIRECTA...' : 
-                     'MANTÉN LA PESTAÑA ABIERTA DURANTE LA TRANSMISIÓN.'}
-                  </p>
-                </div>
-              </div>
-              
-              {transferState === 'transferring' && (
-                <div className="text-4xl font-black text-surface opacity-50 tracking-tighter w-24 text-right">
-                  {progress}%
-                </div>
-              )}
-              
-              {transferState === 'waiting_approval' && (
-                <Button variant="outline" size="sm" onClick={() => setTransferState(null)} className="shrink-0 text-xs text-muted border-muted">
-                  CANCELAR
-                </Button>
-              )}
-            </div>
-          </Card>
-        )}
-
         {/* 3-Column Layout */}
         <div className="nexus-grid">
           
@@ -376,6 +308,74 @@ export default function NexusPage() {
               <h2>MI BIBLIOTECA</h2>
               <p>Tu espacio en la red</p>
             </div>
+
+            {/* Incoming Request Banner */}
+            {incomingRequest && (
+              <Card className="mb-4 p-5 border-warning bg-warning bg-opacity-10 shadow-[0_0_20px_rgba(245,158,11,0.15)] animate-pulse-slow">
+                <div className="flex flex-col xl:flex-row items-center justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <Icon name="warning-box" size={28} className="text-warning mt-1" />
+                    <div>
+                      <h3 className="font-sans font-black text-lg text-text tracking-wide">SOLICITUD DE INTERCEPCIÓN</h3>
+                      <p className="font-mono text-xs text-muted mt-1">
+                        El Terminal <span className="text-warning font-bold">{incomingRequest.senderId.substring(0, 6).toUpperCase()}</span> ha solicitado el archivo:
+                      </p>
+                      <p className="font-mono text-text font-bold mt-2 bg-bg px-2 py-1 rounded inline-block border border-surface text-sm">
+                        {incomingRequest.file.name}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 w-full xl:w-auto">
+                    <Button variant="outline" className="flex-1 xl:flex-none border-error text-error hover:bg-error hover:bg-opacity-10 py-1" onClick={handleRejectRequest}>
+                      <Icon name="close" /> DENEGAR
+                    </Button>
+                    <Button variant="primary" className="flex-1 xl:flex-none bg-warning hover:bg-opacity-80 text-bg py-1" onClick={handleAcceptRequest}>
+                      <Icon name="check" /> PERMITIR
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* Active Transfer Status */}
+            {transferState && !incomingRequest && (
+              <Card className="mb-4 p-5 border-accent bg-bg bg-opacity-90 backdrop-blur-md shadow-[0_0_20px_rgba(139,92,246,0.1)] relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-surface">
+                  <div 
+                    className="h-full bg-accent transition-all duration-300 shadow-[0_0_10px_rgba(139,92,246,1)]" 
+                    style={{ width: transferState === 'waiting_approval' ? '100%' : `${progress}%` }}
+                  ></div>
+                </div>
+                <div className="flex flex-col xl:flex-row justify-between items-center gap-4 font-mono mt-2">
+                  <div className="flex items-center gap-4 w-full xl:w-auto">
+                    <div className="relative">
+                      <Icon name={transferState === 'waiting_approval' ? 'clock' : 'sync'} size={28} className={`text-accent ${transferState === 'transferring' ? 'animate-spin' : 'animate-pulse'}`} />
+                      <div className="absolute inset-0 bg-accent blur-md opacity-40"></div>
+                    </div>
+                    <div>
+                      <p className="text-accent font-bold text-base tracking-wider">{activeTransferName}</p>
+                      <p className="text-[10px] text-muted mt-1">
+                        {transferState === 'waiting_approval' ? 'ESPERANDO CONFIRMACIÓN DEL TERMINAL REMOTO...' : 
+                         transferState === 'connecting' ? 'ESTABLECIENDO CONEXIÓN DIRECTA...' : 
+                         'MANTÉN LA PESTAÑA ABIERTA DURANTE LA TRANSMISIÓN.'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {transferState === 'transferring' && (
+                    <div className="text-3xl font-black text-surface opacity-50 tracking-tighter w-20 text-right">
+                      {progress}%
+                    </div>
+                  )}
+                  
+                  {transferState === 'waiting_approval' && (
+                    <Button variant="outline" size="sm" onClick={() => setTransferState(null)} className="shrink-0 text-[10px] text-muted border-muted py-1">
+                      CANCELAR
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            )}
 
             {/* KPIs */}
             <div className="nexus-kpi-grid">

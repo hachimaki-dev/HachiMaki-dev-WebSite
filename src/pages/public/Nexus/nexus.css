@@ -5,7 +5,7 @@
 
 /* ── Estilos de Layout General ── */
 .nexus-container {
-  max-width: 1400px;
+  max-width: var(--max-width-wide, 1200px);
   margin: 0 auto;
   padding: var(--space-8) var(--space-6);
   display: flex;
@@ -22,7 +22,7 @@
 
 @media (min-width: 1024px) {
   .nexus-grid {
-    grid-template-columns: 280px 1fr 340px;
+    grid-template-columns: 240px 1fr 280px;
   }
 }
 
@@ -37,7 +37,7 @@
 }
 
 .nexus-header__content {
-  max-width: 1400px;
+  max-width: var(--max-width-wide, 1200px);
   margin: 0 auto;
   padding: var(--space-4) var(--space-6);
   display: flex;

@@ -62,6 +62,12 @@ export default function NexusPeerLibraryModal({ peer, onDownload, onPing, onClos
                           <Icon name="file" size={12} /> {ext.substring(0, 4)}
                         </span>
                         <span>{formatBytes(file.size)}</span>
+                        <span className="opacity-50 hidden sm:inline-block border-l border-border pl-2 ml-2">
+                          MIME: {file.type || 'unknown'}
+                        </span>
+                        <span className="opacity-50 hidden sm:inline-block border-l border-border pl-2 ml-2 font-mono text-[9px] mt-0.5">
+                          HASH: {file.id ? Array.from(file.id).reduce((hash, char) => 0 | (31 * hash + char.charCodeAt(0)), 0).toString(16).toUpperCase().padStart(8, '0').slice(-8) : '00000000'}
+                        </span>
                       </div>
                     </div>
                     
