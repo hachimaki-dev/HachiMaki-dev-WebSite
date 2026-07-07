@@ -90,23 +90,31 @@ export function useMediaDevices() {
       streamRef.current.getTracks().forEach((t) => t.stop())
     }
 
-    const constraints = {
-      video: {
-        ...(videoDeviceId ? { deviceId: { exact: videoDeviceId } } : {}),
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-        frameRate: { ideal: 30 },
-        ...videoConstraints,
-      },
-      audio: {
-        ...(audioDeviceId ? { deviceId: { exact: audioDeviceId } } : {}),
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true,
-      },
-    }
-
     try {
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      const hasVideo = devices.some((d) => d.kind === 'videoinput')
+      const hasAudio = devices.some((d) => d.kind === 'audioinput')
+
+      if (!hasVideo && !hasAudio) {
+        throw new Error('NotFoundError') // Trigger the standard error handling
+      }
+
+      const constraints = {
+        video: hasVideo ? {
+          ...(videoDeviceId ? { deviceId: { exact: videoDeviceId } } : {}),
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          frameRate: { ideal: 30 },
+          ...videoConstraints,
+        } : false,
+        audio: hasAudio ? {
+          ...(audioDeviceId ? { deviceId: { exact: audioDeviceId } } : {}),
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        } : false,
+      }
+
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints)
       streamRef.current = mediaStream
       setStream(mediaStream)

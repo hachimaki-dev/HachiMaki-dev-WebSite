@@ -9,6 +9,30 @@ export default function NexusPeerLibraryModal({ peer, onDownload, onPing, onClos
   const isOnline = peer.is_online
   const files = peer.files || []
 
+  const handleDownloadCheck = (file) => {
+    const fileSizeBytes = file.size
+    const fileMB = fileSizeBytes / (1024 * 1024)
+    const fileGB = fileSizeBytes / (1024 * 1024 * 1024)
+    
+    // navigator.deviceMemory returns approximate RAM in GB. Default to 2 if not available for safe measure
+    const deviceMemGB = navigator.deviceMemory || 2
+    
+    // If file is > 25% of total RAM or > 500MB, warn the user
+    if (fileGB > (deviceMemGB * 0.25) || fileMB > 500) {
+      const confirmDownload = window.confirm(
+        `[ALERTA DE SISTEMA]\n\nEl archivo seleccionado es muy masivo (${formatBytes(fileSizeBytes)}).\n` +
+        `Tu terminal registra ~${navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'Desconocida'} de memoria RAM. ` +
+        `Ensamblar este paquete de datos en memoria local podría provocar un colapso del navegador (Out of Memory).\n\n` +
+        `Se recomienda utilizar un equipo con mayor capacidad de memoria RAM para esta intercepción.\n\n` +
+        `¿Forzar protocolo de descarga bajo tu propio riesgo?`
+      )
+      if (!confirmDownload) return
+    }
+
+    onDownload(peer.visitor_id, file)
+    onClose()
+  }
+
   return (
     <div className="nexus-modal-overlay">
       <div className="nexus-modal">
@@ -74,10 +98,7 @@ export default function NexusPeerLibraryModal({ peer, onDownload, onPing, onClos
                     <div className="modal-file-item__btn-wrapper">
                       {isOnline ? (
                         <button 
-                          onClick={() => {
-                            onDownload(peer.visitor_id, file)
-                            onClose()
-                          }}
+                          onClick={() => handleDownloadCheck(file)}
                           className="modal-file-item__btn"
                         >
                           <Icon name="download" size={14} /> Interceptar

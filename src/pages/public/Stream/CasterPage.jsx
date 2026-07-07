@@ -59,6 +59,12 @@ export function CasterPage() {
   const signalingRef = useRef(null)
   const peerManagerRef = useRef(null)
   const cleanupStopRef = useRef(null)
+  const streamStartTimeRef = useRef(null)
+
+  /* Transmission state */
+  const [streamEvents, setStreamEvents] = useState([])
+  const [isMicMuted, setIsMicMuted] = useState(false)
+  const [isCameraDisabled, setIsCameraDisabled] = useState(false)
 
   /* Hooks */
   const { getRoomBySlug, updateRoomStatus } = useRooms()
@@ -75,6 +81,7 @@ export function CasterPage() {
   const { toast } = useToast()
 
   const {
+    transcripts,
     currentSpeech,
     isSupported: isSpeechSupported,
     isListening: isSpeechListening,
@@ -143,11 +150,103 @@ export function CasterPage() {
     await getDisplayStream()
   }, [getDisplayStream])
 
+  /* ── Transmission Controls ── */
+  const toggleMic = useCallback(() => {
+    if (!stream) return
+    const audioTrack = stream.getAudioTracks()[0]
+    if (audioTrack) {
+      audioTrack.enabled = !audioTrack.enabled
+      setIsMicMuted(!audioTrack.enabled)
+      log.info(`Microphone ${audioTrack.enabled ? 'unmuted' : 'muted'}`)
+    }
+  }, [stream])
+
+  const toggleCamera = useCallback(() => {
+    if (!stream) return
+    const videoTrack = stream.getVideoTracks()[0]
+    if (videoTrack) {
+      videoTrack.enabled = !videoTrack.enabled
+      setIsCameraDisabled(!videoTrack.enabled)
+      log.info(`Camera ${videoTrack.enabled ? 'enabled' : 'disabled'}`)
+    }
+  }, [stream])
+
+  const handleScreenshot = useCallback(() => {
+    if (!videoRef.current || !streamStartTimeRef.current) return
+
+    const canvas = document.createElement('canvas')
+    canvas.width = videoRef.current.videoWidth
+    canvas.height = videoRef.current.videoHeight
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
+
+    const dataUrl = canvas.toDataURL('image/png')
+    const a = document.createElement('a')
+    a.href = dataUrl
+    
+    const timestampMs = Date.now() - streamStartTimeRef.current
+    const timestampFormatted = formatDuration(timestampMs)
+    const eventId = crypto.randomUUID()
+    
+    setStreamEvents((prev) => [...prev, {
+      id: eventId,
+      type: 'screenshot',
+      timestamp_ms: timestampMs,
+      timestamp_formatted: timestampFormatted,
+      description: 'Captura de pantalla tomada durante la transmisión'
+    }])
+
+    a.download = `screenshot_${room?.slug || 'stream'}_${timestampFormatted.replace(/:/g, '-')}.png`
+    a.click()
+    toast({ type: 'success', message: 'Captura guardada y registrada en el log.' })
+  }, [room, toast])
+
+  const generateTransmissionLog = useCallback(() => {
+    if (!streamStartTimeRef.current) return
+
+    const logData = {
+      stream_title: room?.title || 'Unknown Stream',
+      start_time: new Date(streamStartTimeRef.current).toISOString(),
+      end_time: new Date().toISOString(),
+      duration_ms: duration,
+      transcripts: transcripts.map(t => {
+        const tTime = new Date(t.created_at).getTime()
+        const relativeMs = Math.max(0, tTime - streamStartTimeRef.current)
+        return {
+          text: t.text,
+          timestamp_ms: relativeMs,
+          timestamp_formatted: formatDuration(relativeMs)
+        }
+      }),
+      chat_messages: messages.map(m => {
+        const mTime = new Date(m.created_at).getTime()
+        const relativeMs = Math.max(0, mTime - streamStartTimeRef.current)
+        return {
+          sender: m.display_name || 'Unknown',
+          message: m.message,
+          timestamp_ms: relativeMs,
+          timestamp_formatted: formatDuration(relativeMs)
+        }
+      }),
+      events: streamEvents
+    }
+
+    const blob = new Blob([JSON.stringify(logData, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `stream_log_${room?.slug || 'stream'}_${new Date().toISOString().split('T')[0]}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }, [room, duration, transcripts, messages, streamEvents])
+
   /* ── Go Live ── */
   const handleGoLive = useCallback(async () => {
     if (!stream || !room) return
 
     setIsLive(true)
+    setStreamEvents([])
+    streamStartTimeRef.current = Date.now()
     await updateRoomStatus(room.id, 'live')
 
     /* Start recording */
@@ -211,6 +310,12 @@ export function CasterPage() {
   const handleStopStream = useCallback(async () => {
     setIsLive(false)
 
+    try {
+      generateTransmissionLog()
+    } catch (err) {
+      log.error('Error generating transmission log:', err)
+    }
+
     let recordingResult = null
     try {
       /* Stop recording and get blob */
@@ -269,7 +374,7 @@ export function CasterPage() {
     }
 
     log.info('⬛ Stream ended')
-  }, [room, user, stopRecording, updateRoomStatus, uploadRecording, toast, isSpeechSupported, stopTranscription])
+  }, [room, user, stopRecording, updateRoomStatus, uploadRecording, toast, isSpeechSupported, stopTranscription, generateTransmissionLog])
 
   /* ── Cleanup on unmount ── */
   useEffect(() => {
@@ -439,10 +544,25 @@ export function CasterPage() {
           ) : (
             <div className="caster-page__live-actions">
               <button
-                className="caster-page__btn caster-page__btn--stop"
-                onClick={handleStopStream}
+                className="caster-page__btn"
+                onClick={toggleMic}
+                title={isMicMuted ? "Activar Micrófono" : "Mutear Micrófono"}
               >
-                ⬛ Detener Transmisión
+                {isMicMuted ? <><Icon name="mic" /> Unmute</> : <><Icon name="mic" /> Mute</>}
+              </button>
+              <button
+                className="caster-page__btn"
+                onClick={toggleCamera}
+                title={isCameraDisabled ? "Activar Cámara" : "Desactivar Cámara"}
+              >
+                {isCameraDisabled ? <><Icon name="camera" /> Cam On</> : <><Icon name="camera" /> Cam Off</>}
+              </button>
+              <button
+                className="caster-page__btn"
+                onClick={handleScreenshot}
+                title="Tomar Captura"
+              >
+                <Icon name="image" /> Screenshot
               </button>
               {isSpeechSupported && (
                 <button
@@ -452,6 +572,12 @@ export function CasterPage() {
                   {isSpeechListening ? <><Icon name="mic" /> Transcripción: ON</> : <><Icon name="mic" /> Transcripción: OFF</>}
                 </button>
               )}
+              <button
+                className="caster-page__btn caster-page__btn--stop"
+                onClick={handleStopStream}
+              >
+                ⬛ Detener Transmisión
+              </button>
             </div>
           )}
         </div>

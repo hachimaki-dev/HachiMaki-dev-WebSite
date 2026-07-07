@@ -68,15 +68,12 @@ export default function NexusPage() {
         if (msg.type === 'request_download') {
           console.log('[WEB_RTC_SIGNALING] Received request_download:', msg)
           const { fileId, fileName } = msg.payload
-          const file = await getFileToShare(fileId)
-          if (!file) {
-            await signalingRef.current.send(msg.sender_id, 'reject_download', { reason: 'ARCHIVO NO ENCONTRADO EN BÓVEDA' })
-            return
-          }
-          setIncomingRequest({
-            senderId: msg.sender_id,
-            file: file
-          })
+          
+          // IMPORTANT: Do NOT call getFileToShare here! 
+          // Browser requires a USER GESTURE to prompt for FileSystemAccess permission (Chrome).
+          // We must wait for the user to click "PERMITIR" before trying to read the file.
+          setIncomingRequest({ senderId: msg.sender_id, fileId, fileName })
+          setTransferState('waiting_approval')
         } 
         else if (msg.type === 'reject_download') {
           setTransferState(null)
@@ -105,7 +102,8 @@ export default function NexusPage() {
               await signalingRef.current.send(msg.sender_id, 'ice-candidate', { candidate })
             },
             onStatusChange: (status) => {
-              if (status === 'disconnected' || status === 'failed') setTransferState(null)
+              if (status === 'disconnected') setTransferState('error_disconnected')
+              if (status === 'failed') setTransferState('error_failed')
             },
             onDataChannelOpen: async () => {
               try {
@@ -177,7 +175,8 @@ export default function NexusPage() {
       },
       onStatusChange: (status) => {
          if (status === 'connected') setTransferState('transferring')
-         if (status === 'disconnected' || status === 'failed') setTransferState(null)
+         if (status === 'disconnected') setTransferState('error_disconnected')
+         if (status === 'failed') setTransferState('error_failed')
       },
       onProgress: (p) => {
          setProgress(p)
@@ -203,9 +202,19 @@ export default function NexusPage() {
 
   const handleAcceptRequest = async () => {
     if (!incomingRequest) return
-    const { senderId, file } = incomingRequest
-    await signalingRef.current.send(senderId, 'accept_download', { fileId: file.id, fileName: file.name })
+    const { senderId, fileId, fileName } = incomingRequest
+    
+    // Now that we have a USER GESTURE (the click on PERMITIR), we can safely ask for file permission in Chrome.
+    const file = await getFileToShare(fileId)
+    if (!file) {
+       await signalingRef.current.send(senderId, 'reject_download', { reason: 'ARCHIVO INACCESIBLE O PERMISO DENEGADO.' })
+       setIncomingRequest(null)
+       setTransferState(null)
+       return
+    }
+
     setIncomingRequest(null)
+    await signalingRef.current.send(senderId, 'accept_download', { fileId: file.id, fileName: file.name })
     setTransferState('connecting')
     setActiveTransferName(`PREPARANDO SUBIDA: ${file.name}`)
   }
@@ -317,12 +326,12 @@ export default function NexusPage() {
                     <Icon name="warning-box" size={28} className="text-warning mt-1" />
                     <div>
                       <h3 className="font-sans font-black text-lg text-text tracking-wide">SOLICITUD DE INTERCEPCIÓN</h3>
-                      <p className="font-mono text-xs text-muted mt-1">
-                        El Terminal <span className="text-warning font-bold">{incomingRequest.senderId.substring(0, 6).toUpperCase()}</span> ha solicitado el archivo:
+                      <p className="text-muted text-sm mb-4">
+                        El terminal <span className="text-accent">{incomingRequest.senderId.slice(0, 8)}</span> solicita acceso a:
                       </p>
-                      <p className="font-mono text-text font-bold mt-2 bg-bg px-2 py-1 rounded inline-block border border-surface text-sm">
-                        {incomingRequest.file.name}
-                      </p>
+                      <div className="bg-bg p-3 rounded border border-surface mb-6 font-mono text-sm break-all">
+                        {incomingRequest.fileName}
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-2 w-full xl:w-auto">
@@ -342,21 +351,31 @@ export default function NexusPage() {
               <Card className="mb-4 p-5 border-accent bg-bg bg-opacity-90 backdrop-blur-md shadow-[0_0_20px_rgba(139,92,246,0.1)] relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-surface">
                   <div 
-                    className="h-full bg-accent transition-all duration-300 shadow-[0_0_10px_rgba(139,92,246,1)]" 
-                    style={{ width: transferState === 'waiting_approval' ? '100%' : `${progress}%` }}
+                    className={`h-full transition-all duration-300 ${transferState.startsWith('error') ? 'bg-error shadow-[0_0_10px_rgba(239,68,68,1)]' : 'bg-accent shadow-[0_0_10px_rgba(139,92,246,1)]'}`}
+                    style={{ width: transferState === 'waiting_approval' || transferState.startsWith('error') ? '100%' : `${progress}%` }}
                   ></div>
                 </div>
                 <div className="flex flex-col xl:flex-row justify-between items-center gap-4 font-mono mt-2">
                   <div className="flex items-center gap-4 w-full xl:w-auto">
                     <div className="relative">
-                      <Icon name={transferState === 'waiting_approval' ? 'clock' : 'sync'} size={28} className={`text-accent ${transferState === 'transferring' ? 'animate-spin' : 'animate-pulse'}`} />
-                      <div className="absolute inset-0 bg-accent blur-md opacity-40"></div>
+                      <Icon name={
+                        transferState.startsWith('error') ? 'alert' : 
+                        transferState === 'waiting_approval' ? 'clock' : 'sync'
+                      } size={28} className={
+                        transferState.startsWith('error') ? 'text-error' : 
+                        `text-accent ${transferState === 'transferring' ? 'animate-spin' : 'animate-pulse'}`
+                      } />
+                      <div className={`absolute inset-0 blur-md opacity-40 ${transferState.startsWith('error') ? 'bg-error' : 'bg-accent'}`}></div>
                     </div>
                     <div>
-                      <p className="text-accent font-bold text-base tracking-wider">{activeTransferName}</p>
+                      <p className={`${transferState.startsWith('error') ? 'text-error' : 'text-accent'} font-bold text-base tracking-wider`}>
+                        {transferState.startsWith('error') ? 'ERROR DE TRANSMISIÓN' : activeTransferName}
+                      </p>
                       <p className="text-[10px] text-muted mt-1">
                         {transferState === 'waiting_approval' ? 'ESPERANDO CONFIRMACIÓN DEL TERMINAL REMOTO...' : 
                          transferState === 'connecting' ? 'ESTABLECIENDO CONEXIÓN DIRECTA...' : 
+                         transferState === 'error_failed' ? 'CONEXIÓN RECHAZADA O INTERRUMPIDA POR EL TERMINAL.' :
+                         transferState === 'error_disconnected' ? 'EL TERMINAL SE HA DESCONECTADO DE LA RED.' :
                          'MANTÉN LA PESTAÑA ABIERTA DURANTE LA TRANSMISIÓN.'}
                       </p>
                     </div>
@@ -368,9 +387,9 @@ export default function NexusPage() {
                     </div>
                   )}
                   
-                  {transferState === 'waiting_approval' && (
-                    <Button variant="outline" size="sm" onClick={() => setTransferState(null)} className="shrink-0 text-[10px] text-muted border-muted py-1">
-                      CANCELAR
+                  {(transferState === 'waiting_approval' || transferState.startsWith('error')) && (
+                    <Button variant="outline" size="sm" onClick={() => setTransferState(null)} className={`shrink-0 text-[10px] py-1 ${transferState.startsWith('error') ? 'text-error border-error' : 'text-muted border-muted'}`}>
+                      {transferState.startsWith('error') ? 'CERRAR' : 'CANCELAR'}
                     </Button>
                   )}
                 </div>

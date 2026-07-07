@@ -13,7 +13,7 @@ import { createStreamLogger } from '../lib/streamLogger'
 const log = createStreamLogger('chat')
 
 /** Max messages to keep in memory */
-const MAX_MESSAGES = 200
+const MAX_MESSAGES = 5000
 
 /** Max messages to load initially */
 const INITIAL_LOAD = 50

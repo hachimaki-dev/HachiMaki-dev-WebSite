@@ -10,6 +10,7 @@ const ICE_CONFIG = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' },
     {
       urls: 'turn:openrelay.metered.ca:80',
       username: 'openrelayproject',
@@ -28,7 +29,7 @@ const ICE_CONFIG = {
   ],
 }
 
-const CHUNK_SIZE = 64 * 1024 // 64KB
+const CHUNK_SIZE = 16 * 1024 // 16KB (Safe Universal MTU for Firefox/Safari compatibility)
 
 export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusChange, onProgress, onDataChannelOpen }) {
   let pc = new RTCPeerConnection(ICE_CONFIG)
@@ -89,24 +90,49 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
           receivedSize = 0
           log.info('Receiving file:', currentFileMeta.name)
         } else if (msg.type === 'FILE_DONE') {
-          const blob = new Blob(receiveBuffer, { type: currentFileMeta.type })
-          const url = URL.createObjectURL(blob)
-          // Trigger download
-          const a = document.createElement('a')
-          a.href = url
-          a.download = currentFileMeta.name
-          a.click()
-          URL.revokeObjectURL(url)
-          log.info('File download complete:', currentFileMeta.name)
-          onProgress?.(100)
+          try {
+            const blob = new Blob(receiveBuffer, { type: currentFileMeta.type })
+            const url = URL.createObjectURL(blob)
+            // Trigger download
+            const a = document.createElement('a')
+            a.href = url
+            a.download = currentFileMeta.name
+            a.click()
+            URL.revokeObjectURL(url)
+            log.info('File download complete:', currentFileMeta.name)
+            onProgress?.(100)
+          } catch (err) {
+            console.error('[WEB_RTC] Out of memory or Blob creation error:', err)
+            onStatusChange?.('failed')
+          }
         }
       } else {
         // Binary chunk
-        receiveBuffer.push(e.data)
-        receivedSize += e.data.byteLength
-        if (expectedSize > 0) {
-           onProgress?.(Math.round((receivedSize / expectedSize) * 100))
+        try {
+          receiveBuffer.push(e.data)
+          receivedSize += e.data.byteLength
+          if (expectedSize > 0) {
+             onProgress?.(Math.round((receivedSize / expectedSize) * 100))
+          }
+        } catch (err) {
+          console.error('[WEB_RTC] Array buffer push error (likely OOM):', err)
+          onStatusChange?.('failed')
         }
+      }
+    }
+
+    channel.onerror = (error) => {
+      console.error('[WEB_RTC] DataChannel error:', error)
+      log.error('DataChannel error', error)
+      onStatusChange?.('failed')
+    }
+
+    channel.onclose = () => {
+      console.log('[WEB_RTC] DataChannel closed')
+      log.info('DataChannel closed')
+      if (receivedSize > 0 && expectedSize > 0 && receivedSize < expectedSize) {
+        // Closed prematurely
+        onStatusChange?.('failed')
       }
     }
   }
@@ -184,6 +210,9 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
       meta: { name: file.name, size: file.size, type: file.type }
     }))
 
+    // Give the receiver a moment to parse metadata and setup the buffer before blasting binary data
+    await new Promise(r => setTimeout(r, 500))
+
     const reader = file.stream().getReader()
     let sentSize = 0
     let chunksSent = 0
@@ -195,12 +224,45 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
       for (let i = 0; i < value.length; i += CHUNK_SIZE) {
         const chunk = value.slice(i, i + CHUNK_SIZE)
         
-        // Wait if buffer is full
-        while (dataChannel.bufferedAmount > dataChannel.bufferedAmountLowThreshold) {
-          await new Promise(r => setTimeout(r, 10))
+        // Wait if buffer is full (Backpressure handling based on events with timeout fallback)
+        if (dataChannel.bufferedAmount >= 65536) {
+          dataChannel.bufferedAmountLowThreshold = 16384; // Trigger when it drops to 1 chunk size
+          await new Promise((resolve, reject) => {
+            let timeoutId;
+            const handleLow = () => {
+              cleanup()
+              resolve()
+            }
+            const handleError = () => {
+              cleanup()
+              reject(new Error('DataChannel error during transfer'))
+            }
+            const handleClose = () => {
+              cleanup()
+              reject(new Error('DataChannel closed during transfer'))
+            }
+            
+            const cleanup = () => {
+              clearTimeout(timeoutId)
+              dataChannel.removeEventListener('bufferedamountlow', handleLow)
+              dataChannel.removeEventListener('error', handleError)
+              dataChannel.removeEventListener('close', handleClose)
+            }
+            
+            timeoutId = setTimeout(() => {
+              console.warn('[WEB_RTC] bufferedamountlow timeout reached. Forcing resume.')
+              cleanup()
+              resolve()
+            }, 5000) // 5 second fallback
+            
+            dataChannel.addEventListener('bufferedamountlow', handleLow)
+            dataChannel.addEventListener('error', handleError)
+            dataChannel.addEventListener('close', handleClose)
+          })
         }
         
-        dataChannel.send(chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength))
+        // chunk is a Uint8Array. DataChannel natively supports ArrayBufferView.
+        dataChannel.send(chunk)
         sentSize += chunk.byteLength
         chunksSent++
         
