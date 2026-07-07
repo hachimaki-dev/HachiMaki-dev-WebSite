@@ -153,22 +153,18 @@ export function usePresence(roomId, role = 'viewer') {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (roomId && userIdRef.current) {
-        /* Use sendBeacon for reliable delivery on page close */
-        const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/${TABLES.ROOM_MEMBERS}?room_id=eq.${roomId}&user_id=eq.${userIdRef.current}`
-        const headers = {
-          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
-        }
-
-        navigator.sendBeacon(
-          url,
-          new Blob(
-            [JSON.stringify({ left_at: new Date().toISOString() })],
-            { type: 'application/json' }
-          )
-        )
-        log.debug('Sent leave beacon')
+        fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/${TABLES.ROOM_MEMBERS}?room_id=eq.${roomId}&user_id=eq.${userIdRef.current}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ left_at: new Date().toISOString() }),
+          keepalive: true
+        });
+        log.debug('Sent leave beacon via keepalive fetch')
       }
     }
 

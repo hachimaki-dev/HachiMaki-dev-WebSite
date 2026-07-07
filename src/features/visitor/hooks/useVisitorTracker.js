@@ -60,6 +60,15 @@ export function useVisitorTracker() {
     let visitCount = parseInt(localStorage.getItem('hachimaki_visitor_count') || '0', 10)
     let lastVisitDate = localStorage.getItem('hachimaki_last_visit')
 
+    // Allow overriding visitor_id via URL query parameter for testing/debugging
+    const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
+    const urlVisitorId = params ? params.get('visitor_id') : null
+    
+    if (urlVisitorId) {
+      visitorId = urlVisitorId
+      localStorage.setItem('hachimaki_visitor_id', urlVisitorId)
+    }
+
     if (!visitorId) {
       visitorId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15)
       localStorage.setItem('hachimaki_visitor_id', visitorId)

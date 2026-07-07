@@ -8,6 +8,8 @@ export function useNexusLibrary(visitorId) {
   const sessionFilesRef = useRef([]) // To access in callbacks easily
   const [peers, setPeers] = useState([])
   const [alerts, setAlerts] = useState([])
+  const [myStats, setMyStats] = useState({ downloads_count: 0, shares_count: 0 })
+  const [nexusActivity, setNexusActivity] = useState([])
   const [loading, setLoading] = useState(true)
 
   const hasFileSystemAccess = 'showOpenFilePicker' in window
@@ -169,6 +171,38 @@ export function useNexusLibrary(visitorId) {
     if (error) console.error('Error sending ping:', error)
   }, [visitorId])
 
+  // 8. Stats & Activity
+  const incrementStat = useCallback(async (statName) => {
+    if (!visitorId) return
+    // Simple RPC call is better, but since we don't have one, we can do a read and update
+    const { data } = await supabase.from('peer_libraries').select(statName).eq('visitor_id', visitorId).single()
+    if (data) {
+      const newValue = (data[statName] || 0) + 1
+      await supabase.from('peer_libraries').update({ [statName]: newValue }).eq('visitor_id', visitorId)
+      setMyStats(prev => ({ ...prev, [statName]: newValue }))
+    }
+  }, [visitorId])
+
+  const logActivity = useCallback(async (actionType, details) => {
+    if (!visitorId) return
+    const { error } = await supabase.from('nexus_activity').insert({
+      visitor_id: visitorId,
+      action_type: actionType,
+      details: details
+    })
+    if (error) console.error('Error logging activity:', error)
+  }, [visitorId])
+
+  // Heartbeat updates
+  const updateHeartbeat = useCallback(async () => {
+    if (!visitorId) return
+    const { error } = await supabase
+      .from('peer_libraries')
+      .update({ is_online: true, last_seen: new Date().toISOString() })
+      .eq('visitor_id', visitorId)
+    if (error) console.error('Error updating heartbeat:', error)
+  }, [visitorId])
+
   // Initialization & Subscriptions
   useEffect(() => {
     if (!visitorId) return
@@ -192,6 +226,7 @@ export function useNexusLibrary(visitorId) {
         .from('peer_libraries')
         .select('*')
         .neq('visitor_id', visitorId)
+        .eq('is_online', true)
       
       if (mounted && peersData) setPeers(peersData)
 
@@ -202,18 +237,60 @@ export function useNexusLibrary(visitorId) {
         .eq('status', 'pending')
 
       if (mounted && alertsData) setAlerts(alertsData)
+
+      // Fetch my stats
+      const { data: myData } = await supabase
+        .from('peer_libraries')
+        .select('downloads_count, shares_count')
+        .eq('visitor_id', visitorId)
+        .single()
+      
+      if (mounted && myData) {
+        setMyStats({ downloads_count: myData.downloads_count || 0, shares_count: myData.shares_count || 0 })
+      }
+
+      // Fetch activity
+      const { data: activityData } = await supabase
+        .from('nexus_activity')
+        .select('*')
+        .eq('visitor_id', visitorId)
+        .order('created_at', { ascending: false })
+        .limit(10)
+        
+      if (mounted && activityData) {
+        setNexusActivity(activityData)
+      }
+
       if (mounted) setLoading(false)
     }
 
     init()
 
+    // Start heartbeat
+    const heartbeatInterval = setInterval(() => {
+      if (mounted) updateHeartbeat()
+    }, 20000)
+
     const peersSub = supabase.channel('nexus_peers')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'peer_libraries' }, (payload) => {
-        if (payload.new.visitor_id === visitorId) return
+        const newPeer = payload.new
+        const oldPeer = payload.old
+        if (newPeer && newPeer.visitor_id === visitorId) return
+        
         setPeers(prev => {
-          const filtered = prev.filter(p => p.visitor_id !== payload.new.visitor_id)
-          if (payload.eventType === 'DELETE') return filtered
-          return [...filtered, payload.new]
+          if (payload.eventType === 'DELETE') {
+            const deletedId = oldPeer ? oldPeer.visitor_id : null
+            return prev.filter(p => p.visitor_id !== deletedId)
+          }
+          
+          const peerId = newPeer ? newPeer.visitor_id : null
+          if (!peerId) return prev
+          
+          const filtered = prev.filter(p => p.visitor_id !== peerId)
+          
+          if (!newPeer.is_online) return filtered
+          
+          return [...filtered, newPeer]
         })
       })
       .subscribe()
@@ -224,19 +301,35 @@ export function useNexusLibrary(visitorId) {
       })
       .subscribe()
 
+    const activitySub = supabase.channel('nexus_activity_sub')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'nexus_activity', filter: `visitor_id=eq.${visitorId}` }, (payload) => {
+        setNexusActivity(prev => [payload.new, ...prev].slice(0, 10))
+      })
+      .subscribe()
+
     const handleUnload = () => {
-      const blob = new Blob([JSON.stringify({ is_online: false })], { type: 'application/json' })
-      navigator.sendBeacon(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/peer_libraries?visitor_id=eq.${visitorId}`, blob)
+      fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/peer_libraries?visitor_id=eq.${visitorId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        },
+        body: JSON.stringify({ is_online: false }),
+        keepalive: true
+      })
     }
     window.addEventListener('beforeunload', handleUnload)
 
     return () => {
       mounted = false
+      clearInterval(heartbeatInterval)
       supabase.removeChannel(peersSub)
       supabase.removeChannel(alertsSub)
+      supabase.removeChannel(activitySub)
       window.removeEventListener('beforeunload', handleUnload)
     }
-  }, [visitorId, loadLocalFiles, syncToNetwork])
+  }, [visitorId, loadLocalFiles, syncToNetwork, updateHeartbeat])
 
   // Combine display files
   const sessionMeta = sessionFiles.map(f => ({ id: f.id, name: f.name, size: f.size, type: f.type, isActive: true, isEphemeral: true }))
@@ -246,12 +339,16 @@ export function useNexusLibrary(visitorId) {
     displayFiles,
     peers,
     alerts,
+    myStats,
+    nexusActivity,
     loading,
     hasFileSystemAccess,
     addFiles,
     reactivateFile,
     removeFile,
     getFileToShare,
-    sendPing
+    sendPing,
+    incrementStat,
+    logActivity
   }
 }

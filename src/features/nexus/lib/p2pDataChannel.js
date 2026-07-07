@@ -9,6 +9,22 @@ const log = createStreamLogger('nexusP2P')
 const ICE_CONFIG = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    {
+      urls: 'turn:openrelay.metered.ca:80',
+      username: 'openrelayproject',
+      credential: 'openrelayproject'
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443',
+      username: 'openrelayproject',
+      credential: 'openrelayproject'
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+      username: 'openrelayproject',
+      credential: 'openrelayproject'
+    }
   ],
 }
 
@@ -22,25 +38,41 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
   let expectedSize = 0
   let currentFileMeta = null
   let isSender = false
+  let iceCandidateQueue = []
   
   pc.onicecandidate = (e) => {
-    if (e.candidate) onIceCandidate(e.candidate)
+    if (e.candidate) {
+      console.log('[WEB_RTC] Generated ICE candidate:', e.candidate.candidate)
+      onIceCandidate(e.candidate)
+    } else {
+      console.log('[WEB_RTC] ICE gathering complete (null candidate)')
+    }
+  }
+
+  pc.onicegatheringstatechange = () => {
+    console.log('[WEB_RTC] ICE gathering state changed:', pc.iceGatheringState)
   }
 
   pc.onconnectionstatechange = () => {
+    console.log('[WEB_RTC] Connection state changed:', pc.connectionState)
     log.info('P2P State:', pc.connectionState)
     onStatusChange?.(pc.connectionState)
   }
 
   // Set up Data Channel for receiving
   pc.ondatachannel = (event) => {
+    console.log('[WEB_RTC] Received remote DataChannel:', event.channel.label)
     dataChannel = event.channel
     dataChannel.binaryType = 'arraybuffer'
+    dataChannel.bufferedAmountLowThreshold = 65536
     setupDataChannelHandlers(dataChannel)
     if (dataChannel.readyState === 'open') {
+      console.log('[WEB_RTC] DataChannel already open upon receipt')
       onDataChannelOpen?.()
     } else {
+      console.log('[WEB_RTC] DataChannel readyState:', dataChannel.readyState, '- waiting for onopen')
       dataChannel.onopen = () => {
+        console.log('[WEB_RTC] DataChannel onopen triggered (Receiver)')
         onDataChannelOpen?.()
       }
     }
@@ -81,37 +113,72 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
 
   // Initiate connection (Sender)
   async function connect() {
+    console.log('[WEB_RTC] Initiating connect...')
     isSender = true
     dataChannel = pc.createDataChannel('fileTransfer', { ordered: true })
     dataChannel.binaryType = 'arraybuffer'
     dataChannel.bufferedAmountLowThreshold = 65536
     setupDataChannelHandlers(dataChannel)
 
+    dataChannel.onopen = () => {
+      console.log('[WEB_RTC] DataChannel onopen triggered (Sender)')
+    }
+
     const offer = await pc.createOffer()
     await pc.setLocalDescription(offer)
+    console.log('[WEB_RTC] Created offer and set local description')
     onOffer(pc.localDescription)
   }
 
   async function handleOffer(sdp) {
+    console.log('[WEB_RTC] Handling offer...')
     await pc.setRemoteDescription(new RTCSessionDescription(sdp))
+    await flushIceCandidates()
     const answer = await pc.createAnswer()
     await pc.setLocalDescription(answer)
+    console.log('[WEB_RTC] Created answer and set local description')
     onAnswer(pc.localDescription)
   }
 
   async function handleAnswer(sdp) {
+    console.log('[WEB_RTC] Handling answer...')
     await pc.setRemoteDescription(new RTCSessionDescription(sdp))
+    await flushIceCandidates()
+    console.log('[WEB_RTC] Set remote description from answer')
   }
 
   async function handleIceCandidate(candidate) {
-    await pc.addIceCandidate(new RTCIceCandidate(candidate))
+    if (pc.remoteDescription && pc.remoteDescription.type) {
+      console.log('[WEB_RTC] Adding remote ICE candidate directly:', candidate.candidate)
+      await pc.addIceCandidate(new RTCIceCandidate(candidate))
+    } else {
+      console.log('[WEB_RTC] Queuing ICE candidate (remoteDescription not set):', candidate.candidate)
+      iceCandidateQueue.push(candidate)
+    }
+  }
+
+  async function flushIceCandidates() {
+    console.log(`[WEB_RTC] Flushing ${iceCandidateQueue.length} queued ICE candidates...`)
+    for (const candidate of iceCandidateQueue) {
+      try {
+        console.log('[WEB_RTC] Adding queued ICE candidate:', candidate.candidate)
+        await pc.addIceCandidate(new RTCIceCandidate(candidate))
+      } catch (err) {
+        console.error('[WEB_RTC] Error adding queued ICE candidate', err)
+        log.error('Error adding queued ICE candidate', err)
+      }
+    }
+    iceCandidateQueue = []
   }
 
   async function sendFile(file) {
+    console.log('[WEB_RTC] Starting sendFile for:', file.name)
     if (!dataChannel || dataChannel.readyState !== 'open') {
+      console.error('[WEB_RTC] Data channel not open. readyState:', dataChannel?.readyState)
       throw new Error('Data channel not open')
     }
 
+    console.log('[WEB_RTC] Sending FILE_META')
     dataChannel.send(JSON.stringify({
       type: 'FILE_META',
       meta: { name: file.name, size: file.size, type: file.type }
@@ -119,6 +186,7 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
 
     const reader = file.stream().getReader()
     let sentSize = 0
+    let chunksSent = 0
     
     while (true) {
       const { done, value } = await reader.read()
@@ -134,10 +202,16 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
         
         dataChannel.send(chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength))
         sentSize += chunk.byteLength
+        chunksSent++
+        
+        if (chunksSent % 20 === 0) {
+          console.log(`[WEB_RTC] Sent ${chunksSent} chunks. Progress: ${Math.round((sentSize / file.size) * 100)}%`)
+        }
         onProgress?.(Math.round((sentSize / file.size) * 100))
       }
     }
 
+    console.log('[WEB_RTC] Sending FILE_DONE')
     dataChannel.send(JSON.stringify({ type: 'FILE_DONE' }))
   }
 

@@ -88,9 +88,10 @@ src/components/ui/Toast.jsx`
 | `subscriptions` | `email`, `subscribe_streams`, `subscribe_newsletter` | Public insert (via RPC), auth all |
 | `stream_transcriptions` | `room_id`, `text`, `created_at` | Public read, auth insert/delete |
 | `friend_links` | `name`, `url`, `image_url`, `animation_type`, `sort_order` | Public read, auth all |
-| `peer_libraries` | `visitor_id`, `alias`, `files`, `is_online` | Public read/insert/update |
+| `peer_libraries` | `visitor_id`, `alias`, `files`, `is_online`, `downloads_count`, `shares_count` | Public read/insert/update |
 | `peer_alerts` | `id`, `sender_id`, `receiver_id`, `file_id`, `status` | Public read/insert/update/delete |
 | `p2p_signaling` | `id`, `sender_id`, `target_id`, `type`, `payload` | Public read/insert/delete |
+| `nexus_activity` | `id`, `visitor_id`, `action_type`, `details` | Public read/insert/delete |
 
 Schema changes → create `migrations/NNN_description.sql`, update `migrations/README.md`
 

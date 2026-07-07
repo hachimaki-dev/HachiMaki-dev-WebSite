@@ -56,9 +56,10 @@ All values come from `src/styles/tokens.css`:
 - `subscriptions` — newsletter/stream subscriptions
 - `stream_transcriptions` — stream speech transcriptions
 - `friend_links` — website buttons showcase (linkeame)
-- `peer_libraries` — P2P file sharing libraries
+- `peer_libraries` — P2P file sharing libraries (with downloads_count, shares_count)
 - `peer_alerts` — P2P offline alerts
 - `p2p_signaling` — WebRTC P2P signaling
+- `nexus_activity` — P2P activity log
 
 RLS: public read when `published=true` or public list, writes require authentication.
 Streaming: public read, anonymous signaling/chat, auth for rooms/recordings/transcriptions.
