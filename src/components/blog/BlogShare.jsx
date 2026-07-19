@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Icon from '../ui/Icon'
 import './BlogShare.css'
 
-export function BlogShare({ title = '' }) {
+export function BlogShare() {
   const [copied, setCopied] = useState(false)
 
   const handleShare = async () => {

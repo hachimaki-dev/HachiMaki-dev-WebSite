@@ -38,7 +38,6 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
   let receivedSize = 0
   let expectedSize = 0
   let currentFileMeta = null
-  let isSender = false
   let iceCandidateQueue = []
   
   pc.onicecandidate = (e) => {
@@ -140,7 +139,6 @@ export function createNexusPeer({ onOffer, onAnswer, onIceCandidate, onStatusCha
   // Initiate connection (Sender)
   async function connect() {
     console.log('[WEB_RTC] Initiating connect...')
-    isSender = true
     dataChannel = pc.createDataChannel('fileTransfer', { ordered: true })
     dataChannel.binaryType = 'arraybuffer'
     dataChannel.bufferedAmountLowThreshold = 65536

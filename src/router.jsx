@@ -139,6 +139,6 @@ export const router = createBrowserRouter(
     },
   ],
   {
-    basename: '/hachimaki-dev',
+    basename: '/HachiMaki-dev-WebSite',
   }
 )

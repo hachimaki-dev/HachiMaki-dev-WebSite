@@ -61,7 +61,7 @@ export default defineConfig({
       },
     }),
   ],
-  base: '/hachimaki-dev/',
+  base: '/HachiMaki-dev-WebSite/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

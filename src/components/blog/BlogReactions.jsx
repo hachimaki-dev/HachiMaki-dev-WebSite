@@ -1,5 +1,4 @@
 import { useBlogReactions } from '../../features/blog/useBlogReactions'
-import { useVisitorTracker } from '../../features/visitor/hooks/useVisitorTracker'
 import Icon from '../ui/Icon'
 import './BlogReactions.css'
 

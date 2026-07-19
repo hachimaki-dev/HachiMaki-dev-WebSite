@@ -1,4 +1,3 @@
-import React from 'react'
 import Icon from '../ui/Icon'
 import { formatBytes } from '../../utils/formatBytes'
 import { getAvatarIcon } from '../../utils/getAvatarIcon'

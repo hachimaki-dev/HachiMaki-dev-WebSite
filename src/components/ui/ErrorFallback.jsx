@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { useRouteError, useNavigate } from 'react-router-dom'
+import { useRouteError } from 'react-router-dom'
 import './ErrorFallback.css'
 
 /**

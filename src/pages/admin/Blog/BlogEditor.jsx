@@ -28,7 +28,6 @@ export function BlogEditor() {
 
   const [loading, setLoading] = useState(isEditing)
   const [saving, setSaving] = useState(false)
-  const [isPhotoPickerOpen, setIsPhotoPickerOpen] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const [newTagName, setNewTagName] = useState('')
   const { photos, loading: photosLoading } = usePhotos()

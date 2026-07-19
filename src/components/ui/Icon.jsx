@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * Reusable Icon component using pixelarticons
  * 

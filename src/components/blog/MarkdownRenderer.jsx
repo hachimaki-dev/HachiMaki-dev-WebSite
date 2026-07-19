@@ -106,19 +106,17 @@ function PreBlock({ children, ...props }) {
 
   return (
     <div className="prose__code-block">
-      {(language || true) && (
-        <div className="prose__code-header">
-          <span className="prose__code-lang">{language || 'code'}</span>
-          <button
-            className="prose__code-copy"
-            onClick={handleCopy}
-            type="button"
-            aria-label="Copiar código"
-          >
-            {copied ? <><Icon name="check" /> Copiado</> : 'Copiar'}
-          </button>
-        </div>
-      )}
+      <div className="prose__code-header">
+        <span className="prose__code-lang">{language || 'code'}</span>
+        <button
+          className="prose__code-copy"
+          onClick={handleCopy}
+          type="button"
+          aria-label="Copiar código"
+        >
+          {copied ? <><Icon name="check" /> Copiado</> : 'Copiar'}
+        </button>
+      </div>
       <pre {...props}>{children}</pre>
     </div>
   )
