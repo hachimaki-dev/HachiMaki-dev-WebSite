@@ -14,44 +14,66 @@ const generateAlias = (visitorId) => {
 }
 
 /**
- * useBlogComments — Fetch and submit comments for a post
- * @param {string} postId
+ * useBlogComments — Fetch and submit comments for a post, course, or lesson
+ * @param {string|object} target - Either postId string or object { postId, courseId, lessonId }
  * @param {string} visitorId
  */
-export function useBlogComments(postId, visitorId) {
+export function useBlogComments(target, visitorId) {
+  // Support both string (postId) for backward compatibility and object
+  const postId = typeof target === 'string' ? target : target?.postId
+  const courseId = typeof target === 'object' ? target?.courseId : null
+  const lessonId = typeof target === 'object' ? target?.lessonId : null
+
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(true)
 
   const fetchComments = useCallback(async () => {
-    if (!postId) return
+    if (!postId && !courseId && !lessonId) return
     setLoading(true)
 
-    const { data, error } = await supabase
+    let query = supabase
       .from(TABLES.BLOG_COMMENTS)
       .select('*')
-      .eq('post_id', postId)
       .eq('is_deleted', false)
-      .order('created_at', { ascending: true })
+
+    if (postId) {
+      query = query.eq('post_id', postId)
+    } else if (courseId) {
+      query = query.eq('course_id', courseId)
+    } else if (lessonId) {
+      query = query.eq('lesson_id', lessonId)
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: true })
 
     if (!error && data) {
       setComments(data)
     }
     setLoading(false)
-  }, [postId])
+  }, [postId, courseId, lessonId])
 
   useEffect(() => {
     fetchComments()
   }, [fetchComments])
 
   const addComment = async (content) => {
-    if (!postId || !visitorId || !content.trim()) return { success: false, error: 'Invalid input' }
+    if ((!postId && !courseId && !lessonId) || !visitorId || !content.trim()) {
+      return { success: false, error: 'Invalid input' }
+    }
 
     const alias = generateAlias(visitorId)
     const newComment = {
-      post_id: postId,
       visitor_id: visitorId,
       alias,
       content: content.trim()
+    }
+
+    if (postId) {
+      newComment.post_id = postId
+    } else if (courseId) {
+      newComment.course_id = courseId
+    } else if (lessonId) {
+      newComment.lesson_id = lessonId
     }
 
     const { data, error } = await supabase

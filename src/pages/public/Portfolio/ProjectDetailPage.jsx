@@ -7,6 +7,7 @@ import { useProject } from '../../../features/portfolio/useProjects'
 import { ROUTES } from '../../../lib/constants'
 import './ProjectDetailPage.css'
 import Icon from '../../../components/ui/Icon'
+import { SEO } from '../../../components/ui/SEO'
 
 const ensureExternalLink = (url) => {
   if (!url) return ''
@@ -39,6 +40,13 @@ export function ProjectDetailPage() {
 
   return (
     <PageWrapper>
+      <SEO 
+        title={`${project.title} - Portfolio`} 
+        description={project.description || `Proyecto ${project.title}`} 
+        type="article"
+        image={project.cover_url}
+        url={window.location.href}
+      />
       <article className="project-detail page-enter">
         {/* Back */}
         <Link to={ROUTES.PORTFOLIO} className="project-detail__back">

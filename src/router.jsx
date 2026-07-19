@@ -19,6 +19,9 @@ const PhotosPage = lazy(() => import('./pages/public/Photos/PhotosPage').then(m 
 const VisitantesPage = lazy(() => import('./pages/public/Visitantes/VisitantesPage').then(m => ({ default: m.VisitantesPage })))
 const ContactPage = lazy(() => import('./pages/public/Contact/ContactPage').then(m => ({ default: m.ContactPage })))
 const NexusPage = lazy(() => import('./pages/public/Nexus/NexusPage').then(m => ({ default: m.default })))
+const CoursesPage = lazy(() => import('./pages/public/Courses/CoursesPage').then(m => ({ default: m.CoursesPage })))
+const CourseDetailPage = lazy(() => import('./pages/public/Courses/CourseDetailPage').then(m => ({ default: m.CourseDetailPage })))
+const CourseLessonPage = lazy(() => import('./pages/public/Courses/CourseLessonPage').then(m => ({ default: m.CourseLessonPage })))
 const LoginPage = lazy(() => import('./features/auth/LoginPage').then(m => ({ default: m.LoginPage })))
 
 import { useVisitorTracker } from './features/visitor/hooks/useVisitorTracker'
@@ -41,6 +44,9 @@ const AdminPhotosPage = lazy(() => import('./pages/admin/Photos/AdminPhotosPage'
 const AdminContactPage = lazy(() => import('./pages/admin/Contact/AdminContactPage').then(m => ({ default: m.AdminContactPage })))
 const AdminSubscriptionsPage = lazy(() => import('./pages/admin/Subscriptions/AdminSubscriptionsPage').then(m => ({ default: m.AdminSubscriptionsPage })))
 const AdminFriendLinksPage = lazy(() => import('./pages/admin/FriendLinks/AdminFriendLinksPage').then(m => ({ default: m.AdminFriendLinksPage })))
+const AdminCoursesPage = lazy(() => import('./pages/admin/Courses/AdminCoursesPage').then(m => ({ default: m.AdminCoursesPage })))
+const CourseEditor = lazy(() => import('./pages/admin/Courses/CourseEditor').then(m => ({ default: m.CourseEditor })))
+const LessonEditor = lazy(() => import('./pages/admin/Courses/LessonEditor').then(m => ({ default: m.LessonEditor })))
 
 /* ── Public layout wrapper ── */
 function PublicLayout() {
@@ -88,6 +94,9 @@ export const router = createBrowserRouter(
         { path: '/stream/:slug/watch', element: <ViewerPage /> },
         { path: '/contacto', element: <ContactPage /> },
         { path: '/nexus', element: <NexusPage /> },
+        { path: '/cursos', element: <CoursesPage /> },
+        { path: '/cursos/:slug', element: <CourseDetailPage /> },
+        { path: '/cursos/:slug/:lessonSlug', element: <CourseLessonPage /> },
       ],
     },
     {
@@ -121,6 +130,11 @@ export const router = createBrowserRouter(
         { path: 'contact', element: <AdminContactPage /> },
         { path: 'subscriptions', element: <AdminSubscriptionsPage /> },
         { path: 'links', element: <AdminFriendLinksPage /> },
+        { path: 'courses', element: <AdminCoursesPage /> },
+        { path: 'courses/new', element: <CourseEditor /> },
+        { path: 'courses/:id', element: <CourseEditor /> },
+        { path: 'courses/:id/lessons/new', element: <LessonEditor /> },
+        { path: 'courses/:id/lessons/:lessonId', element: <LessonEditor /> },
       ],
     },
   ],

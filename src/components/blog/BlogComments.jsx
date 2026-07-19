@@ -4,9 +4,12 @@ import { formatDate } from '../../utils/formatDate'
 import Icon from '../ui/Icon'
 import './BlogComments.css'
 
-export function BlogComments({ postId }) {
+export function BlogComments({ postId, courseId, lessonId }) {
   const visitorId = localStorage.getItem('hachimaki_visitor_id')
-  const { comments, loading, addComment, generateAlias } = useBlogComments(postId, visitorId)
+  const { comments, loading, addComment, generateAlias } = useBlogComments(
+    { postId, courseId, lessonId },
+    visitorId
+  )
   
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)

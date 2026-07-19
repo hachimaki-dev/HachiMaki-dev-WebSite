@@ -13,20 +13,21 @@ Includes: landing page, blog, portfolio, and private admin panel.
 ```
 src/
 ├── components/
-│   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite
+│   ├── ui/              # Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite, ThreatGlobe
 │   └── layout/          # Header, Footer, PageWrapper, AdminLayout
 ├── pages/
-│   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage
+│   ├── public/          # Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage, CoursesPage, CourseDetailPage, CourseLessonPage
 │   │   ├── Stream/      # StreamRoomPage, CasterPage, ViewerPage, StreamChat
 │   │   ├── Photos/      # PhotosPage
 │   │   └── Visitantes/  # VisitantesPage
 │   │   └── Nexus/       # NexusPage
-│   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminPhotosPage, AdminContactPage, AdminSubscriptionsPage
+│   └── admin/           # Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminPhotosPage, AdminContactPage, AdminSubscriptionsPage, AdminCoursesPage, CourseEditor, LessonEditor
 │       └── Streams/     # AdminStreamsPage
 │       └── Photos/      # AdminPhotosPage
 ├── features/
 │   ├── auth/            # useAuth hook, AuthGuard component, LoginPage
-│   ├── blog/            # useBlogPosts, useBlogTags, useBlogSeries, useBlogAdmin, useBlogTagsAdmin, useBlogSeriesAdmin
+│   ├── blog/            # useBlogPosts, useBlogTags, useBlogSeries, useBlogAdmin, useBlogTagsAdmin, useBlogSeriesAdmin, useContentIndex
+│   ├── courses/         # useCourses (public), useCoursesAdmin (CRUD)
 │   ├── portfolio/       # useProjects (public reads), useProjectsAdmin (CRUD)
 │   ├── visitor/         # useVisitorTracker (logs actions), useVisitorLogs (live sync)
 │   ├── contact/         # useContact (public), useContactAdmin (CRUD)
@@ -58,7 +59,7 @@ src/
 4. **Single Supabase instance** — Import from `src/lib/supabase.js` only
 5. **No localStorage for data** — Only Supabase for business data
 6. **Handle all states** — Loading, error, and empty states in every async component
-7. **Toast for feedback** — Use `useToast()` from `src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
+7. **Toast for feedback** — Use `useToast()` from `src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav, ContentIndex
 src/components/ui/Toast.jsx`
 8. **Migrations are local** — `migrations/` is in `.gitignore`, never commit
 9. **No `console.log`** — Remove debug logs before finishing
@@ -70,9 +71,11 @@ src/components/ui/Toast.jsx`
 |---|---|---|
 | `profiles` | `display_name`, `bio`, `avatar_url` | Public read, auth write |
 | `blog_posts` | `slug`, `title`, `content`, `published`, `published_at`, `reading_time_min`, `content_format`, `series_id`, `series_order` | Published = public read, auth write |
+| `courses` | `slug`, `title`, `description`, `cover_url`, `category`, `difficulty`, `published`, `published_at` | Published = public read, auth write |
+| `course_lessons` | `course_id`, `slug`, `title`, `excerpt`, `content`, `content_format`, `video_url`, `sort_order`, `reading_time_min`, `published`, `published_at` | Published = public read, auth write |
 | `blog_tags` | `name`, `slug`, `color` | Public read, auth write |
 | `blog_reactions` | `post_id`, `visitor_id`, `reaction_type` | Public read/insert |
-| `blog_comments` | `post_id`, `visitor_id`, `alias`, `content` | Public read/insert |
+| `blog_comments` | `post_id` (nullable), `course_id` (nullable), `lesson_id` (nullable), `visitor_id`, `alias`, `content` | Public read/insert |
 | `blog_post_tags` | `post_id`, `tag_id` | Public read, auth write |
 | `blog_series` | `title`, `slug`, `description` | Public read, auth write |
 | `projects` | `slug`, `title`, `tags[]`, `featured`, `published`, `sort_order` | Published = public read, auth write |
@@ -136,6 +139,42 @@ npm test         # Run unit tests via Vitest
    - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
+## How to Create a Tutorial (For AI Agents)
+
+When the user asks you to "create a tutorial" or "create a course", DO NOT try to modify React files or create `.md` files in `src/`. Instead, use the provided script to save it as a draft in the database.
+
+**IMPORTANT SECURITY NOTE**: The database uses Row Level Security (RLS). To bypass RLS and insert data programmatically, the script requires the Supabase Service Role Key.
+1. Check if `SUPABASE_SERVICE_ROLE_KEY` is present in `.env`.
+2. If it is NOT present, tell the user they must add their service role key to `.env` before you can proceed (they can find it in Supabase Dashboard -> Settings -> API).
+3. NEVER expose the service role key in client code (never use `VITE_` prefix for it).
+
+**Creation & Update Workflow:**
+1. Create or edit a temporary JSON file (e.g., `_drafts/my-course.json`) with the structure:
+```json
+{
+  "title": "Aprende React",
+  "description": "Curso completo.",
+  "category": "Programación",
+  "difficulty": "Intermedio",
+  "lessons": [
+    {
+      "title": "Introducción",
+      "excerpt": "Qué es React.",
+      "content": "Contenido en markdown aquí..."
+    }
+  ]
+}
+```
+2. Run the script: `node scripts/agent-create-course.js _drafts/my-course.json`
+3. The script is idempotent: if a course with the same slug already exists, it updates the course and its lessons in-place (updating existing lessons, inserting new ones, and deleting any obsolete ones), preserving their original IDs and publication states.
+4. Tell the user it has been saved as a draft or updated.
+
+**Publication Rules:**
+- New courses and new lessons are always created with `published: false` (Draft status).
+- Existing published courses/lessons retain their publication status when updated.
+- DO NOT attempt to publish the course directly via the database script.
+- Instruct the user to go to the Admin panel at `/admin/courses` to review, edit, and manually publish the course when they are ready.
+
 \n## 🔄 Auto-Maintenance (MANDATORY)
 
 After every change that modifies the project architecture (new/renamed/removed components, pages, hooks, routes, tables, tokens, or dependencies), you MUST update ALL agent config files to keep them in sync:

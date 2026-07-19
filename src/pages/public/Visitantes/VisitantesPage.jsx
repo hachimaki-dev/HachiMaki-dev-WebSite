@@ -4,6 +4,7 @@ import { useVisitorLogs } from '../../../features/visitor/hooks/useVisitorLogs'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
 import { parseUserAgent } from '../../../utils/parseUserAgent'
+import { ThreatGlobe } from '../../../components/ui/ThreatGlobe'
 import './VisitantesPage.css'
 import Icon from '../../../components/ui/Icon'
 
@@ -333,6 +334,9 @@ export function VisitantesPage() {
           })}
         </div>
       </section>
+
+      {/* Threat Globe Tracker */}
+      <ThreatGlobe logs={logs} />
 
       <div className="visitors-grid">
         {/* Columna Izquierda: Expediente del Usuario */}

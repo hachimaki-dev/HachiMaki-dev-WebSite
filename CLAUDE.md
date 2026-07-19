@@ -19,14 +19,15 @@ Single admin user authenticated via Supabase. Deployed to GitHub Pages.
 
 ```
 src/
-  components/ui/        → Primitives: Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite
+  components/ui/        → Primitives: Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite, ThreatGlobe
   components/layout/    → Header, Footer, PageWrapper, AdminLayout
-  pages/public/         → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage
+  pages/public/         → Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage, CoursesPage, CourseDetailPage, CourseLessonPage
   pages/public/Stream/  → StreamRoomPage, CasterPage, ViewerPage, StreamChat
-  pages/admin/          → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminContactPage, AdminSubscriptionsPage
+  pages/admin/          → Dashboard, AdminBlog, BlogEditor, AdminPortfolio, ProjectEditor, Settings, AdminContactPage, AdminSubscriptionsPage, AdminCoursesPage, CourseEditor, LessonEditor
   pages/admin/Streams/  → AdminStreamsPage
   features/auth/        → useAuth, AuthGuard, LoginPage
-  features/blog/        → useBlogPosts (public), useBlogAdmin (CRUD)
+  features/blog/        → useBlogPosts (public), useBlogAdmin (CRUD), useContentIndex
+  features/courses/     → useCourses (public), useCoursesAdmin (CRUD)
   features/portfolio/   → useProjects (public), useProjectsAdmin (CRUD)
   features/visitor/     → useVisitorTracker, useVisitorLogs
   features/contact/     → useContact (public), useContactAdmin (CRUD)
@@ -47,13 +48,17 @@ migrations/             → Local SQL files, in .gitignore — NEVER commit
 ## Supabase Tables
 
 - `profiles` — Admin profile (1 row): `id`, `display_name`, `bio`, `avatar_url`
-- `blog_posts`
+- `blog_posts` — blog with slug, title, content, published flag
+- `courses` — IA, programming or software courses
+- `course_lessons` — lessons belonging to a course
 - `blog_tags` — blog taxonomy tags
 - `blog_post_tags`
 - `blog_reactions`
-- `blog_comments` — many-to-many tags
+- `blog_comments` — blog post, course, and lesson comments
 - `blog_series` — blog series collections
-- `blog_posts` — Blog: `slug`, `title`, `excerpt`, `content`, `cover_url`, `published`, `published_at`
+- `blog_posts` — blog with slug, title, content, published flag
+- `courses` — IA, programming or software courses
+- `course_lessons` — lessons belonging to a course — Blog: `slug`, `title`, `excerpt`, `content`, `cover_url`, `published`, `published_at`
 - `projects` — Portfolio: `slug`, `title`, `description`, `content`, `tags[]`, `featured`, `published`, `sort_order`
 - `rooms` — Streaming rooms: `slug`, `title`, `caster_id`, `status` (offline/live/ended)
 - `room_members` — Presence: `room_id`, `user_id`, `role` (caster/viewer)
@@ -75,6 +80,7 @@ Contact & Subscriptions: insert open to public, full read/write for authenticate
 
 ```
 Public:  /  /blog  /blog/:slug  /portfolio  /portfolio/:slug  /photos  /visitantes  /contacto  /login
+         /cursos  /cursos/:slug  /cursos/:slug/:lessonSlug
          /stream/:slug  /stream/:slug/cast  /stream/:slug/watch
 Admin:   /admin  /admin/blog  /admin/blog/new  /admin/blog/:id
          /admin/portfolio  /admin/portfolio/new  /admin/portfolio/:id
@@ -170,3 +176,39 @@ All of these files must reflect the current state of the project:
 
 > **Do NOT ask for permission.** If the change affects any section documented in these files (structure, tables, routes, components, rules), update them automatically as part of the same task.
 - `photos` — custom photo gallery
+
+## How to Create a Tutorial (For AI Agents)
+
+When the user asks you to "create a tutorial" or "create a course", DO NOT try to modify React files or create `.md` files in `src/`. Instead, use the provided script to save it as a draft in the database.
+
+**IMPORTANT SECURITY NOTE**: The database uses Row Level Security (RLS). To bypass RLS and insert data programmatically, the script requires the Supabase Service Role Key.
+1. Check if `SUPABASE_SERVICE_ROLE_KEY` is present in `.env`.
+2. If it is NOT present, tell the user they must add their service role key to `.env` before you can proceed (they can find it in Supabase Dashboard -> Settings -> API).
+3. NEVER expose the service role key in client code (never use `VITE_` prefix for it).
+
+**Creation & Update Workflow:**
+1. Create or edit a temporary JSON file (e.g., `_drafts/my-course.json`) with the structure:
+```json
+{
+  "title": "Aprende React",
+  "description": "Curso completo.",
+  "category": "Programación",
+  "difficulty": "Intermedio",
+  "lessons": [
+    {
+      "title": "Introducción",
+      "excerpt": "Qué es React.",
+      "content": "Contenido en markdown aquí..."
+    }
+  ]
+}
+```
+2. Run the script: `node scripts/agent-create-course.js _drafts/my-course.json`
+3. The script is idempotent: if a course with the same slug already exists, it updates the course and its lessons in-place (updating existing lessons, inserting new ones, and deleting any obsolete ones), preserving their original IDs and publication states.
+4. Tell the user it has been saved as a draft or updated.
+
+**Publication Rules:**
+- New courses and new lessons are always created with `published: false` (Draft status).
+- Existing published courses/lessons retain their publication status when updated.
+- DO NOT attempt to publish the course directly via the database script.
+- Instruct the user to go to the Admin panel at `/admin/courses` to review, edit, and manually publish the course when they are ready.

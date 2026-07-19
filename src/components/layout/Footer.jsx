@@ -28,7 +28,6 @@ export function Footer() {
               <h4 className="footer__col-title">Sitio</h4>
               <Link to={ROUTES.HOME} className="footer__link">Inicio</Link>
               <Link to={ROUTES.BLOG} className="footer__link">Blog</Link>
-              <Link to={ROUTES.PORTFOLIO} className="footer__link">Portfolio</Link>
               <Link to={ROUTES.PHOTOS} className="footer__link">Fotos</Link>
               <Link to={ROUTES.VISITORS} className="footer__link">Visitantes</Link>
               <Link to={ROUTES.CONTACT} className="footer__link">Contacto</Link>

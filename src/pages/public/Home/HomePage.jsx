@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PageWrapper } from '../../../components/layout/PageWrapper'
-import { useBlogPosts } from '../../../features/blog/useBlogPosts'
+import { useUnifiedFeed } from '../../../features/blog/useUnifiedFeed'
 import { formatDate } from '../../../utils/formatDate'
 import { ROUTES } from '../../../lib/constants'
 import { NewsletterInvite } from '../../../components/ui/NewsletterInvite'
 import { StreamStories } from '../Stream/StreamStories'
+import { ThreatGlobe } from '../../../components/ui/ThreatGlobe'
+import { ContentIndex } from '../../../components/blog/ContentIndex'
 import './HomePage.css'
 import Icon from '../../../components/ui/Icon'
+import { SEO } from '../../../components/ui/SEO'
+
 
 
 export function HomePage() {
-  const { posts: latestPosts, loading: postsLoading } = useBlogPosts()
+  const { feed: latestPosts, loading: postsLoading } = useUnifiedFeed({ limit: 10 })
 
   /* Live clock */
   const [time, setTime] = useState(new Date())
@@ -24,14 +28,15 @@ export function HomePage() {
 
   return (
     <PageWrapper>
+      <SEO title="Inicio" description="Web personal, blog y cursos de hachimaki. Desarrollo web moderno." />
       <div className="vhs-scanlines vhs-noise"></div>
 
       {/* ═══ Main grid: Sidebar photo | Content ═══ */}
       <div className="outsider">
         {/* ── Left: VHS Cassette Case ── */}
         <aside className="outsider__profile">
+          {/* Spine / Lomo */}
           <div className="vhs-case">
-            {/* Spine / Lomo */}
             <div className="vhs-case__spine">
               <span className="vhs-case__spine-text">Hachimaki dev ?</span>
               <span className="vhs-case__spine-code">¿Que es ser un </span>
@@ -48,6 +53,7 @@ export function HomePage() {
                   src="/hachimaki-dev/hachimaki-profile.png"
                   alt="HachiMaki"
                   className="vhs-case__photo"
+                  fetchpriority="high"
                 />
                 <div className="vhs-case__photo-scanlines"></div>
                 {/* Worn edges */}
@@ -71,6 +77,11 @@ export function HomePage() {
             <span className="outsider__status-dot"></span>
             SEÑAL ACTIVA
           </div>
+
+          <ContentIndex />
+
+          {/* Threat Globe tracker */}
+          <ThreatGlobe isSidebar={true} />
         </aside>
 
         {/* ── Center: Main content — News/Blog feed ── */}
@@ -106,14 +117,14 @@ export function HomePage() {
             <div className="outsider__feed">
               {latestPosts.map((post, i) => (
                 <Link
-                  key={post.id}
-                  to={`/blog/${post.slug}`}
+                  key={post.feed_id}
+                  to={post.link}
                   className={`outsider__feed-item animate-slide-up delay-${Math.min(i + 1, 6)}`}
                 >
                   {/* Feed item header */}
                   <div className="outsider__feed-item-header">
                     <span className="outsider__feed-item-id">
-                      SEÑAL-{String(i + 1).padStart(3, '0')}
+                      {post.feed_badge}-{String(i + 1).padStart(3, '0')}
                     </span>
                     <span className="outsider__feed-item-date">
                       {formatDate(post.published_at || post.created_at).toUpperCase()}
@@ -123,7 +134,7 @@ export function HomePage() {
                   {/* Cover image if available */}
                   {post.cover_url && (
                     <div className="outsider__feed-item-cover">
-                      <img src={post.cover_url} alt={post.title} />
+                      <img src={post.cover_url} alt={post.title} loading="lazy" decoding="async" />
                       <div className="vhs-case__worn-edges"></div>
                     </div>
                   )}
@@ -183,8 +194,6 @@ export function HomePage() {
           </div>
 
           <NewsletterInvite />
-
-
 
           {/* Clock */}
           <div className="outsider__sidebar-clock">{timestamp}</div>

@@ -35,13 +35,17 @@ All values come from `src/styles/tokens.css`:
 ## Database Tables (Supabase PostgreSQL)
 
 - `profiles` — single admin profile row
-- `blog_posts`
+- `blog_posts` — blog with slug, title, content, published flag
+- `courses` — IA, programming or software courses
+- `course_lessons` — lessons belonging to a course
 - `blog_tags` — blog taxonomy tags
 - `blog_post_tags`
 - `blog_reactions`
-- `blog_comments` — many-to-many tags
+- `blog_comments` — blog post, course, and lesson comments
 - `blog_series` — blog series collections
 - `blog_posts` — blog with slug, title, content, published flag
+- `courses` — IA, programming or software courses
+- `course_lessons` — lessons belonging to a course — blog with slug, title, content, published flag
 - `projects` — portfolio with slug, tags[], featured, sort_order
 - `rooms` — streaming rooms with slug, caster_id, status, is_private
 - `room_passwords` — secures passwords for private rooms
@@ -56,7 +60,7 @@ All values come from `src/styles/tokens.css`:
 - `subscriptions` — newsletter/stream subscriptions
 - `stream_transcriptions` — stream speech transcriptions
 - `friend_links` — website buttons showcase (linkeame)
-- `peer_libraries` — P2P file sharing libraries (with downloads_count, shares_count)
+- `peer_libraries` — P2P file sharing libraries (with downloads_count, shares_count) (with downloads_count, shares_count) (with downloads_count, shares_count)
 - `peer_alerts` — P2P offline alerts
 - `p2p_signaling` — WebRTC P2P signaling
 - `nexus_activity` — P2P activity log
@@ -68,15 +72,15 @@ Contact & Subscriptions: public insert, authenticated admin read/write.
 ## Folder Conventions
 
 ```
-src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav
-src/components/ui/             → Reusable primitives (Button, Input, Card, Modal, NewsletterInvite...)
+src/components/blog/           → BlogShare, BlogReactions, BlogComments, MarkdownRenderer, TableOfContents, TagPills, PostMeta, SeriesNav, ContentIndex
+src/components/ui/             → Reusable primitives (Button, Input, Card, Modal, NewsletterInvite, ThreatGlobe...)
 src/components/layout/         → Header, Footer, PageWrapper, AdminLayout
 src/pages/public/              → Public pages (Home, Blog, Portfolio, Contact)
 src/pages/public/Stream/       → StreamRoomPage, CasterPage, ViewerPage, StreamChat
 src/pages/public/Photos/       → PhotosPage
 src/pages/public/Visitantes/   → VisitantesPage
 src/pages/public/Nexus/        → NexusPage
-src/pages/admin/               → Admin CRUD pages (behind AuthGuard - Dashboard, Settings, Contact, Subscriptions)
+src/pages/admin/               → Admin CRUD pages (behind AuthGuard - Dashboard, Settings, Contact, Subscriptions, Courses, CourseEditor, LessonEditor)
 src/pages/admin/Streams/       → AdminStreamsPage
 src/pages/admin/Photos/        → AdminPhotosPage
 src/features/{domain}/         → Domain hooks & helpers (auth, blog, portfolio, streaming, visitor, contact, subscriptions)
@@ -107,6 +111,41 @@ npm run build    # Prod build (must pass with 0 errors)
 npm test         # Run unit tests via Vitest
 ```
 
+## How to Create a Tutorial (For AI Agents)
+
+When the user asks you to "create a tutorial" or "create a course", DO NOT try to modify React files or create `.md` files in `src/`. Instead, use the provided script to save it as a draft in the database.
+
+**IMPORTANT SECURITY NOTE**: The database uses Row Level Security (RLS). To bypass RLS and insert data programmatically, the script requires the Supabase Service Role Key.
+1. Check if `SUPABASE_SERVICE_ROLE_KEY` is present in `.env`.
+2. If it is NOT present, tell the user they must add their service role key to `.env` before you can proceed (they can find it in Supabase Dashboard -> Settings -> API).
+3. NEVER expose the service role key in client code (never use `VITE_` prefix for it).
+
+**Creation & Update Workflow:**
+1. Create or edit a temporary JSON file (e.g., `_drafts/my-course.json`) with the structure:
+```json
+{
+  "title": "Aprende React",
+  "description": "Curso completo.",
+  "category": "Programación",
+  "difficulty": "Intermedio",
+  "lessons": [
+    {
+      "title": "Introducción",
+      "excerpt": "Qué es React.",
+      "content": "Contenido en markdown aquí..."
+    }
+  ]
+}
+```
+2. Run the script: `node scripts/agent-create-course.js _drafts/my-course.json`
+3. The script is idempotent: if a course with the same slug already exists, it updates the course and its lessons in-place (updating existing lessons, inserting new ones, and deleting any obsolete ones), preserving their original IDs and publication states.
+4. Tell the user it has been saved as a draft or updated.
+
+**Publication Rules:**
+- New courses and new lessons are always created with `published: false` (Draft status).
+- Existing published courses/lessons retain their publication status when updated.
+- DO NOT attempt to publish the course directly via the database script.
+- Instruct the user to go to the Admin panel at `/admin/courses` to review, edit, and manually publish the course when they are ready.
 
 ## UI / UX Guidelines (Retro VHS / Surveillance System)
 

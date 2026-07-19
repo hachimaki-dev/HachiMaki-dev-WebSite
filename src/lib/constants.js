@@ -17,6 +17,9 @@ export const ROUTES = {
   LOGIN: '/login',
   CONTACT: '/contacto',
   NEXUS: '/nexus',
+  COURSES: '/cursos',
+  COURSE_DETAIL: '/cursos/:slug',
+  COURSE_LESSON: '/cursos/:slug/:lessonSlug',
 
   /* Streaming routes */
   STREAM_ROOM: '/stream/:slug',
@@ -38,6 +41,11 @@ export const ROUTES = {
   ADMIN_FRIEND_LINKS: '/admin/links',
   ADMIN_BLOG_TAGS: '/admin/blog/tags',
   ADMIN_BLOG_SERIES: '/admin/blog/series',
+  ADMIN_COURSES: '/admin/courses',
+  ADMIN_COURSE_NEW: '/admin/courses/new',
+  ADMIN_COURSE_EDIT: '/admin/courses/:id',
+  ADMIN_COURSE_LESSON_NEW: '/admin/courses/:id/lessons/new',
+  ADMIN_COURSE_LESSON_EDIT: '/admin/courses/:id/lessons/:lessonId',
 }
 
 /* ── Supabase tables ── */
@@ -65,6 +73,8 @@ export const TABLES = {
   PEER_LIBRARIES: 'peer_libraries',
   PEER_ALERTS: 'peer_alerts',
   P2P_SIGNALING: 'p2p_signaling',
+  COURSES: 'courses',
+  COURSE_LESSONS: 'course_lessons',
 }
 
 /* ── Site metadata ── */

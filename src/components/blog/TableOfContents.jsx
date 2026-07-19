@@ -3,9 +3,15 @@ import './TableOfContents.css'
 
 /**
  * TableOfContents — Sticky sidebar nav generated from markdown headings
- * @param {{ content: string, format?: 'markdown'|'html' }} props
+ * @param {{ content: string, format?: 'markdown'|'html', layout?: 'sidebar'|'grid', isCollapsed?: boolean, onToggleCollapse?: () => void }} props
  */
-export function TableOfContents({ content, format = 'markdown' }) {
+export function TableOfContents({ 
+  content, 
+  format = 'markdown', 
+  layout = 'sidebar',
+  isCollapsed = false,
+  onToggleCollapse
+}) {
   const [headings, setHeadings] = useState([])
   const [activeId, setActiveId] = useState('')
   const observerRef = useRef(null)
@@ -16,6 +22,16 @@ export function TableOfContents({ content, format = 'markdown' }) {
 
     let parsed = []
 
+    // Helper to strip emojis and clean up leading symbols to make it look like clean system text
+    const cleanHeadingText = (text) => {
+      // Strips standard Unicode emojis
+      const emojiRegex = /[\u{1F300}-\u{1F9FF}]|[\u{2700}-\u{27BF}]|[\u{2600}-\u{26FF}]/gu
+      let clean = text.replace(emojiRegex, '').trim()
+      // Strip any leading punctuation or arrows (e.g. 🎯, 🧠, →, 💡, etc. which might be left or plain text)
+      clean = clean.replace(/^[→⇒•·\-\s\d\.]+/g, '').trim()
+      return clean
+    }
+
     if (format === 'markdown') {
       // Parse markdown headings (## and ###)
       const lines = content.split('\n')
@@ -23,8 +39,9 @@ export function TableOfContents({ content, format = 'markdown' }) {
         const match = line.match(/^(#{2,3})\s+(.+)$/)
         if (match) {
           const level = match[1].length
-          const text = match[2].replace(/[*_`~]/g, '').trim()
-          const id = text
+          const rawText = match[2].replace(/[*_`~]/g, '').trim()
+          const text = cleanHeadingText(rawText)
+          const id = rawText
             .toLowerCase()
             .replace(/[^\w\s-]/g, '')
             .replace(/\s+/g, '-')
@@ -37,8 +54,9 @@ export function TableOfContents({ content, format = 'markdown' }) {
       const doc = parser.parseFromString(content, 'text/html')
       doc.querySelectorAll('h2, h3').forEach((el) => {
         const level = parseInt(el.tagName[1], 10)
-        const text = el.textContent.trim()
-        const id = el.id || text
+        const rawText = el.textContent.trim()
+        const text = cleanHeadingText(rawText)
+        const id = el.id || rawText
           .toLowerCase()
           .replace(/[^\w\s-]/g, '')
           .replace(/\s+/g, '-')
@@ -92,20 +110,49 @@ export function TableOfContents({ content, format = 'markdown' }) {
   if (headings.length < 2) return null
 
   return (
-    <nav className="toc" aria-label="Tabla de contenidos">
-      <div className="toc__title">CONTENIDO</div>
-      <ul className="toc__list">
-        {headings.map(({ id, text, level }) => (
-          <li
-            key={id}
-            className={`toc__item ${level === 3 ? 'toc__item--nested' : ''} ${activeId === id ? 'toc__item--active' : ''}`}
+    <nav 
+      className={`toc ${layout === 'grid' ? 'toc--grid' : ''} ${isCollapsed ? 'toc--collapsed' : ''}`} 
+      aria-label="Tabla de contenidos"
+    >
+      <div className="toc__header">
+        <div className="toc__title">
+          {layout === 'grid' ? 'SECCIONES DE LA LECCIÓN' : 'SECCIONES.SYS'}
+        </div>
+        {layout === 'sidebar' && onToggleCollapse && (
+          <button 
+            type="button"
+            className="toc__collapse-btn" 
+            onClick={onToggleCollapse}
+            title={isCollapsed ? "Expandir índice" : "Minimizar índice"}
           >
-            <a href={`#${id}`} className="toc__link">
-              {text}
-            </a>
-          </li>
-        ))}
-      </ul>
+            {isCollapsed ? '[ + ]' : '[ - ]'}
+          </button>
+        )}
+      </div>
+
+      {!isCollapsed && (
+        <ul className={`toc__list ${layout === 'grid' ? 'toc__list--grid' : ''}`}>
+          {headings.map(({ id, text, level }) => {
+            const isActive = activeId === id
+            return (
+              <li
+                key={id}
+                className={`toc__item ${level === 3 ? 'toc__item--nested' : ''} ${isActive ? 'toc__item--active' : ''}`}
+              >
+                <a href={`#${id}`} className="toc__link">
+                  {layout === 'sidebar' && level === 3 && (
+                    <span className="toc__branch">├─ </span>
+                  )}
+                  {layout === 'sidebar' && level === 2 && isActive && (
+                    <span className="toc__prompt">&gt; </span>
+                  )}
+                  {text}
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </nav>
   )
 }

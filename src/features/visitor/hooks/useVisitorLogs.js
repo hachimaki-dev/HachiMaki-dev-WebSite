@@ -84,8 +84,9 @@ export function useVisitorLogs() {
     fetchLogs()
 
     // Setup Supabase realtime channel to listen to INSERTs
+    const channelId = `visitor_logs_live_${Math.random().toString(36).substring(2, 11)}`
     const channel = supabase
-      .channel('visitor_logs_live')
+      .channel(channelId)
       .on(
         'postgres_changes',
         {

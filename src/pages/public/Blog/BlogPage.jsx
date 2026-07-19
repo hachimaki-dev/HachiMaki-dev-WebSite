@@ -4,7 +4,7 @@ import { PageWrapper } from '../../../components/layout/PageWrapper'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { SearchBar } from '../../../components/blog/SearchBar'
 import { Pagination } from '../../../components/blog/Pagination'
-import { useBlogPosts } from '../../../features/blog/useBlogPosts'
+import { useUnifiedFeed } from '../../../features/blog/useUnifiedFeed'
 import { useBlogTags } from '../../../features/blog/useBlogTags'
 import { formatDate } from '../../../utils/formatDate'
 import { StreamStories } from '../Stream/StreamStories'
@@ -17,10 +17,10 @@ export function BlogPage() {
   const [page, setPage] = useState(1)
 
   const { tags } = useBlogTags()
-  const { posts, loading, error, totalPages } = useBlogPosts({
+  const { feed: posts, loading, error, totalPages } = useUnifiedFeed({
     search,
     tagSlug: activeTag,
-    page,
+    limit: 50
   })
 
   const handleSearch = (val) => {
@@ -131,11 +131,11 @@ export function BlogPage() {
             {/* Featured Post */}
             {featuredPost && (
               <Link
-                to={`/blog/${featuredPost.slug}`}
+                to={featuredPost.link}
                 className="blog-feed-item blog-feed-hero animate-slide-up delay-2"
               >
                 <div className="blog-feed-item-header">
-                  <span className="blog-feed-item-id">SEÑAL-000 (DESTACADA)</span>
+                  <span className="blog-feed-item-id">{featuredPost.feed_badge}-000 (DESTACADA)</span>
                   <span className="blog-feed-item-date">{formatDate(featuredPost.published_at || featuredPost.created_at).toUpperCase()}</span>
                 </div>
                 {featuredPost.cover_url && (
@@ -160,12 +160,12 @@ export function BlogPage() {
             {/* Remaining Posts */}
             {remainingPosts.map((post, i) => (
               <Link
-                key={post.id}
-                to={`/blog/${post.slug}`}
+                key={post.feed_id}
+                to={post.link}
                 className={`blog-feed-item animate-slide-up delay-${Math.min(i + 3, 6)}`}
               >
                 <div className="blog-feed-item-header">
-                  <span className="blog-feed-item-id">SEÑAL-{String(i + 1).padStart(3, '0')}</span>
+                  <span className="blog-feed-item-id">{post.feed_badge}-{String(i + 1).padStart(3, '0')}</span>
                   <span className="blog-feed-item-date">{formatDate(post.published_at || post.created_at).toUpperCase()}</span>
                 </div>
                 {post.cover_url && (

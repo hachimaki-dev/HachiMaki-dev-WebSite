@@ -9,7 +9,7 @@ export function Header() {
   const navLinks = [
     { to: ROUTES.HOME, label: 'HOME' },
     { to: ROUTES.BLOG, label: 'BLOG' },
-    { to: ROUTES.PORTFOLIO, label: 'PORTFOLIO' },
+    { to: ROUTES.COURSES, label: 'CURSOS' },
     { to: ROUTES.PHOTOS, label: 'PHOTOS' },
     { to: ROUTES.VISITORS, label: 'VISITANTES' },
     { to: ROUTES.NEXUS, label: 'BÓVEDA' },

@@ -16,6 +16,7 @@ export function AdminLayout() {
   const sidebarLinks = [
     { to: ROUTES.ADMIN, label: 'Dashboard', icon: '◉', end: true },
     { to: ROUTES.ADMIN_BLOG, label: 'Blog', icon: <Icon name="magic-edit" />, end: false },
+    { to: ROUTES.ADMIN_COURSES, label: 'Cursos', icon: <Icon name="book" />, end: false },
     { to: ROUTES.ADMIN_PORTFOLIO, label: 'Portfolio', icon: '◧', end: false },
     { to: ROUTES.ADMIN_STREAMS, label: 'Streams', icon: <Icon name="radio" />, end: false },
     { to: ROUTES.ADMIN_PHOTOS, label: 'Photos', icon: <Icon name="camera" />, end: false },

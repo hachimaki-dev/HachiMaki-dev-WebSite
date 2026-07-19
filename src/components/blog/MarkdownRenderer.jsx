@@ -27,6 +27,7 @@ export function MarkdownRenderer({ content, format = 'markdown' }) {
   return (
     <div className="prose">
       <ReactMarkdown
+        children={content}
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
           rehypeHighlight,

@@ -185,10 +185,16 @@ export function useVisitorTracker() {
       isInitializedRef.current = true
 
       try {
-        // Try ipapi.co (HTTPS-friendly)
-        const response = await fetch('https://ipapi.co/json/')
-        if (response.ok) {
-          geoDataRef.current = await response.json()
+        const cachedGeo = sessionStorage.getItem('hachimaki_geo')
+        if (cachedGeo) {
+          geoDataRef.current = JSON.parse(cachedGeo)
+        } else {
+          // Try ipapi.co (HTTPS-friendly)
+          const response = await fetch('https://ipapi.co/json/')
+          if (response.ok) {
+            geoDataRef.current = await response.json()
+            sessionStorage.setItem('hachimaki_geo', JSON.stringify(geoDataRef.current))
+          }
         }
       } catch (err) {
         // Fallback: ip-api (might fail on HTTPS, but good to try as fallback)
@@ -196,6 +202,7 @@ export function useVisitorTracker() {
           const res = await fetch('https://ipapi.co/json/') // fallback to backup fetch
           if (res.ok) {
             geoDataRef.current = await res.json()
+            sessionStorage.setItem('hachimaki_geo', JSON.stringify(geoDataRef.current))
           }
         } catch (e) {
           // Both failed (probably offline or adblocker)
@@ -216,16 +223,24 @@ export function useVisitorTracker() {
       if (!target) return
 
       let label = target.innerText?.trim() || target.placeholder || target.ariaLabel || target.name || target.id || target.tagName
-      if (label.length > 50) label = label.substring(0, 47) + '...'
+      if (label && label.length > 50) label = label.substring(0, 47) + '...'
 
-      logAction('click', {
+      const payload = {
         element: target.tagName.toLowerCase(),
         label: label,
         id: target.id || null,
         className: target.className || null,
         clientX: e.clientX,
         clientY: e.clientY
-      })
+      }
+
+      const executeLog = () => logAction('click', payload)
+
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(executeLog, { timeout: 1000 })
+      } else {
+        setTimeout(executeLog, 100)
+      }
     }
 
     document.addEventListener('click', handleGlobalClick, true)

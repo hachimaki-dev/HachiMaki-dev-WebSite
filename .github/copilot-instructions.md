@@ -32,7 +32,7 @@ Deployed to GitHub Pages via GitHub Actions.
 - Never use `localStorage` for business data
 - Database schema changes go in `migrations/NNN_description.sql` (local, gitignored)
 
-- UI primitives: `src/components/ui/` (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite)
+- UI primitives: `src/components/ui/` (Button, Input, Card, Modal, Toast, PageLoader, EmptyState, Badge, Countdown, NewsletterInvite, ThreatGlobe)
 - Layout components: `src/components/layout/`
 - Public pages: `src/pages/public/` (Home, Blog, BlogPost, Portfolio, ProjectDetail, PhotosPage, VisitantesPage, ContactPage)
 - Stream pages: `src/pages/public/Stream/` (StreamRoomPage, CasterPage, ViewerPage, StreamChat)
@@ -68,6 +68,40 @@ Deployed to GitHub Pages via GitHub Actions.
    - **Colors**: Rely exclusively on src/styles/tokens.css. Primary accent is --color-accent (#8b5cf6).
 3. **Animations**: Use micro-animations like animate-slide-up for loading content, glow-pulse for status dots, and image scaling on hover.
    4. **Icons**: Use `pixelarticons` exclusively via the `<Icon name="..." />` component (from `src/components/ui/Icon.jsx`). Do not use inline SVGs.
+## How to Create a Tutorial (For AI Agents)
+
+When the user asks you to "create a tutorial" or "create a course", DO NOT try to modify React files or create `.md` files in `src/`. Instead, use the provided script to save it as a draft in the database.
+
+**IMPORTANT SECURITY NOTE**: The database uses Row Level Security (RLS). To bypass RLS and insert data programmatically, the script requires the Supabase Service Role Key.
+1. Check if `SUPABASE_SERVICE_ROLE_KEY` is present in `.env`.
+2. If it is NOT present, tell the user they must add their service role key to `.env` before you can proceed (they can find it in Supabase Dashboard -> Settings -> API).
+3. NEVER expose the service role key in client code (never use `VITE_` prefix for it).
+
+**Creation Workflow:**
+1. Create a temporary JSON file (e.g., `_drafts/my-course.json`) with the structure:
+```json
+{
+  "title": "Aprende React",
+  "description": "Curso completo.",
+  "category": "Programación",
+  "difficulty": "Intermedio",
+  "lessons": [
+    {
+      "title": "Introducción",
+      "excerpt": "Qué es React.",
+      "content": "Contenido en markdown aquí..."
+    }
+  ]
+}
+```
+2. Run the script: `node scripts/agent-create-course.js _drafts/my-course.json`
+3. Tell the user it has been saved as a draft.
+
+**Publication Rules:**
+- The script ALWAYS creates courses and lessons with `published: false` (Draft status).
+- DO NOT attempt to publish the course directly via the database script.
+- Instruct the user to go to the Admin panel at `/admin/courses` to review, edit, and manually publish the course when they are ready.
+
 \n## 🔄 Auto-Maintenance (MANDATORY)
 
 After every change that modifies the project architecture (new/renamed/removed components, pages, hooks, routes, tables, tokens, or dependencies), update ALL agent config files to keep them in sync:

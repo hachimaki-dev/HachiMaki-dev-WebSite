@@ -1,5 +1,4 @@
 import { useParams, Link } from 'react-router-dom'
-import { useEffect } from 'react'
 import { PageWrapper } from '../../../components/layout/PageWrapper'
 import { PageLoader } from '../../../components/ui/PageLoader'
 import { EmptyState } from '../../../components/ui/EmptyState'
@@ -14,51 +13,13 @@ import { BlogShare } from '../../../components/blog/BlogShare'
 import { BlogReactions } from '../../../components/blog/BlogReactions'
 import { BlogComments } from '../../../components/blog/BlogComments'
 import { NewsletterInvite } from '../../../components/ui/NewsletterInvite'
+import { SEO } from '../../../components/ui/SEO'
 import './BlogPostPage.css'
 import Icon from '../../../components/ui/Icon'
 
 export function BlogPostPage() {
   const { slug } = useParams()
   const { post, seriesPosts, relatedPosts, loading, error } = useBlogPost(slug)
-
-  // Dynamic SEO meta tags
-  useEffect(() => {
-    if (!post) return
-    document.title = `${post.title} — hachimaki.dev`
-
-    const setMeta = (name, content, isProperty = false) => {
-      const attr = isProperty ? 'property' : 'name'
-      let el = document.querySelector(`meta[${attr}="${name}"]`)
-      if (!el) {
-        el = document.createElement('meta')
-        el.setAttribute(attr, name)
-        document.head.appendChild(el)
-      }
-      el.content = content
-      return el
-    }
-
-    const els = [
-      setMeta('description', post.excerpt || post.title),
-      setMeta('og:title', post.title, true),
-      setMeta('og:description', post.excerpt || post.title, true),
-      setMeta('og:type', 'article', true),
-      setMeta('og:url', window.location.href, true),
-    ]
-
-    if (post.cover_url) {
-      els.push(setMeta('og:image', post.cover_url, true))
-    }
-
-    return () => {
-      document.title = 'hachimaki.dev — Developer & Creator'
-      els.forEach(el => {
-        if (document.head.contains(el)) {
-          document.head.removeChild(el)
-        }
-      })
-    }
-  }, [post])
 
   if (loading) return <PageLoader />
 
@@ -81,6 +42,13 @@ export function BlogPostPage() {
 
   return (
     <PageWrapper>
+      <SEO 
+        title={post.title} 
+        description={post.excerpt || post.title} 
+        type="article"
+        image={post.cover_url}
+        url={window.location.href}
+      />
       <article className="blog-post page-enter">
         {/* Back link */}
         <Link to={ROUTES.BLOG} className="blog-post__back">
