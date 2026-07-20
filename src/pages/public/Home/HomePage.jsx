@@ -50,7 +50,7 @@ export function HomePage() {
               {/* Photo */}
               <div className="vhs-case__photo-wrap">
                 <img
-                  src="/hachimaki-dev/hachimaki-profile.png"
+                  src={`${import.meta.env.BASE_URL}hachimaki-profile.png`}
                   alt="HachiMaki"
                   className="vhs-case__photo"
                   fetchpriority="high"
