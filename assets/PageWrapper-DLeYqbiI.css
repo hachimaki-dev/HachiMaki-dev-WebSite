@@ -1,0 +1,1 @@
+.page-wrapper{width:100%;max-width:var(--max-width-wide);padding:var(--space-10) var(--space-6);flex:1;margin-inline:auto}.page-wrapper--narrow{max-width:var(--max-width-content)}@media (width<=480px){.page-wrapper{padding:var(--space-6) var(--space-4)}}

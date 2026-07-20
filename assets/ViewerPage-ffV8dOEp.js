@@ -1,0 +1,1 @@
+import{s as e}from"./constants-C4rmFu4r.js";import{d as t}from"./index-B-QnDaAt.js";import{t as n}from"./StreamViewer-gjYvkR5C.js";var r=e();function i(){let{slug:e}=t();return(0,r.jsx)(n,{slug:e})}export{i as ViewerPage};

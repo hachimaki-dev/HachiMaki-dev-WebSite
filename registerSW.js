@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/HachiMaki-dev-WebSite/sw.js', { scope: '/HachiMaki-dev-WebSite/' })})}

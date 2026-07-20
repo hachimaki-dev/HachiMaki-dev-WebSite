@@ -1,0 +1,1 @@
+import{s as e}from"./constants-C4rmFu4r.js";import{s as t}from"./index-B-QnDaAt.js";var n=e();function r({tags:e,size:r=`sm`}){return!e||e.length===0?null:(0,n.jsx)(`div`,{className:`tag-pills tag-pills--${r}`,children:e.map(e=>(0,n.jsx)(t,{to:`/blog/tag/${e.slug}`,className:`tag-pill`,style:{"--tag-color":e.color||`var(--color-accent)`},children:e.name},e.id))})}export{r as t};

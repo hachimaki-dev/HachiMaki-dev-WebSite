@@ -1,0 +1,1 @@
+import{s as e}from"./constants-C4rmFu4r.js";var t=e();function n({variant:e=`default`,size:n=`sm`,className:r=``,children:i}){return(0,t.jsx)(`span`,{className:`badge badge--${e} badge--${n} ${r}`,children:i})}export{n as t};

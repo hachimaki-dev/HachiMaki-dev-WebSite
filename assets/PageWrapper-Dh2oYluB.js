@@ -1,0 +1,1 @@
+import{s as e}from"./constants-C4rmFu4r.js";var t=e();function n({narrow:e=!1,className:n=``,children:r}){return(0,t.jsx)(`main`,{className:`page-wrapper page-enter ${e?`page-wrapper--narrow`:``} ${n}`,children:r})}export{n as t};

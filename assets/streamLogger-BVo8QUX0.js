@@ -1,0 +1,1 @@
+function e(e=``){let t=e?`[STREAM:${e}]`:`[STREAM]`;return{debug(...e){},info(...e){},warn(...e){console.warn(t,...e)},error(...e){console.error(t,...e)}}}e();export{e as t};
