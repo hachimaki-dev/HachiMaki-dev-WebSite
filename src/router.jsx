@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Outlet } from 'react-router-dom'
+import { createHashRouter, Outlet } from 'react-router-dom'
 import { Header } from './components/layout/Header'
 import { Footer } from './components/layout/Footer'
 import { AdminLayout } from './components/layout/AdminLayout'
@@ -73,7 +73,7 @@ function ProtectedAdminLayout() {
   )
 }
 
-export const router = createBrowserRouter(
+export const router = createHashRouter(
   [
     {
       /* Public routes */
@@ -136,9 +136,6 @@ export const router = createBrowserRouter(
         { path: 'courses/:id/lessons/new', element: <LessonEditor /> },
         { path: 'courses/:id/lessons/:lessonId', element: <LessonEditor /> },
       ],
-    },
-  ],
-  {
-    basename: '/HachiMaki-dev-WebSite',
-  }
+    }
+  ]
 )
